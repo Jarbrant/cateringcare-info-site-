@@ -1,74 +1,84 @@
-"use client";
+"use client"
 
-import { useState } from "react";
+import {useState} from "react"
 
-export default function ChatWidget() {
+export default function ChatWidget(){
 
-  const [messages, setMessages] = useState<any[]>([]);
-  const [input, setInput] = useState("");
+const [messages,setMessages] = useState<any[]>([])
+const [input,setInput] = useState("")
 
-  async function sendMessage() {
+async function send(){
 
-    if (!input.trim()) return;
+ if(!input.trim()) return
 
-    const res = await fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: input })
-    });
+ const res = await fetch("/api/search",{
 
-    const data = await res.json();
+  method:"POST",
 
-    const newMessages = [...messages, {
-      role: "user",
-      text: input
-    }];
+  headers:{ "Content-Type":"application/json" },
 
-    if (data.found) {
-      newMessages.push({
-        role: "bot",
-        text: data.answer
-      });
-    } else {
-      newMessages.push({
-        role: "bot",
-        text: "Jag hittar inget svar. Klicka här för att chatta med oss."
-      });
-    }
+  body:JSON.stringify({question:input})
 
-    setMessages(newMessages);
-    setInput("");
-  }
+ })
 
-  return (
+ const data = await res.json()
 
-    <div className="fixed bottom-6 right-6 bg-white shadow-lg p-4 w-80 rounded-xl">
+ setMessages([
 
-      <div className="h-60 overflow-auto mb-3">
+  ...messages,
 
-        {messages.map((m,i)=>(
-          <div key={i} className="mb-2">
-            <strong>{m.role === "user" ? "Du" : "Support"}:</strong>
-            <p>{m.text}</p>
-          </div>
-        ))}
+  {role:"user",text:input},
 
-      </div>
+  {role:"bot",text:data.answer}
 
-      <input
-        className="border p-2 w-full"
-        value={input}
-        onChange={(e)=>setInput(e.target.value)}
-        placeholder="Ställ en fråga..."
-      />
+ ])
 
-      <button
-        onClick={sendMessage}
-        className="bg-green-700 text-white w-full mt-2 p-2 rounded"
-      >
-        Skicka
-      </button>
+ setInput("")
 
-    </div>
-  );
+}
+
+return(
+
+<div style={{
+
+ position:"fixed",
+ bottom:20,
+ right:20,
+ width:320,
+ background:"#fff",
+ border:"1px solid #ddd",
+ padding:15
+
+}}>
+
+<div style={{height:200,overflow:"auto"}}>
+
+{messages.map((m,i)=>(
+
+<div key={i}>
+
+<strong>{m.role==="user"?"Du":"Support"}:</strong>
+
+<p>{m.text}</p>
+
+</div>
+
+))}
+
+</div>
+
+<input
+
+value={input}
+onChange={e=>setInput(e.target.value)}
+placeholder="Ställ en fråga..."
+
+/>
+
+<button onClick={send}>Skicka</button>
+
+</div>
+
+)
+
 }
