@@ -9,21 +9,56 @@ font-family:Arial;
 max-width:800px;
 margin:auto;
 padding:40px;
+background:#f5f7f6;
+}
+
+h1{
+color:#2f7d59;
 }
 
 textarea{
 width:100%;
 height:400px;
-font-size:16px;
+font-size:15px;
+padding:15px;
+border:1px solid #ccc;
+border-radius:8px;
+box-sizing:border-box;
+font-family:monospace;
+line-height:1.6;
 }
 
 button{
-padding:12px 20px;
+padding:12px 24px;
 font-size:16px;
-background:#2f7d57;
+background:#2f7d59;
 color:white;
 border:none;
-margin-top:20px;
+border-radius:6px;
+cursor:pointer;
+margin-top:15px;
+margin-right:10px;
+}
+
+button:hover{
+background:#24614a;
+}
+
+#status{
+margin-top:15px;
+padding:10px;
+border-radius:6px;
+display:none;
+}
+
+.success{
+background:#d4edda;
+color:#155724;
+}
+
+.error{
+background:#f8d7da;
+color:#721c24;
 }
 
 </style>
@@ -31,33 +66,70 @@ margin-top:20px;
 
 <body>
 
-<h1>CateringCare FAQ Admin</h1>
+<h1>🍽️ CateringCare FAQ Admin</h1>
 
-<p>Här kan du lägga till eller uppdatera AI-kunskap.</p>
+<p>Här kan du lägga till eller uppdatera AI-kunskap (sparas i Cloudflare KV).</p>
+<p><small>💡 Tips: MD-filer på GitHub läses också automatiskt. Det här är för extra FAQ-data.</small></p>
 
-<textarea id="faq"></textarea>
+<button onclick="loadFaq()">📥 Ladda befintlig FAQ</button>
+<button onclick="save()">💾 Spara FAQ</button>
 
-<br>
+<div id="status"></div>
 
-<button onclick="save()">Spara FAQ</button>
+<br><br>
+
+<textarea id="faq" placeholder="Skriv FAQ-information här..."></textarea>
 
 <script>
 
-async function save(){
+// ⭐ DIN CLOUDFLARE WORKER URL
+const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
 
-const text = document.getElementById("faq").value
-
-await fetch("/admin/save",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({text})
-})
-
-alert("FAQ sparad")
-
+function showStatus(message, type) {
+  const el = document.getElementById("status")
+  el.textContent = message
+  el.className = type
+  el.style.display = "block"
+  setTimeout(() => { el.style.display = "none" }, 3000)
 }
+
+async function loadFaq(){
+  try {
+    const res = await fetch(WORKER_URL + "/admin/get")
+    const data = await res.json()
+    document.getElementById("faq").value = data.faq || ""
+    showStatus("✅ FAQ laddad!", "success")
+  } catch(err) {
+    showStatus("❌ Kunde inte ladda FAQ: " + err.message, "error")
+  }
+}
+
+async function save(){
+  const text = document.getElementById("faq").value
+
+  try {
+    const res = await fetch(WORKER_URL + "/admin/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text })
+    })
+
+    const data = await res.json()
+
+    if(data.status === "saved") {
+      showStatus("✅ FAQ sparad!", "success")
+    } else {
+      showStatus("❌ Fel: " + JSON.stringify(data), "error")
+    }
+  } catch(err) {
+    showStatus("❌ Kunde inte spara: " + err.message, "error")
+  }
+}
+
+// Ladda FAQ automatiskt när sidan öppnas
+loadFaq()
 
 </script>
 
