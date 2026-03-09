@@ -6,7 +6,7 @@
 
 body{
 font-family:Arial;
-max-width:800px;
+max-width:900px;
 margin:auto;
 padding:40px;
 background:#f5f7f6;
@@ -112,6 +112,14 @@ margin-top:0;
 background:#b02a37;
 }
 
+.help-btn{
+background:#0d6efd;
+}
+
+.help-btn:hover{
+background:#0b5ed7;
+}
+
 #status{
 margin-top:15px;
 padding:10px;
@@ -127,6 +135,101 @@ color:#155724;
 .error{
 background:#f8d7da;
 color:#721c24;
+}
+
+/* HJÄLPSEKTIONER */
+
+.help-panel{
+display:none;
+background:white;
+border-radius:12px;
+padding:30px;
+margin-top:20px;
+box-shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+
+.help-panel h2{
+color:#2f7d59;
+border-bottom:2px solid #e6f4ec;
+padding-bottom:10px;
+}
+
+.help-panel h3{
+color:#333;
+margin-top:25px;
+}
+
+.help-step{
+background:#f8f9fa;
+border-left:4px solid #2f7d59;
+padding:15px;
+margin:10px 0;
+border-radius:0 8px 8px 0;
+}
+
+.help-step strong{
+color:#2f7d59;
+}
+
+.help-example{
+background:#e6f4ec;
+padding:15px;
+border-radius:8px;
+margin:10px 0;
+font-family:monospace;
+font-size:14px;
+line-height:1.8;
+white-space:pre-wrap;
+}
+
+.help-warning{
+background:#fff3cd;
+border-left:4px solid #ffc107;
+padding:12px 15px;
+margin:10px 0;
+border-radius:0 8px 8px 0;
+}
+
+.help-tip{
+background:#d1ecf1;
+border-left:4px solid #0dcaf0;
+padding:12px 15px;
+margin:10px 0;
+border-radius:0 8px 8px 0;
+}
+
+.tab-buttons{
+display:flex;
+gap:5px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tab-btn{
+padding:8px 16px;
+background:#e9ecef;
+color:#333;
+border:none;
+border-radius:20px;
+cursor:pointer;
+font-size:14px;
+}
+
+.tab-btn:hover{
+background:#dee2e6;
+}
+
+.tab-btn.active{
+background:#2f7d59;
+color:white;
+}
+
+.tab-content{
+display:none;
+}
+
+.tab-content.active{
+display:block;
 }
 
 </style>
@@ -168,13 +271,272 @@ color:#721c24;
 
 <h1>🍽️ CateringCare FAQ Admin</h1>
 
-<p>Här kan du lägga till eller uppdatera AI-kunskap (sparas i Cloudflare KV).</p>
-<p><small>💡 Tips: MD-filer på GitHub läses också automatiskt. Det här är för extra FAQ-data.</small></p>
+<p>Här kan du lägga till eller uppdatera AI-kunskap.</p>
 
 <button onclick="loadFaq()">📥 Ladda befintlig FAQ</button>
 <button onclick="save()">💾 Spara FAQ</button>
+<button class="help-btn" onclick="toggleHelp()">❓ Hjälp & Guide</button>
 
 <div id="status"></div>
+
+<!-- ======================== -->
+<!-- HJÄLP-PANEL              -->
+<!-- ======================== -->
+
+<div id="helpPanel" class="help-panel">
+
+<h2>📖 Hjälp – Så använder du admin-panelen</h2>
+
+<div class="tab-buttons">
+  <button class="tab-btn active" onclick="showTab('overview')">🏠 Översikt</button>
+  <button class="tab-btn" onclick="showTab('kv')">📝 KV-rutan</button>
+  <button class="tab-btn" onclick="showTab('md')">📁 MD-filer</button>
+  <button class="tab-btn" onclick="showTab('tips')">💡 Tips</button>
+  <button class="tab-btn" onclick="showTab('examples')">📋 Exempel</button>
+</div>
+
+<!-- TAB: ÖVERSIKT -->
+<div id="tab-overview" class="tab-content active">
+
+<h3>Hur AI-assistenten får sin kunskap</h3>
+
+<p>Assistenten läser information från <strong>två ställen</strong>:</p>
+
+<div class="help-step">
+<strong>1️⃣ MD-filer på GitHub</strong> (automatiskt)<br>
+Alla <code>.md</code>-filer i <code>content/faq/</code>-mapparna läses automatiskt.
+Du behöver inte göra något här – bara skapa filer på GitHub!
+</div>
+
+<div class="help-step">
+<strong>2️⃣ KV-rutan nedan</strong> (manuellt)<br>
+Texten du skriver i rutan sparas i Cloudflare KV.
+Perfekt för snabba tillägg utan att ändra på GitHub.
+</div>
+
+<div class="help-tip">
+💡 <strong>Båda kombineras!</strong> AI:n läser MD-filer + KV-rutan varje gång någon ställer en fråga.
+</div>
+
+</div>
+
+<!-- TAB: KV-RUTAN -->
+<div id="tab-kv" class="tab-content">
+
+<h3>Så här använder du KV-rutan</h3>
+
+<div class="help-step">
+<strong>Steg 1:</strong> Klicka "📥 Ladda befintlig FAQ" för att se vad som redan finns sparat.
+</div>
+
+<div class="help-step">
+<strong>Steg 2:</strong> Skriv eller klistra in FAQ-text i rutan. Skriv tydligt med rubriker.
+</div>
+
+<div class="help-step">
+<strong>Steg 3:</strong> Klicka "💾 Spara FAQ" – informationen sparas direkt!
+</div>
+
+<div class="help-warning">
+⚠️ <strong>OBS:</strong> Att spara skriver över det som redan finns. Ladda alltid befintlig FAQ först så du inte tappar gammal info!
+</div>
+
+<h3>Format som fungerar bra:</h3>
+
+<div class="help-example">=== RUBRIK ===
+
+Fråga: Hur gör jag X?
+Svar: Du gör X genom att...
+
+Fråga: Vad kostar Y?
+Svar: Y kostar...</div>
+
+</div>
+
+<!-- TAB: MD-FILER -->
+<div id="tab-md" class="tab-content">
+
+<h3>Så skapar du en ny MD-fil på GitHub</h3>
+
+<div class="help-step">
+<strong>Steg 1:</strong> Gå till ditt repo på GitHub:<br>
+<a href="https://github.com/Jarbrant/cateringcare-info-site-" target="_blank">github.com/Jarbrant/cateringcare-info-site-</a>
+</div>
+
+<div class="help-step">
+<strong>Steg 2:</strong> Gå till rätt mapp:
+<ul>
+<li><code>content/faq/fakturering/</code> – fakturor, autogiro, betalning</li>
+<li><code>content/faq/kost/</code> – specialkost, allergier</li>
+<li><code>content/faq/leverans/</code> – leveranstider, utebliven mat</li>
+<li><code>content/faq/support/</code> – klagomål, kontakt, övrigt</li>
+</ul>
+</div>
+
+<div class="help-step">
+<strong>Steg 3:</strong> Klicka "Add file" → "Create new file"
+</div>
+
+<div class="help-step">
+<strong>Steg 4:</strong> Ge filen ett namn med <code>.md</code>, t.ex: <code>paus-leverans.md</code>
+</div>
+
+<div class="help-step">
+<strong>Steg 5:</strong> Skriv innehållet (se exempel nedan) och klicka "Commit"
+</div>
+
+<h3>Så här ska en MD-fil se ut:</h3>
+
+<div class="help-example">---
+title: Kan jag pausa matleveransen?
+category: leverans
+keywords: paus semester sjukhus uppehåll
+---
+
+Ja, du kan pausa din matleverans tillfälligt.
+
+Meddela din hemtjänst eller kontakta oss
+senast 3 dagar innan.
+
+Vanliga anledningar:
+- Semester
+- Sjukhusvistelse
+- Tillfälligt boende hos anhörig
+
+Kontakta oss för att starta igen:
+info@cateringcare.se eller 070-123 45 67</div>
+
+<div class="help-tip">
+💡 <strong>Tips:</strong> Ju fler MD-filer du skapar, desto smartare blir assistenten!
+</div>
+
+</div>
+
+<!-- TAB: TIPS -->
+<div id="tab-tips" class="tab-content">
+
+<h3>💡 Tips för bästa resultat</h3>
+
+<div class="help-step">
+<strong>✅ Skriv tydligt:</strong> Korta meningar. Undvik krångliga formuleringar.
+</div>
+
+<div class="help-step">
+<strong>✅ Tänk som kunden:</strong> Skriv rubriker som frågor – "Hur gör jag...?", "Vad kostar...?"
+</div>
+
+<div class="help-step">
+<strong>✅ Lägg till keywords:</strong> I MD-filer, lägg till keywords som kunder kan tänkas söka på.
+</div>
+
+<div class="help-step">
+<strong>✅ En sak per fil:</strong> Varje MD-fil ska handla om ETT ämne. Det gör det lättare att underhålla.
+</div>
+
+<div class="help-step">
+<strong>✅ Testa efter ändring:</strong> Ställ en fråga i chatten efter du sparat för att se att AI:n förstår.
+</div>
+
+<div class="help-warning">
+⚠️ <strong>Undvik:</strong> Hitta inte på information! AI:n kommer att svara med det du skriver. Se till att allt stämmer.
+</div>
+
+<h3>🗂️ Befintliga FAQ-mappar</h3>
+
+<table style="width:100%;border-collapse:collapse;">
+<tr style="background:#2f7d59;color:white;">
+  <th style="padding:10px;text-align:left;">Mapp</th>
+  <th style="padding:10px;text-align:left;">Innehåller</th>
+  <th style="padding:10px;text-align:left;">Befintliga filer</th>
+</tr>
+<tr style="border-bottom:1px solid #ddd;">
+  <td style="padding:10px;"><code>fakturering/</code></td>
+  <td style="padding:10px;">Fakturor, autogiro, e-faktura</td>
+  <td style="padding:10px;">autogiro.md, efaktura.md, faktura.md</td>
+</tr>
+<tr style="border-bottom:1px solid #ddd;">
+  <td style="padding:10px;"><code>kost/</code></td>
+  <td style="padding:10px;">Specialkost, allergier</td>
+  <td style="padding:10px;">allergier.md, specialkost.md</td>
+</tr>
+<tr style="border-bottom:1px solid #ddd;">
+  <td style="padding:10px;"><code>leverans/</code></td>
+  <td style="padding:10px;">Leveranstider, problem</td>
+  <td style="padding:10px;">ingen-mat.md, leveranstid.md</td>
+</tr>
+<tr>
+  <td style="padding:10px;"><code>support/</code></td>
+  <td style="padding:10px;">Klagomål, kontakt</td>
+  <td style="padding:10px;">klagomal.md, kontakt.md (tomma!)</td>
+</tr>
+</table>
+
+</div>
+
+<!-- TAB: EXEMPEL -->
+<div id="tab-examples" class="tab-content">
+
+<h3>📋 Kopierbara exempel</h3>
+
+<p>Kopiera dessa och klistra in som nya MD-filer på GitHub:</p>
+
+<h4>Exempel: Paus av leverans</h4>
+<div class="help-example">---
+title: Kan jag pausa matleveransen?
+category: leverans
+keywords: paus semester sjukhus uppehåll stoppa
+---
+
+Ja, du kan pausa din matleverans.
+
+Meddela hemtjänsten eller kontakta oss senast 3 dagar innan.
+
+Kontakt: info@cateringcare.se eller 070-123 45 67</div>
+
+<h4>Exempel: Priser</h4>
+<div class="help-example">---
+title: Vad kostar matleveransen?
+category: fakturering
+keywords: pris kostnad betala hur mycket
+---
+
+Priset beror på vilken kommun du tillhör och ditt biståndsbeslut.
+
+Kontakta din hemtjänst eller oss för prisuppgifter.
+
+Kontakt: info@cateringcare.se eller 070-123 45 67</div>
+
+<h4>Exempel: Byte av adress</h4>
+<div class="help-example">---
+title: Hur byter jag leveransadress?
+category: support
+keywords: flytta adress byta ny adress
+---
+
+Kontakta din hemtjänst om du byter adress.
+
+De uppdaterar leveransinformationen åt dig.
+
+Du kan även kontakta oss direkt:
+info@cateringcare.se eller 070-123 45 67</div>
+
+<h4>Exempel: KV-rutan (extra FAQ)</h4>
+<div class="help-example">=== JULHELGEN 2026 ===
+
+Under julhelgen (23-26 dec) levereras extra portioner
+den 22 december. Ingen leverans sker 23-26 dec.
+
+Normal leverans startar igen 27 december.
+
+=== NYÅR 2026 ===
+
+Ingen leverans 31 dec - 1 jan.
+Extra portioner levereras 30 december.</div>
+
+</div>
+
+</div>
+<!-- SLUT HJÄLP-PANEL -->
 
 <br><br>
 
@@ -184,33 +546,23 @@ color:#721c24;
 
 <script>
 
-// ⭐ DIN CLOUDFLARE WORKER URL
 const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
 
-// Lösenordet sparas i sessionen så man slipper logga in igen vid sidladdning
 let adminToken = sessionStorage.getItem("adminToken") || ""
 
-// Kolla om redan inloggad
-if(adminToken){
-  showAdmin()
-}
+if(adminToken) showAdmin()
 
-/* ========================
-   INLOGGNING
-   ======================== */
+/* INLOGGNING */
 
 async function login(){
   const password = document.getElementById("password").value
-
   try {
     const res = await fetch(WORKER_URL + "/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password })
     })
-
     const data = await res.json()
-
     if(data.success){
       adminToken = data.token
       sessionStorage.setItem("adminToken", adminToken)
@@ -239,9 +591,21 @@ function logout(){
   document.getElementById("password").value = ""
 }
 
-/* ========================
-   FAQ FUNKTIONER
-   ======================== */
+/* HJÄLP */
+
+function toggleHelp(){
+  const panel = document.getElementById("helpPanel")
+  panel.style.display = panel.style.display === "none" || !panel.style.display ? "block" : "none"
+}
+
+function showTab(tabName){
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"))
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"))
+  document.getElementById("tab-" + tabName).classList.add("active")
+  event.target.classList.add("active")
+}
+
+/* FAQ FUNKTIONER */
 
 function showStatus(message, type) {
   const el = document.getElementById("status")
@@ -257,12 +621,7 @@ async function loadFaq(){
       headers: { "Authorization": "Bearer " + adminToken }
     })
     const data = await res.json()
-
-    if(data.error === "unauthorized"){
-      logout()
-      return
-    }
-
+    if(data.error === "unauthorized"){ logout(); return }
     document.getElementById("faq").value = data.faq || ""
     showStatus("✅ FAQ laddad!", "success")
   } catch(err) {
@@ -272,7 +631,6 @@ async function loadFaq(){
 
 async function save(){
   const text = document.getElementById("faq").value
-
   try {
     const res = await fetch(WORKER_URL + "/admin/save", {
       method: "POST",
@@ -282,14 +640,8 @@ async function save(){
       },
       body: JSON.stringify({ text })
     })
-
     const data = await res.json()
-
-    if(data.error === "unauthorized"){
-      logout()
-      return
-    }
-
+    if(data.error === "unauthorized"){ logout(); return }
     if(data.status === "saved") {
       showStatus("✅ FAQ sparad!", "success")
     } else {
