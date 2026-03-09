@@ -1,15 +1,6 @@
----
-title: Hur snabbt kan leveransen starta?
-category: leverans
-keywords: leverans start tid snabbt akut
----
+# När levereras maten
 
-Normalt startar leverans inom 5 arbetsdagar efter signerat avtal.
-Vid akuta behov kan vi ofta starta snabbare – kontakta oss direkt!
-# Leveranstider
+Leverans sker via hemtjänstens personal enligt deras planering.
 
-Leverans sker via hemtjänstens personal.
-
-Normalt mellan 10:00 och 14:00.
-
-Exakta tider varierar beroende på hemtjänstens planering.
+Normalt levereras maten mellan 10:00 och 14:00 men tider kan variera
+beroende på hemtjänstens schema.
