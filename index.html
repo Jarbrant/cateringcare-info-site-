@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,15 +8,15 @@
 
 <title>CateringCare – Trygg matleverans för äldre</title>
 
-<meta name="description" content="CateringCare levererar näringsrik mat till äldre via hemtjänsten. Information för anhöriga om leverans, fakturering och vanliga frågor.">
+<meta name="description" content="CateringCare levererar näringsrika måltider till äldre via hemtjänsten. Information för anhöriga om leveranser, fakturering och frågor.">
 
 <style>
 
-/* ---------- GLOBAL STYLING ---------- */
+/* ---------- GLOBAL ---------- */
 
 body{
-font-family: Arial, Helvetica, sans-serif;
 margin:0;
+font-family: Arial, Helvetica, sans-serif;
 background:#f6f8f7;
 color:#333;
 line-height:1.6;
@@ -49,14 +50,13 @@ nav a{
 color:white;
 text-decoration:none;
 margin-left:20px;
-font-weight:500;
 }
 
 /* ---------- HERO ---------- */
 
 .hero{
 background:#e6f4ec;
-padding:60px 20px;
+padding:70px 20px;
 text-align:center;
 }
 
@@ -95,7 +95,50 @@ border:2px solid #2f7d59;
 color:#2f7d59;
 }
 
-/* ---------- INFO CARDS ---------- */
+/* ---------- ASSISTANT ---------- */
+
+.assistant{
+background:white;
+padding:40px 20px;
+}
+
+.assistant-container{
+display:flex;
+align-items:center;
+gap:30px;
+max-width:900px;
+margin:auto;
+flex-wrap:wrap;
+}
+
+.assistant-avatar{
+width:120px;
+border-radius:60px;
+}
+
+.assistant-text{
+flex:1;
+}
+
+.assistant-input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+margin-top:10px;
+}
+
+.assistant-button{
+margin-top:10px;
+background:#2f7d59;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* ---------- CARDS ---------- */
 
 .cards{
 display:grid;
@@ -112,27 +155,18 @@ box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 .card h3{
-margin-top:0;
 color:#2f7d59;
+margin-top:0;
 }
 
-/* ---------- FAQ ---------- */
+/* ---------- CHAT ---------- */
 
-.faq{
-margin-top:50px;
-}
-
-.faq-item{
-background:white;
-padding:20px;
-margin-bottom:10px;
+.chat-response{
+margin-top:15px;
+background:#f1f1f1;
+padding:12px;
 border-radius:6px;
-cursor:pointer;
-}
-
-.faq-item summary{
-font-weight:bold;
-font-size:16px;
+display:none;
 }
 
 /* ---------- FOOTER ---------- */
@@ -168,7 +202,6 @@ CateringCare
 
 <a href="#">Start</a>
 <a href="#faq">Vanliga frågor</a>
-<a href="#fakturering">Fakturering</a>
 <a href="#kontakt">Kontakt</a>
 
 </nav>
@@ -186,16 +219,14 @@ CateringCare
 <h1>Trygg matleverans för äldre</h1>
 
 <p>
-CateringCare levererar näringsrika måltider till personer
-med biståndsbeslut via hemtjänsten.
-Här hittar anhöriga och brukare information om leverans,
-fakturering och vanliga frågor.
+CateringCare levererar näringsrika måltider till personer med biståndsbeslut via hemtjänsten.
+Här hittar anhöriga och brukare information om leveranser, fakturering och support.
 </p>
 
 <div class="hero-buttons">
 
-<a class="button button-primary" href="#faq">
-Vanliga frågor
+<a class="button button-primary" href="#assistant">
+Ställ en fråga
 </a>
 
 <a class="button button-secondary" href="#kontakt">
@@ -208,7 +239,38 @@ Kontakta oss
 
 </section>
 
-<!-- INFO SECTION -->
+<!-- ASSISTANT -->
+
+<section id="assistant" class="assistant">
+
+<div class="assistant-container">
+
+<img src="assistant.png" class="assistant-avatar">
+
+<div class="assistant-text">
+
+<h2>CateringCare Assistent</h2>
+
+<p>
+Hej! Jag kan hjälpa dig med frågor om leveranser,
+fakturor och beställningar.
+</p>
+
+<input id="question" class="assistant-input" placeholder="Skriv din fråga här...">
+
+<button class="assistant-button" onclick="askQuestion()">
+Skicka fråga
+</button>
+
+<div id="response" class="chat-response"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- INFO -->
 
 <section class="container">
 
@@ -219,8 +281,7 @@ Kontakta oss
 <h3>📦 Leverans via hemtjänsten</h3>
 
 <p>
-Maten levereras normalt via hemtjänstens personal enligt
-deras planering.
+Maten levereras normalt via hemtjänstens personal enligt deras planering.
 </p>
 
 </div>
@@ -230,8 +291,7 @@ deras planering.
 <h3>💳 Fakturering</h3>
 
 <p>
-Fakturan skickas den 10:e varje månad och gäller
-föregående månads leveranser.
+Fakturan skickas den 10:e varje månad och gäller föregående månads leveranser.
 Betalningsvillkor är 10 dagar netto.
 </p>
 
@@ -243,40 +303,12 @@ Betalningsvillkor är 10 dagar netto.
 
 <p>
 Här hittar anhöriga information om fakturor,
-autogiro och hur leveranser fungerar.
+autogiro och leveranser.
 </p>
 
 </div>
 
 </div>
-
-</section>
-
-<!-- FAQ SECTION -->
-
-<section id="faq" class="container faq">
-
-<h2>Vanliga frågor</h2>
-
-<details class="faq-item">
-<summary>Jag har inte fått någon mat idag</summary>
-<p>Om du inte har fått din mat ska du kontakta din hemtjänst i första hand. Hemtjänsten ansvarar för leveransen.</p>
-</details>
-
-<details class="faq-item">
-<summary>Jag är på sjukhus</summary>
-<p>Kontakta din hemtjänst så att leveransen kan pausas under tiden du är på sjukhus.</p>
-</details>
-
-<details class="faq-item">
-<summary>Hur fungerar faktureringen?</summary>
-<p>Vi fakturerar i efterhand. Fakturan skickas den 10:e varje månad för föregående månads leveranser.</p>
-</details>
-
-<details class="faq-item">
-<summary>Hur ändrar jag en beställning?</summary>
-<p>Kontakta din hemtjänst i första hand eftersom de hanterar beställningar och ändringar.</p>
-</details>
 
 </section>
 
@@ -287,8 +319,7 @@ autogiro och hur leveranser fungerar.
 <h2>Kontakt</h2>
 
 <p>
-Vid frågor om fakturor eller betalning är du välkommen
-att kontakta CateringCare.
+Vid frågor om fakturor eller betalning kontakta CateringCare.
 </p>
 
 <p>
@@ -296,8 +327,6 @@ E-post: info@cateringcare.se
 </p>
 
 </section>
-
-<!-- FOOTER -->
 
 <footer>
 
@@ -310,6 +339,32 @@ E-post: info@cateringcare.se
 </div>
 
 </footer>
+
+<script>
+
+function askQuestion(){
+
+let question = document.getElementById("question").value.toLowerCase()
+
+let response = document.getElementById("response")
+
+let answer = "Jag är inte säker. Kontakta gärna din hemtjänst."
+
+if(question.includes("mat") || question.includes("leverans"))
+answer = "Om du inte fått din mat ska du kontakta din hemtjänst i första hand."
+
+if(question.includes("sjukhus"))
+answer = "Om du är på sjukhus behöver leveransen pausas via hemtjänsten."
+
+if(question.includes("faktura"))
+answer = "Fakturan skickas den 10:e varje månad och betalningsvillkor är 10 dagar netto."
+
+response.style.display="block"
+response.innerHTML="<strong>Svar:</strong> "+answer
+
+}
+
+</script>
 
 </body>
 </html>
