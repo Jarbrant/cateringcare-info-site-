@@ -16,6 +16,64 @@ h1{
 color:#2f7d59;
 }
 
+/* INLOGGNING */
+
+.login-box{
+max-width:400px;
+margin:80px auto;
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 4px 20px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.login-box h1{
+margin-bottom:10px;
+}
+
+.login-box p{
+color:#666;
+margin-bottom:25px;
+}
+
+.login-input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:16px;
+box-sizing:border-box;
+margin-bottom:15px;
+}
+
+.login-button{
+width:100%;
+padding:14px;
+font-size:16px;
+background:#2f7d59;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.login-button:hover{
+background:#24614a;
+}
+
+.login-error{
+color:#dc3545;
+margin-top:10px;
+display:none;
+}
+
+/* ADMIN PANEL */
+
+.admin-panel{
+display:none;
+}
+
 textarea{
 width:100%;
 height:400px;
@@ -44,6 +102,16 @@ button:hover{
 background:#24614a;
 }
 
+.logout-btn{
+background:#dc3545;
+float:right;
+margin-top:0;
+}
+
+.logout-btn:hover{
+background:#b02a37;
+}
+
 #status{
 margin-top:15px;
 padding:10px;
@@ -66,6 +134,38 @@ color:#721c24;
 
 <body>
 
+<!-- ======================== -->
+<!-- INLOGGNINGSSIDA          -->
+<!-- ======================== -->
+
+<div id="loginPage" class="login-box">
+
+<h1>🔒</h1>
+<h1>CateringCare Admin</h1>
+<p>Logga in för att hantera FAQ</p>
+
+<input
+  id="password"
+  type="password"
+  class="login-input"
+  placeholder="Ange lösenord..."
+  onkeydown="if(event.key==='Enter')login()"
+>
+
+<button class="login-button" onclick="login()">Logga in</button>
+
+<p id="loginError" class="login-error">❌ Fel lösenord</p>
+
+</div>
+
+<!-- ======================== -->
+<!-- ADMIN-PANELEN            -->
+<!-- ======================== -->
+
+<div id="adminPanel" class="admin-panel">
+
+<button class="logout-btn" onclick="logout()">🚪 Logga ut</button>
+
 <h1>🍽️ CateringCare FAQ Admin</h1>
 
 <p>Här kan du lägga till eller uppdatera AI-kunskap (sparas i Cloudflare KV).</p>
@@ -80,10 +180,68 @@ color:#721c24;
 
 <textarea id="faq" placeholder="Skriv FAQ-information här..."></textarea>
 
+</div>
+
 <script>
 
 // ⭐ DIN CLOUDFLARE WORKER URL
 const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
+
+// Lösenordet sparas i sessionen så man slipper logga in igen vid sidladdning
+let adminToken = sessionStorage.getItem("adminToken") || ""
+
+// Kolla om redan inloggad
+if(adminToken){
+  showAdmin()
+}
+
+/* ========================
+   INLOGGNING
+   ======================== */
+
+async function login(){
+  const password = document.getElementById("password").value
+
+  try {
+    const res = await fetch(WORKER_URL + "/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password })
+    })
+
+    const data = await res.json()
+
+    if(data.success){
+      adminToken = data.token
+      sessionStorage.setItem("adminToken", adminToken)
+      document.getElementById("loginError").style.display = "none"
+      showAdmin()
+    } else {
+      document.getElementById("loginError").style.display = "block"
+    }
+  } catch(err) {
+    document.getElementById("loginError").textContent = "❌ Kunde inte ansluta"
+    document.getElementById("loginError").style.display = "block"
+  }
+}
+
+function showAdmin(){
+  document.getElementById("loginPage").style.display = "none"
+  document.getElementById("adminPanel").style.display = "block"
+  loadFaq()
+}
+
+function logout(){
+  adminToken = ""
+  sessionStorage.removeItem("adminToken")
+  document.getElementById("loginPage").style.display = "block"
+  document.getElementById("adminPanel").style.display = "none"
+  document.getElementById("password").value = ""
+}
+
+/* ========================
+   FAQ FUNKTIONER
+   ======================== */
 
 function showStatus(message, type) {
   const el = document.getElementById("status")
@@ -95,8 +253,16 @@ function showStatus(message, type) {
 
 async function loadFaq(){
   try {
-    const res = await fetch(WORKER_URL + "/admin/get")
+    const res = await fetch(WORKER_URL + "/admin/get", {
+      headers: { "Authorization": "Bearer " + adminToken }
+    })
     const data = await res.json()
+
+    if(data.error === "unauthorized"){
+      logout()
+      return
+    }
+
     document.getElementById("faq").value = data.faq || ""
     showStatus("✅ FAQ laddad!", "success")
   } catch(err) {
@@ -111,12 +277,18 @@ async function save(){
     const res = await fetch(WORKER_URL + "/admin/save", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + adminToken
       },
       body: JSON.stringify({ text })
     })
 
     const data = await res.json()
+
+    if(data.error === "unauthorized"){
+      logout()
+      return
+    }
 
     if(data.status === "saved") {
       showStatus("✅ FAQ sparad!", "success")
@@ -127,9 +299,6 @@ async function save(){
     showStatus("❌ Kunde inte spara: " + err.message, "error")
   }
 }
-
-// Ladda FAQ automatiskt när sidan öppnas
-loadFaq()
 
 </script>
 
