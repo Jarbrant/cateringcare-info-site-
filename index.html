@@ -22,8 +22,6 @@ margin:auto;
 padding:20px;
 }
 
-/* HEADER */
-
 header{
 background:#2f7d59;
 color:white;
@@ -39,8 +37,6 @@ align-items:center;
 font-weight:bold;
 font-size:22px;
 }
-
-/* HERO */
 
 .hero{
 background:#e6f4ec;
@@ -58,26 +54,21 @@ max-width:700px;
 margin:auto;
 }
 
-/* ASSISTENT */
-
 .assistant{
 background:white;
 padding:50px 20px;
 }
 
 .assistant-box{
-display:flex;
-align-items:center;
-gap:30px;
-max-width:900px;
+max-width:700px;
 margin:auto;
-flex-wrap:wrap;
 }
 
 .assistant-avatar{
-width:120px;
-border-radius:60px;
+width:80px;
+border-radius:40px;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
+margin-bottom:15px;
 }
 
 .assistant-input{
@@ -86,6 +77,7 @@ padding:12px;
 border:1px solid #ccc;
 border-radius:6px;
 margin-top:10px;
+box-sizing:border-box;
 }
 
 .assistant-button{
@@ -98,12 +90,44 @@ border-radius:6px;
 cursor:pointer;
 }
 
-.chat-response{
-margin-top:15px;
+.assistant-button:hover{
+background:#24614a;
+}
+
+.chat-history{
+margin-top:20px;
+max-height:400px;
+overflow-y:auto;
+}
+
+.chat-bubble{
+padding:12px 16px;
+border-radius:12px;
+margin-bottom:10px;
+max-width:85%;
+line-height:1.5;
+}
+
+.chat-user{
+background:#2f7d59;
+color:white;
+margin-left:auto;
+border-bottom-right-radius:4px;
+}
+
+.chat-bot{
 background:#f0f0f0;
-padding:12px;
-border-radius:6px;
-display:none;
+color:#333;
+margin-right:auto;
+border-bottom-left-radius:4px;
+}
+
+.chat-thinking{
+background:#f0f0f0;
+color:#999;
+margin-right:auto;
+border-bottom-left-radius:4px;
+font-style:italic;
 }
 
 .cards{
@@ -137,60 +161,47 @@ text-align:center;
 <body>
 
 <header>
-
 <div class="container">
-
-<div class="logo">
-CateringCare
+<div class="logo">CateringCare</div>
 </div>
-
-</div>
-
 </header>
 
 <section class="hero">
-
 <div class="container">
-
 <h1>Trygg matleverans för äldre</h1>
-
 <p>
 CateringCare levererar näringsrika måltider till personer
 med biståndsbeslut via hemtjänsten.
 </p>
-
 </div>
-
 </section>
 
 <section class="assistant">
-
 <div class="assistant-box">
 
 <img src="assistant.png" class="assistant-avatar">
 
-<div>
-
 <h2>CateringCare Assistent</h2>
-
 <p>Ställ en fråga om leveranser eller fakturor.</p>
 
-<input id="question" class="assistant-input" placeholder="Skriv din fråga...">
+<!-- Chatthistorik visas här -->
+<div id="chatHistory" class="chat-history"></div>
+
+<input
+  id="question"
+  class="assistant-input"
+  placeholder="Skriv din fråga..."
+  onkeydown="if(event.key==='Enter')askQuestion()"
+>
 
 <button class="assistant-button" onclick="askQuestion()">
 Skicka fråga
 </button>
 
-<div id="response" class="chat-response"></div>
-
 </div>
-
-</div>
-
 </section>
 
 <section class="container">
-
 <div class="cards">
 
 <div class="card">
@@ -209,54 +220,84 @@ Skicka fråga
 </div>
 
 </div>
-
 </section>
 
 <footer>
-
 <div class="container">
-
 <p>© CateringCare</p>
-
 </div>
-
 </footer>
 
 <script>
 
+// Här sparas hela konversationen
+let chatHistory = [];
+
 async function askQuestion(){
 
-const question = document.getElementById("question").value
-const responseBox = document.getElementById("response")
+const input = document.getElementById("question");
+const question = input.value.trim();
+if(!question) return;
 
-responseBox.style.display="block"
-responseBox.innerHTML="Assistenten tänker..."
+const chatBox = document.getElementById("chatHistory");
+
+// Visa användarens fråga
+chatBox.innerHTML += '<div class="chat-bubble chat-user">' + question + '</div>';
+
+// Visa "tänker..."
+chatBox.innerHTML += '<div class="chat-bubble chat-thinking" id="thinking">Assistenten tänker...</div>';
+
+// Rensa inputfältet
+input.value = "";
+
+// Scrolla ner
+chatBox.scrollTop = chatBox.scrollHeight;
 
 try{
 
 const res = await fetch(
-"https://cateringcare-info-site-01.andersmenyit.workers.dev",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({question})
-}
+  "https://cateringcare-info-site-01.andersmenyit.workers.dev",
+  {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      question: question,
+      history: chatHistory
+    })
+  }
 )
 
 const data = await res.json()
 
-responseBox.innerHTML =
-"<b>CateringCare Assistent:</b><br>" +
-data.answer
+// Ta bort "tänker..."
+const thinking = document.getElementById("thinking");
+if(thinking) thinking.remove();
+
+// Visa svaret
+chatBox.innerHTML += '<div class="chat-bubble chat-bot">' + data.answer + '</div>';
+
+// Spara i historiken så AI:n minns
+chatHistory.push({ role: "user", content: question });
+chatHistory.push({ role: "assistant", content: data.answer });
+
+// Håll historiken till max 20 meddelanden (så det inte blir för dyrt)
+if(chatHistory.length > 20){
+  chatHistory = chatHistory.slice(-20);
+}
 
 }catch(err){
 
-responseBox.innerHTML =
-"Det gick inte att kontakta assistenten."
+const thinking = document.getElementById("thinking");
+if(thinking) thinking.remove();
+
+chatBox.innerHTML += '<div class="chat-bubble chat-bot">Något gick fel, försök igen!</div>';
 
 }
+
+// Scrolla ner
+chatBox.scrollTop = chatBox.scrollHeight;
 
 }
 
