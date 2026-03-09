@@ -1,36 +1,36 @@
-/**
- * Secure API endpoint
- * Sanitizes input
- */
+import { searchFAQ } from "@/lib/faqSearch"
 
-import { searchFAQ } from "@/lib/faqSearch";
+export async function POST(req:Request){
 
-export async function POST(req: Request) {
+  const body = await req.json()
 
-  const body = await req.json();
+  const question = String(body.question || "").slice(0,200)
 
-  const question = String(body.question || "")
-    .slice(0, 200); // prevent abuse
+  if(!question){
 
-  if (!question) {
-    return Response.json({
-      error: "Invalid question"
-    }, { status: 400 });
+    return Response.json({error:"question required"},{status:400})
+
   }
 
-  const result = searchFAQ(question);
+  const result = searchFAQ(question)
 
-  if (!result) {
+  if(!result){
 
     return Response.json({
-      found: false,
-      answer: null
-    });
+
+      found:false,
+      answer:"Jag hittar inget svar. Kontakta din hemtjänst."
+
+    })
+
   }
 
   return Response.json({
-    found: true,
-    answer: result.content,
-    title: result.title
-  });
+
+    found:true,
+    title:result.title,
+    answer:result.content
+
+  })
+
 }
