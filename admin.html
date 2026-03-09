@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CateringCare Admin</title>
+<style>
 
+body{
+font-family:Arial;
+max-width:800px;
+margin:auto;
+padding:40px;
+}
+
+textarea{
+width:100%;
+height:400px;
+font-size:16px;
+}
+
+button{
+padding:12px 20px;
+font-size:16px;
+background:#2f7d57;
+color:white;
+border:none;
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>CateringCare FAQ Admin</h1>
+
+<p>Här kan du lägga till eller uppdatera AI-kunskap.</p>
+
+<textarea id="faq"></textarea>
+
+<br>
+
+<button onclick="save()">Spara FAQ</button>
+
+<script>
+
+async function save(){
+
+const text = document.getElementById("faq").value
+
+await fetch("/admin/save",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({text})
+})
+
+alert("FAQ sparad")
+
+}
+
+</script>
+
+</body>
+</html>
