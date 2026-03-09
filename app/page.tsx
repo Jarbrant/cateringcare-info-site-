@@ -1,37 +1,34 @@
-import ChatWidget from "@/components/ChatWidget";
+import ChatWidget from "@/components/ChatWidget"
 
-export default function Home() {
+export default function Home(){
 
-  return (
+return(
 
-    <main className="p-10 max-w-5xl mx-auto">
+<main style={{padding:40,maxWidth:900,margin:"auto"}}>
 
-      <h1 className="text-4xl font-bold mb-6">
-        CateringCare
-      </h1>
+<h1>CateringCare</h1>
 
-      <p className="text-lg mb-6">
-        Näringsrik och trygg matleverans för äldreomsorgen.
-      </p>
+<p>
 
-      <section className="mb-10">
+Information och support för matleveranser
+till äldreomsorgen.
 
-        <h2 className="text-2xl font-semibold">
-          Information för anhöriga
-        </h2>
+</p>
 
-        <ul className="list-disc ml-6 mt-4">
+<h2>Vanliga frågor</h2>
 
-          <li>Hur fungerar fakturor?</li>
-          <li>Hur skaffar man autogiro?</li>
-          <li>Kan faktura skickas via e-post?</li>
+<ul>
 
-        </ul>
+<li>Hur fungerar faktureringen?</li>
+<li>Jag har inte fått någon mat</li>
+<li>Hur ändrar jag en beställning?</li>
 
-      </section>
+</ul>
 
-      <ChatWidget />
+<ChatWidget/>
 
-    </main>
-  );
+</main>
+
+)
+
 }
