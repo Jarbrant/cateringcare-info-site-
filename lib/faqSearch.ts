@@ -1,23 +1,19 @@
-/**
- * Fuse.js fuzzy search
- * prevents direct user input injection
- */
+import Fuse from "fuse.js"
+import { loadFAQs } from "./faqLoader"
 
-import Fuse from "fuse.js";
-import { loadFAQs } from "./faqLoader";
+export function searchFAQ(question:string){
 
-export function searchFAQ(query: string) {
+  const faqs = loadFAQs()
 
-  const faqs = loadFAQs();
+  const fuse = new Fuse(faqs,{
+    keys:["title","content"],
+    threshold:0.4
+  })
 
-  const fuse = new Fuse(faqs, {
-    keys: ["title", "content", "keywords"],
-    threshold: 0.4
-  });
+  const results = fuse.search(question)
 
-  const results = fuse.search(query);
+  if(results.length === 0) return null
 
-  if (!results.length) return null;
+  return results[0].item
 
-  return results[0].item;
 }
