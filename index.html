@@ -8,7 +8,7 @@
 
 <title>CateringCare – Trygg matleverans för äldre</title>
 
-<meta name="description" content="CateringCare levererar näringsrika måltider till äldre via hemtjänsten. Information för anhöriga om leveranser, fakturering och frågor.">
+<meta name="description" content="Information om CateringCare matleverans till äldre via hemtjänsten. Fakturering, leveranser och AI-assistent för frågor.">
 
 <style>
 
@@ -16,8 +16,8 @@
 
 body{
 margin:0;
-font-family: Arial, Helvetica, sans-serif;
-background:#f6f8f7;
+font-family:system-ui,-apple-system,Arial;
+background:#f5f7f6;
 color:#333;
 line-height:1.6;
 }
@@ -42,21 +42,21 @@ align-items:center;
 }
 
 .logo{
-font-size:22px;
 font-weight:bold;
+font-size:22px;
 }
 
 nav a{
 color:white;
-text-decoration:none;
 margin-left:20px;
+text-decoration:none;
 }
 
 /* ---------- HERO ---------- */
 
 .hero{
 background:#e6f4ec;
-padding:70px 20px;
+padding:80px 20px;
 text-align:center;
 }
 
@@ -95,14 +95,14 @@ border:2px solid #2f7d59;
 color:#2f7d59;
 }
 
-/* ---------- ASSISTANT ---------- */
+/* ---------- ASSISTENT ---------- */
 
 .assistant{
 background:white;
-padding:40px 20px;
+padding:50px 20px;
 }
 
-.assistant-container{
+.assistant-box{
 display:flex;
 align-items:center;
 gap:30px;
@@ -114,10 +114,6 @@ flex-wrap:wrap;
 .assistant-avatar{
 width:120px;
 border-radius:60px;
-}
-
-.assistant-text{
-flex:1;
 }
 
 .assistant-input{
@@ -138,6 +134,14 @@ border-radius:6px;
 cursor:pointer;
 }
 
+.chat-response{
+margin-top:15px;
+background:#f0f0f0;
+padding:12px;
+border-radius:6px;
+display:none;
+}
+
 /* ---------- CARDS ---------- */
 
 .cards{
@@ -151,22 +155,12 @@ margin-top:40px;
 background:white;
 padding:25px;
 border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
+box-shadow:0 2px 8px rgba(0,0,0,0.06);
 }
 
 .card h3{
-color:#2f7d59;
 margin-top:0;
-}
-
-/* ---------- CHAT ---------- */
-
-.chat-response{
-margin-top:15px;
-background:#f1f1f1;
-padding:12px;
-border-radius:6px;
-display:none;
+color:#2f7d59;
 }
 
 /* ---------- FOOTER ---------- */
@@ -188,8 +182,6 @@ font-size:14px;
 
 <body>
 
-<!-- HEADER -->
-
 <header>
 
 <div class="container">
@@ -201,7 +193,7 @@ CateringCare
 <nav>
 
 <a href="#">Start</a>
-<a href="#faq">Vanliga frågor</a>
+<a href="#assistant">Ställ en fråga</a>
 <a href="#kontakt">Kontakt</a>
 
 </nav>
@@ -210,8 +202,6 @@ CateringCare
 
 </header>
 
-<!-- HERO -->
-
 <section class="hero">
 
 <div class="container">
@@ -219,14 +209,15 @@ CateringCare
 <h1>Trygg matleverans för äldre</h1>
 
 <p>
-CateringCare levererar näringsrika måltider till personer med biståndsbeslut via hemtjänsten.
-Här hittar anhöriga och brukare information om leveranser, fakturering och support.
+CateringCare levererar näringsrika måltider till personer
+med biståndsbeslut via hemtjänsten.
+Här kan anhöriga och brukare snabbt få hjälp via vår assistent.
 </p>
 
 <div class="hero-buttons">
 
 <a class="button button-primary" href="#assistant">
-Ställ en fråga
+💬 Ställ en fråga
 </a>
 
 <a class="button button-secondary" href="#kontakt">
@@ -239,15 +230,13 @@ Kontakta oss
 
 </section>
 
-<!-- ASSISTANT -->
-
 <section id="assistant" class="assistant">
 
-<div class="assistant-container">
+<div class="assistant-box">
 
 <img src="assistant.png" class="assistant-avatar">
 
-<div class="assistant-text">
+<div>
 
 <h2>CateringCare Assistent</h2>
 
@@ -256,7 +245,7 @@ Hej! Jag kan hjälpa dig med frågor om leveranser,
 fakturor och beställningar.
 </p>
 
-<input id="question" class="assistant-input" placeholder="Skriv din fråga här...">
+<input id="question" class="assistant-input" placeholder="Skriv din fråga...">
 
 <button class="assistant-button" onclick="askQuestion()">
 Skicka fråga
@@ -269,8 +258,6 @@ Skicka fråga
 </div>
 
 </section>
-
-<!-- INFO -->
 
 <section class="container">
 
@@ -291,7 +278,7 @@ Maten levereras normalt via hemtjänstens personal enligt deras planering.
 <h3>💳 Fakturering</h3>
 
 <p>
-Fakturan skickas den 10:e varje månad och gäller föregående månads leveranser.
+Fakturan skickas den 10:e varje månad.
 Betalningsvillkor är 10 dagar netto.
 </p>
 
@@ -303,7 +290,7 @@ Betalningsvillkor är 10 dagar netto.
 
 <p>
 Här hittar anhöriga information om fakturor,
-autogiro och leveranser.
+autogiro och hur leveranser fungerar.
 </p>
 
 </div>
@@ -311,8 +298,6 @@ autogiro och leveranser.
 </div>
 
 </section>
-
-<!-- KONTAKT -->
 
 <section id="kontakt" class="container">
 
@@ -342,25 +327,49 @@ E-post: info@cateringcare.se
 
 <script>
 
-function askQuestion(){
+/* ================================
+   AI Chat via Cloudflare Worker
+================================ */
 
-let question = document.getElementById("question").value.toLowerCase()
+async function askQuestion(){
 
-let response = document.getElementById("response")
+const question = document.getElementById("question").value
+const responseBox = document.getElementById("response")
 
-let answer = "Jag är inte säker. Kontakta gärna din hemtjänst."
+if(!question){
+responseBox.style.display="block"
+responseBox.innerHTML="Skriv en fråga först."
+return
+}
 
-if(question.includes("mat") || question.includes("leverans"))
-answer = "Om du inte fått din mat ska du kontakta din hemtjänst i första hand."
+responseBox.style.display="block"
+responseBox.innerHTML="Assistenten tänker..."
 
-if(question.includes("sjukhus"))
-answer = "Om du är på sjukhus behöver leveransen pausas via hemtjänsten."
+try{
 
-if(question.includes("faktura"))
-answer = "Fakturan skickas den 10:e varje månad och betalningsvillkor är 10 dagar netto."
+const res = await fetch(
+"https://cateringcare-info-site-01.andersmenyit.workers.dev",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({question})
+}
+)
 
-response.style.display="block"
-response.innerHTML="<strong>Svar:</strong> "+answer
+const data = await res.json()
+
+responseBox.innerHTML =
+"<strong>CateringCare Assistent:</strong><br>" +
+data.answer
+
+}catch(err){
+
+responseBox.innerHTML =
+"Det gick inte att kontakta assistenten just nu."
+
+}
 
 }
 
