@@ -12,12 +12,9 @@ padding:40px;
 background:#f5f7f6;
 }
 
-h1{
-color:#2f7d59;
-}
+h1{ color:#2f7d59; }
 
 /* INLOGGNING */
-
 .login-box{
 max-width:400px;
 margin:80px auto;
@@ -27,262 +24,206 @@ border-radius:12px;
 box-shadow:0 4px 20px rgba(0,0,0,0.1);
 text-align:center;
 }
-
-.login-box h1{
-margin-bottom:10px;
-}
-
-.login-box p{
-color:#666;
-margin-bottom:25px;
-}
-
+.login-box h1{ margin-bottom:10px; }
+.login-box p{ color:#666; margin-bottom:25px; }
 .login-input{
-width:100%;
-padding:12px;
-border:1px solid #ccc;
-border-radius:6px;
-font-size:16px;
-box-sizing:border-box;
-margin-bottom:15px;
+width:100%; padding:12px; border:1px solid #ccc;
+border-radius:6px; font-size:16px; box-sizing:border-box; margin-bottom:15px;
 }
-
 .login-button{
-width:100%;
-padding:14px;
-font-size:16px;
-background:#2f7d59;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
+width:100%; padding:14px; font-size:16px; background:#2f7d59;
+color:white; border:none; border-radius:6px; cursor:pointer;
 }
+.login-button:hover{ background:#24614a; }
+.login-error{ color:#dc3545; margin-top:10px; display:none; }
 
-.login-button:hover{
-background:#24614a;
-}
-
-.login-error{
-color:#dc3545;
-margin-top:10px;
-display:none;
-}
-
-/* ADMIN PANEL */
-
-.admin-panel{
-display:none;
-}
-
+/* ADMIN */
+.admin-panel{ display:none; }
 textarea{
-width:100%;
-height:400px;
-font-size:15px;
-padding:15px;
-border:1px solid #ccc;
-border-radius:8px;
-box-sizing:border-box;
-font-family:monospace;
-line-height:1.6;
+width:100%; height:400px; font-size:15px; padding:15px;
+border:1px solid #ccc; border-radius:8px; box-sizing:border-box;
+font-family:monospace; line-height:1.6;
 }
-
 button{
-padding:12px 24px;
-font-size:16px;
-background:#2f7d59;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-top:15px;
-margin-right:10px;
+padding:12px 24px; font-size:16px; background:#2f7d59; color:white;
+border:none; border-radius:6px; cursor:pointer; margin-top:15px; margin-right:10px;
 }
-
-button:hover{
-background:#24614a;
-}
-
-.logout-btn{
-background:#dc3545;
-float:right;
-margin-top:0;
-}
-
-.logout-btn:hover{
-background:#b02a37;
-}
-
-.help-btn{
-background:#0d6efd;
-}
-
-.help-btn:hover{
-background:#0b5ed7;
-}
+button:hover{ background:#24614a; }
+.logout-btn{ background:#dc3545; float:right; margin-top:0; }
+.logout-btn:hover{ background:#b02a37; }
+.help-btn{ background:#0d6efd; }
+.help-btn:hover{ background:#0b5ed7; }
+.stats-btn{ background:#6f42c1; }
+.stats-btn:hover{ background:#5a32a3; }
 
 #status{
-margin-top:15px;
-padding:10px;
-border-radius:6px;
-display:none;
+margin-top:15px; padding:10px; border-radius:6px; display:none;
+}
+.success{ background:#d4edda; color:#155724; }
+.error{ background:#f8d7da; color:#721c24; }
+
+/* STATISTIK */
+.stats-panel{
+display:none; background:white; border-radius:12px;
+padding:30px; margin-top:20px; box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
 
-.success{
-background:#d4edda;
-color:#155724;
+.stats-cards{
+display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px; margin:20px 0;
 }
 
-.error{
-background:#f8d7da;
-color:#721c24;
+.stat-card{
+background:linear-gradient(135deg,#2f7d59,#24614a);
+color:white; padding:25px; border-radius:12px; text-align:center;
+}
+.stat-card.purple{ background:linear-gradient(135deg,#6f42c1,#5a32a3); }
+.stat-card.blue{ background:linear-gradient(135deg,#0d6efd,#0b5ed7); }
+
+.stat-number{ font-size:42px; font-weight:bold; }
+.stat-label{ font-size:14px; opacity:0.9; margin-top:5px; }
+
+.chart-bar-container{
+display:flex; align-items:flex-end; gap:3px;
+height:150px; margin:20px 0; padding:10px 0;
+border-bottom:2px solid #ddd;
 }
 
-/* HJÄLPSEKTIONER */
+.chart-bar{
+flex:1; background:#2f7d59; border-radius:3px 3px 0 0;
+min-width:8px; position:relative; cursor:pointer;
+transition: opacity 0.2s;
+}
+.chart-bar:hover{ opacity:0.8; }
 
+.chart-tooltip{
+display:none; position:absolute; bottom:100%; left:50%;
+transform:translateX(-50%); background:#333; color:white;
+padding:4px 8px; border-radius:4px; font-size:11px;
+white-space:nowrap; margin-bottom:5px;
+}
+.chart-bar:hover .chart-tooltip{ display:block; }
+
+.recent-table{
+width:100%; border-collapse:collapse; margin-top:15px;
+}
+.recent-table th{
+background:#2f7d59; color:white; padding:10px; text-align:left;
+}
+.recent-table td{
+padding:10px; border-bottom:1px solid #eee;
+}
+.recent-table tr:hover{ background:#f8f9fa; }
+
+.time-ago{ color:#999; font-size:13px; }
+
+/* HJÄLP */
 .help-panel{
-display:none;
-background:white;
-border-radius:12px;
-padding:30px;
-margin-top:20px;
-box-shadow:0 2px 12px rgba(0,0,0,0.08);
+display:none; background:white; border-radius:12px;
+padding:30px; margin-top:20px; box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
-
-.help-panel h2{
-color:#2f7d59;
-border-bottom:2px solid #e6f4ec;
-padding-bottom:10px;
-}
-
-.help-panel h3{
-color:#333;
-margin-top:25px;
-}
-
+.help-panel h2{ color:#2f7d59; border-bottom:2px solid #e6f4ec; padding-bottom:10px; }
+.help-panel h3{ color:#333; margin-top:25px; }
 .help-step{
-background:#f8f9fa;
-border-left:4px solid #2f7d59;
-padding:15px;
-margin:10px 0;
-border-radius:0 8px 8px 0;
+background:#f8f9fa; border-left:4px solid #2f7d59;
+padding:15px; margin:10px 0; border-radius:0 8px 8px 0;
 }
-
-.help-step strong{
-color:#2f7d59;
-}
-
+.help-step strong{ color:#2f7d59; }
 .help-example{
-background:#e6f4ec;
-padding:15px;
-border-radius:8px;
-margin:10px 0;
-font-family:monospace;
-font-size:14px;
-line-height:1.8;
-white-space:pre-wrap;
+background:#e6f4ec; padding:15px; border-radius:8px; margin:10px 0;
+font-family:monospace; font-size:14px; line-height:1.8; white-space:pre-wrap;
 }
-
 .help-warning{
-background:#fff3cd;
-border-left:4px solid #ffc107;
-padding:12px 15px;
-margin:10px 0;
-border-radius:0 8px 8px 0;
+background:#fff3cd; border-left:4px solid #ffc107;
+padding:12px 15px; margin:10px 0; border-radius:0 8px 8px 0;
 }
-
 .help-tip{
-background:#d1ecf1;
-border-left:4px solid #0dcaf0;
-padding:12px 15px;
-margin:10px 0;
-border-radius:0 8px 8px 0;
+background:#d1ecf1; border-left:4px solid #0dcaf0;
+padding:12px 15px; margin:10px 0; border-radius:0 8px 8px 0;
 }
-
-.tab-buttons{
-display:flex;
-gap:5px;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
-
+.tab-buttons{ display:flex; gap:5px; margin-bottom:20px; flex-wrap:wrap; }
 .tab-btn{
-padding:8px 16px;
-background:#e9ecef;
-color:#333;
-border:none;
-border-radius:20px;
-cursor:pointer;
-font-size:14px;
+padding:8px 16px; background:#e9ecef; color:#333;
+border:none; border-radius:20px; cursor:pointer; font-size:14px;
 }
-
-.tab-btn:hover{
-background:#dee2e6;
-}
-
-.tab-btn.active{
-background:#2f7d59;
-color:white;
-}
-
-.tab-content{
-display:none;
-}
-
-.tab-content.active{
-display:block;
-}
+.tab-btn:hover{ background:#dee2e6; }
+.tab-btn.active{ background:#2f7d59; color:white; }
+.tab-content{ display:none; }
+.tab-content.active{ display:block; }
 
 </style>
 </head>
 
 <body>
 
-<!-- ======================== -->
-<!-- INLOGGNINGSSIDA          -->
-<!-- ======================== -->
-
+<!-- INLOGGNING -->
 <div id="loginPage" class="login-box">
-
 <h1>🔒</h1>
 <h1>CateringCare Admin</h1>
 <p>Logga in för att hantera FAQ</p>
-
-<input
-  id="password"
-  type="password"
-  class="login-input"
-  placeholder="Ange lösenord..."
-  onkeydown="if(event.key==='Enter')login()"
->
-
+<input id="password" type="password" class="login-input"
+  placeholder="Ange lösenord..." onkeydown="if(event.key==='Enter')login()">
 <button class="login-button" onclick="login()">Logga in</button>
-
 <p id="loginError" class="login-error">❌ Fel lösenord</p>
-
 </div>
 
-<!-- ======================== -->
-<!-- ADMIN-PANELEN            -->
-<!-- ======================== -->
-
+<!-- ADMIN -->
 <div id="adminPanel" class="admin-panel">
 
 <button class="logout-btn" onclick="logout()">🚪 Logga ut</button>
 
 <h1>🍽️ CateringCare FAQ Admin</h1>
-
 <p>Här kan du lägga till eller uppdatera AI-kunskap.</p>
 
 <button onclick="loadFaq()">📥 Ladda befintlig FAQ</button>
 <button onclick="save()">💾 Spara FAQ</button>
-<button class="help-btn" onclick="toggleHelp()">❓ Hjälp & Guide</button>
+<button class="stats-btn" onclick="toggleStats()">📊 Statistik</button>
+<button class="help-btn" onclick="toggleHelp()">❓ Hjälp</button>
 
 <div id="status"></div>
 
 <!-- ======================== -->
-<!-- HJÄLP-PANEL              -->
+<!-- STATISTIK-PANEL          -->
 <!-- ======================== -->
 
+<div id="statsPanel" class="stats-panel">
+
+<h2>📊 Statistik – Chattanvändning</h2>
+
+<button onclick="loadStats()" style="margin-bottom:15px;">🔄 Uppdatera</button>
+
+<div class="stats-cards">
+  <div class="stat-card">
+    <div class="stat-number" id="statTotal">-</div>
+    <div class="stat-label">Totalt antal frågor</div>
+  </div>
+  <div class="stat-card purple">
+    <div class="stat-number" id="statToday">-</div>
+    <div class="stat-label">Frågor idag</div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-number" id="statAvg">-</div>
+    <div class="stat-label">Snitt per dag (30d)</div>
+  </div>
+</div>
+
+<h3>📈 Frågor per dag (senaste 30 dagarna)</h3>
+<div id="chartContainer" class="chart-bar-container"></div>
+
+<h3>💬 Senaste frågorna</h3>
+<table class="recent-table">
+  <thead>
+    <tr>
+      <th>Fråga</th>
+      <th>Tid</th>
+    </tr>
+  </thead>
+  <tbody id="recentBody"></tbody>
+</table>
+
+</div>
+
+<!-- HJÄLP-PANEL -->
 <div id="helpPanel" class="help-panel">
 
 <h2>📖 Hjälp – Så använder du admin-panelen</h2>
@@ -295,251 +236,55 @@ display:block;
   <button class="tab-btn" onclick="showTab('examples')">📋 Exempel</button>
 </div>
 
-<!-- TAB: ÖVERSIKT -->
 <div id="tab-overview" class="tab-content active">
-
 <h3>Hur AI-assistenten får sin kunskap</h3>
-
-<p>Assistenten läser information från <strong>två ställen</strong>:</p>
-
-<div class="help-step">
-<strong>1️⃣ MD-filer på GitHub</strong> (automatiskt)<br>
-Alla <code>.md</code>-filer i <code>content/faq/</code>-mapparna läses automatiskt.
-Du behöver inte göra något här – bara skapa filer på GitHub!
+<div class="help-step"><strong>1️⃣ MD-filer på GitHub</strong> (automatiskt)<br>
+Alla <code>.md</code>-filer i <code>content/faq/</code>-mapparna läses automatiskt.</div>
+<div class="help-step"><strong>2️⃣ KV-rutan nedan</strong> (manuellt)<br>
+Texten du skriver i rutan sparas i Cloudflare KV.</div>
+<div class="help-tip">💡 <strong>Båda kombineras!</strong> AI:n läser MD-filer + KV-rutan.</div>
 </div>
 
-<div class="help-step">
-<strong>2️⃣ KV-rutan nedan</strong> (manuellt)<br>
-Texten du skriver i rutan sparas i Cloudflare KV.
-Perfekt för snabba tillägg utan att ändra på GitHub.
-</div>
-
-<div class="help-tip">
-💡 <strong>Båda kombineras!</strong> AI:n läser MD-filer + KV-rutan varje gång någon ställer en fråga.
-</div>
-
-</div>
-
-<!-- TAB: KV-RUTAN -->
 <div id="tab-kv" class="tab-content">
-
 <h3>Så här använder du KV-rutan</h3>
-
-<div class="help-step">
-<strong>Steg 1:</strong> Klicka "📥 Ladda befintlig FAQ" för att se vad som redan finns sparat.
+<div class="help-step"><strong>Steg 1:</strong> Klicka "📥 Ladda befintlig FAQ"</div>
+<div class="help-step"><strong>Steg 2:</strong> Skriv FAQ-text i rutan</div>
+<div class="help-step"><strong>Steg 3:</strong> Klicka "💾 Spara FAQ"</div>
+<div class="help-warning">⚠️ Att spara skriver över gammal data. Ladda alltid först!</div>
 </div>
 
-<div class="help-step">
-<strong>Steg 2:</strong> Skriv eller klistra in FAQ-text i rutan. Skriv tydligt med rubriker.
-</div>
-
-<div class="help-step">
-<strong>Steg 3:</strong> Klicka "💾 Spara FAQ" – informationen sparas direkt!
-</div>
-
-<div class="help-warning">
-⚠️ <strong>OBS:</strong> Att spara skriver över det som redan finns. Ladda alltid befintlig FAQ först så du inte tappar gammal info!
-</div>
-
-<h3>Format som fungerar bra:</h3>
-
-<div class="help-example">=== RUBRIK ===
-
-Fråga: Hur gör jag X?
-Svar: Du gör X genom att...
-
-Fråga: Vad kostar Y?
-Svar: Y kostar...</div>
-
-</div>
-
-<!-- TAB: MD-FILER -->
 <div id="tab-md" class="tab-content">
-
-<h3>Så skapar du en ny MD-fil på GitHub</h3>
-
-<div class="help-step">
-<strong>Steg 1:</strong> Gå till ditt repo på GitHub:<br>
-<a href="https://github.com/Jarbrant/cateringcare-info-site-" target="_blank">github.com/Jarbrant/cateringcare-info-site-</a>
+<h3>Så skapar du en ny MD-fil</h3>
+<div class="help-step"><strong>Steg 1:</strong> Gå till <a href="https://github.com/Jarbrant/cateringcare-info-site-" target="_blank">GitHub-repot</a></div>
+<div class="help-step"><strong>Steg 2:</strong> Gå till rätt mapp (fakturering/kost/leverans/support)</div>
+<div class="help-step"><strong>Steg 3:</strong> Klicka "Add file" → "Create new file"</div>
+<div class="help-step"><strong>Steg 4:</strong> Ge filen namn med <code>.md</code> och skriv innehåll</div>
+<div class="help-step"><strong>Steg 5:</strong> Klicka "Commit" – klar!</div>
 </div>
 
-<div class="help-step">
-<strong>Steg 2:</strong> Gå till rätt mapp:
-<ul>
-<li><code>content/faq/fakturering/</code> – fakturor, autogiro, betalning</li>
-<li><code>content/faq/kost/</code> – specialkost, allergier</li>
-<li><code>content/faq/leverans/</code> – leveranstider, utebliven mat</li>
-<li><code>content/faq/support/</code> – klagomål, kontakt, övrigt</li>
-</ul>
-</div>
-
-<div class="help-step">
-<strong>Steg 3:</strong> Klicka "Add file" → "Create new file"
-</div>
-
-<div class="help-step">
-<strong>Steg 4:</strong> Ge filen ett namn med <code>.md</code>, t.ex: <code>paus-leverans.md</code>
-</div>
-
-<div class="help-step">
-<strong>Steg 5:</strong> Skriv innehållet (se exempel nedan) och klicka "Commit"
-</div>
-
-<h3>Så här ska en MD-fil se ut:</h3>
-
-<div class="help-example">---
-title: Kan jag pausa matleveransen?
-category: leverans
-keywords: paus semester sjukhus uppehåll
----
-
-Ja, du kan pausa din matleverans tillfälligt.
-
-Meddela din hemtjänst eller kontakta oss
-senast 3 dagar innan.
-
-Vanliga anledningar:
-- Semester
-- Sjukhusvistelse
-- Tillfälligt boende hos anhörig
-
-Kontakta oss för att starta igen:
-info@cateringcare.se eller 070-123 45 67</div>
-
-<div class="help-tip">
-💡 <strong>Tips:</strong> Ju fler MD-filer du skapar, desto smartare blir assistenten!
-</div>
-
-</div>
-
-<!-- TAB: TIPS -->
 <div id="tab-tips" class="tab-content">
-
-<h3>💡 Tips för bästa resultat</h3>
-
-<div class="help-step">
-<strong>✅ Skriv tydligt:</strong> Korta meningar. Undvik krångliga formuleringar.
+<h3>💡 Tips</h3>
+<div class="help-step"><strong>✅</strong> Skriv korta, tydliga svar</div>
+<div class="help-step"><strong>✅</strong> Skriv rubriker som frågor</div>
+<div class="help-step"><strong>✅</strong> En sak per MD-fil</div>
+<div class="help-step"><strong>✅</strong> Testa efter ändring</div>
 </div>
 
-<div class="help-step">
-<strong>✅ Tänk som kunden:</strong> Skriv rubriker som frågor – "Hur gör jag...?", "Vad kostar...?"
-</div>
-
-<div class="help-step">
-<strong>✅ Lägg till keywords:</strong> I MD-filer, lägg till keywords som kunder kan tänkas söka på.
-</div>
-
-<div class="help-step">
-<strong>✅ En sak per fil:</strong> Varje MD-fil ska handla om ETT ämne. Det gör det lättare att underhålla.
-</div>
-
-<div class="help-step">
-<strong>✅ Testa efter ändring:</strong> Ställ en fråga i chatten efter du sparat för att se att AI:n förstår.
-</div>
-
-<div class="help-warning">
-⚠️ <strong>Undvik:</strong> Hitta inte på information! AI:n kommer att svara med det du skriver. Se till att allt stämmer.
-</div>
-
-<h3>🗂️ Befintliga FAQ-mappar</h3>
-
-<table style="width:100%;border-collapse:collapse;">
-<tr style="background:#2f7d59;color:white;">
-  <th style="padding:10px;text-align:left;">Mapp</th>
-  <th style="padding:10px;text-align:left;">Innehåller</th>
-  <th style="padding:10px;text-align:left;">Befintliga filer</th>
-</tr>
-<tr style="border-bottom:1px solid #ddd;">
-  <td style="padding:10px;"><code>fakturering/</code></td>
-  <td style="padding:10px;">Fakturor, autogiro, e-faktura</td>
-  <td style="padding:10px;">autogiro.md, efaktura.md, faktura.md</td>
-</tr>
-<tr style="border-bottom:1px solid #ddd;">
-  <td style="padding:10px;"><code>kost/</code></td>
-  <td style="padding:10px;">Specialkost, allergier</td>
-  <td style="padding:10px;">allergier.md, specialkost.md</td>
-</tr>
-<tr style="border-bottom:1px solid #ddd;">
-  <td style="padding:10px;"><code>leverans/</code></td>
-  <td style="padding:10px;">Leveranstider, problem</td>
-  <td style="padding:10px;">ingen-mat.md, leveranstid.md</td>
-</tr>
-<tr>
-  <td style="padding:10px;"><code>support/</code></td>
-  <td style="padding:10px;">Klagomål, kontakt</td>
-  <td style="padding:10px;">klagomal.md, kontakt.md (tomma!)</td>
-</tr>
-</table>
-
-</div>
-
-<!-- TAB: EXEMPEL -->
 <div id="tab-examples" class="tab-content">
-
 <h3>📋 Kopierbara exempel</h3>
-
-<p>Kopiera dessa och klistra in som nya MD-filer på GitHub:</p>
-
-<h4>Exempel: Paus av leverans</h4>
 <div class="help-example">---
 title: Kan jag pausa matleveransen?
 category: leverans
-keywords: paus semester sjukhus uppehåll stoppa
+keywords: paus semester sjukhus
 ---
 
-Ja, du kan pausa din matleverans.
-
-Meddela hemtjänsten eller kontakta oss senast 3 dagar innan.
-
-Kontakt: info@cateringcare.se eller 070-123 45 67</div>
-
-<h4>Exempel: Priser</h4>
-<div class="help-example">---
-title: Vad kostar matleveransen?
-category: fakturering
-keywords: pris kostnad betala hur mycket
----
-
-Priset beror på vilken kommun du tillhör och ditt biståndsbeslut.
-
-Kontakta din hemtjänst eller oss för prisuppgifter.
-
-Kontakt: info@cateringcare.se eller 070-123 45 67</div>
-
-<h4>Exempel: Byte av adress</h4>
-<div class="help-example">---
-title: Hur byter jag leveransadress?
-category: support
-keywords: flytta adress byta ny adress
----
-
-Kontakta din hemtjänst om du byter adress.
-
-De uppdaterar leveransinformationen åt dig.
-
-Du kan även kontakta oss direkt:
-info@cateringcare.se eller 070-123 45 67</div>
-
-<h4>Exempel: KV-rutan (extra FAQ)</h4>
-<div class="help-example">=== JULHELGEN 2026 ===
-
-Under julhelgen (23-26 dec) levereras extra portioner
-den 22 december. Ingen leverans sker 23-26 dec.
-
-Normal leverans startar igen 27 december.
-
-=== NYÅR 2026 ===
-
-Ingen leverans 31 dec - 1 jan.
-Extra portioner levereras 30 december.</div>
-
+Ja, meddela hemtjänsten senast 3 dagar innan.
+Kontakt: info@cateringcare.se</div>
 </div>
 
 </div>
-<!-- SLUT HJÄLP-PANEL -->
 
 <br><br>
-
 <textarea id="faq" placeholder="Skriv FAQ-information här..."></textarea>
 
 </div>
@@ -547,19 +292,15 @@ Extra portioner levereras 30 december.</div>
 <script>
 
 const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
-
 let adminToken = sessionStorage.getItem("adminToken") || ""
-
 if(adminToken) showAdmin()
 
 /* INLOGGNING */
-
 async function login(){
   const password = document.getElementById("password").value
   try {
     const res = await fetch(WORKER_URL + "/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password })
     })
     const data = await res.json()
@@ -591,27 +332,32 @@ function logout(){
   document.getElementById("password").value = ""
 }
 
-/* HJÄLP */
-
+/* HJÄLP & STATISTIK TOGGLE */
 function toggleHelp(){
-  const panel = document.getElementById("helpPanel")
-  panel.style.display = panel.style.display === "none" || !panel.style.display ? "block" : "none"
+  const p = document.getElementById("helpPanel")
+  p.style.display = p.style.display === "block" ? "none" : "block"
+  document.getElementById("statsPanel").style.display = "none"
 }
 
-function showTab(tabName){
+function toggleStats(){
+  const p = document.getElementById("statsPanel")
+  const isHidden = p.style.display !== "block"
+  p.style.display = isHidden ? "block" : "none"
+  document.getElementById("helpPanel").style.display = "none"
+  if(isHidden) loadStats()
+}
+
+function showTab(name){
   document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"))
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"))
-  document.getElementById("tab-" + tabName).classList.add("active")
+  document.getElementById("tab-" + name).classList.add("active")
   event.target.classList.add("active")
 }
 
-/* FAQ FUNKTIONER */
-
-function showStatus(message, type) {
+/* FAQ */
+function showStatus(msg, type){
   const el = document.getElementById("status")
-  el.textContent = message
-  el.className = type
-  el.style.display = "block"
+  el.textContent = msg; el.className = type; el.style.display = "block"
   setTimeout(() => { el.style.display = "none" }, 3000)
 }
 
@@ -624,9 +370,7 @@ async function loadFaq(){
     if(data.error === "unauthorized"){ logout(); return }
     document.getElementById("faq").value = data.faq || ""
     showStatus("✅ FAQ laddad!", "success")
-  } catch(err) {
-    showStatus("❌ Kunde inte ladda FAQ: " + err.message, "error")
-  }
+  } catch(err) { showStatus("❌ " + err.message, "error") }
 }
 
 async function save(){
@@ -634,22 +378,88 @@ async function save(){
   try {
     const res = await fetch(WORKER_URL + "/admin/save", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + adminToken
-      },
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + adminToken },
       body: JSON.stringify({ text })
     })
     const data = await res.json()
     if(data.error === "unauthorized"){ logout(); return }
-    if(data.status === "saved") {
-      showStatus("✅ FAQ sparad!", "success")
-    } else {
-      showStatus("❌ Fel: " + JSON.stringify(data), "error")
+    if(data.status === "saved") showStatus("✅ FAQ sparad!", "success")
+    else showStatus("❌ " + JSON.stringify(data), "error")
+  } catch(err) { showStatus("❌ " + err.message, "error") }
+}
+
+/* ==============================
+   STATISTIK
+   ============================== */
+
+async function loadStats(){
+  try {
+    const res = await fetch(WORKER_URL + "/admin/stats", {
+      headers: { "Authorization": "Bearer " + adminToken }
+    })
+    const data = await res.json()
+    if(data.error === "unauthorized"){ logout(); return }
+
+    // Uppdatera kort
+    document.getElementById("statTotal").textContent = data.total || 0
+    document.getElementById("statToday").textContent = data.today || 0
+
+    // Beräkna snitt
+    const totalDays = data.daily ? data.daily.filter(d => d.count > 0).length || 1 : 1
+    const totalInPeriod = data.daily ? data.daily.reduce((sum, d) => sum + d.count, 0) : 0
+    const avg = Math.round((totalInPeriod / Math.max(totalDays, 1)) * 10) / 10
+    document.getElementById("statAvg").textContent = avg
+
+    // Rita graf
+    const chart = document.getElementById("chartContainer")
+    chart.innerHTML = ""
+    if(data.daily && data.daily.length > 0){
+      const maxCount = Math.max(...data.daily.map(d => d.count), 1)
+      const reversed = [...data.daily].reverse()
+      reversed.forEach(day => {
+        const height = Math.max((day.count / maxCount) * 130, day.count > 0 ? 5 : 1)
+        const bar = document.createElement("div")
+        bar.className = "chart-bar"
+        bar.style.height = height + "px"
+        bar.style.background = day.count > 0 ? "#2f7d59" : "#e0e0e0"
+        bar.innerHTML = '<div class="chart-tooltip">' + day.date + ': ' + day.count + ' frågor</div>'
+        chart.appendChild(bar)
+      })
     }
+
+    // Senaste frågorna
+    const tbody = document.getElementById("recentBody")
+    tbody.innerHTML = ""
+    if(data.recent && data.recent.length > 0){
+      data.recent.slice(0, 20).forEach(q => {
+        const tr = document.createElement("tr")
+        const timeAgo = getTimeAgo(q.time)
+        tr.innerHTML = '<td>' + escapeHtml(q.question) + '</td><td class="time-ago">' + timeAgo + '</td>'
+        tbody.appendChild(tr)
+      })
+    } else {
+      tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#999;">Inga frågor ännu</td></tr>'
+    }
+
   } catch(err) {
-    showStatus("❌ Kunde inte spara: " + err.message, "error")
+    console.error("Stats error:", err)
   }
+}
+
+function getTimeAgo(dateStr){
+  const now = new Date()
+  const then = new Date(dateStr)
+  const diff = Math.floor((now - then) / 1000)
+  if(diff < 60) return "Just nu"
+  if(diff < 3600) return Math.floor(diff/60) + " min sedan"
+  if(diff < 86400) return Math.floor(diff/3600) + " tim sedan"
+  return Math.floor(diff/86400) + " dagar sedan"
+}
+
+function escapeHtml(text){
+  const div = document.createElement("div")
+  div.textContent = text
+  return div.innerHTML
 }
 
 </script>
