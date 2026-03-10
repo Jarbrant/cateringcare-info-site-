@@ -1,13 +1,56 @@
 /* ==============================
-   CateringCare Shop
+   CateringCare Shop v2
    ============================== */
 
 const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
 let shopData = null
 let cart = []
 let activeCategory = "all"
+let appliedCoupon = null
+
+// Allergen-mappning
+const ALLERGEN_MAP = {
+  "mjölk":    { emoji:"🥛", label:"Mjölk", css:"dairy" },
+  "milk":     { emoji:"🥛", label:"Mjölk", css:"dairy" },
+  "laktos":   { emoji:"🥛", label:"Laktos", css:"dairy" },
+  "grädde":   { emoji:"🥛", label:"Grädde", css:"dairy" },
+  "vispgrädde":{ emoji:"🥛", label:"Grädde", css:"dairy" },
+  "ost":      { emoji:"🧀", label:"Ost", css:"dairy" },
+  "smör":     { emoji:"🧈", label:"Smör", css:"dairy" },
+  "gluten":   { emoji:"🌾", label:"Gluten", css:"gluten" },
+  "vete":     { emoji:"🌾", label:"Vete", css:"gluten" },
+  "vetemjöl": { emoji:"🌾", label:"Vete", css:"gluten" },
+  "råg":      { emoji:"🌾", label:"Råg", css:"gluten" },
+  "korn":     { emoji:"🌾", label:"Korn", css:"gluten" },
+  "nötter":   { emoji:"🥜", label:"Nötter", css:"nuts" },
+  "mandel":   { emoji:"🥜", label:"Mandel", css:"nuts" },
+  "jordnöt":  { emoji:"🥜", label:"Jordnöt", css:"nuts" },
+  "fisk":     { emoji:"🐟", label:"Fisk", css:"fish" },
+  "räkor":    { emoji:"🦐", label:"Räkor", css:"fish" },
+  "skaldjur": { emoji:"🦐", label:"Skaldjur", css:"fish" },
+  "ägg":      { emoji:"🥚", label:"Ägg", css:"egg" },
+  "soja":     { emoji:"🫘", label:"Soja", css:"soy" },
+  "selleri":  { emoji:"🥬", label:"Selleri", css:"" },
+  "senap":    { emoji:"🟡", label:"Senap", css:"" }
+}
+
+// Kategori-ikoner
+const CATEGORY_ICONS = {
+  "sallad": "🥗", "sallads": "🥗",
+  "soppa": "🍲", "sopp": "🍲",
+  "meny": "🍽️", "lunch": "🍽️",
+  "middag": "🥩", "kött": "🥩",
+  "fisk": "🐟", "vegetarisk": "🥬", "vegan": "🌱",
+  "önskemål": "⭐", "special": "⭐",
+  "dessert": "🍰", "frukost": "🥐"
+}
 
 loadShop()
+
+
+/* ==============================
+   LADDA BUTIK
+   ============================== */
 
 async function loadShop(){
   try {
@@ -48,6 +91,11 @@ function renderShop(){
   renderProducts()
 }
 
+
+/* ==============================
+   KATEGORI-TABS
+   ============================== */
+
 function buildCategoryTabs(){
   const cats = [...new Set(shopData.items.map(i => i.category || "Matlåda"))]
   const el = document.getElementById("categoryTabs")
@@ -66,10 +114,16 @@ function setCat(cat, el){
   renderProducts()
 }
 
+
+/* ==============================
+   RENDERA PRODUKTER
+   ============================== */
+
 function renderProducts(){
   const area = document.getElementById("productsArea")
   const search = (document.getElementById("searchInput").value || "").toLowerCase().trim()
   let items = shopData.items
+
   if(activeCategory !== "all") items = items.filter(i => (i.category||"Matlåda") === activeCategory)
   if(search) items = items.filter(i =>
     i.name.toLowerCase().includes(search) ||
@@ -88,28 +142,48 @@ function renderProducts(){
   for(const item of items){
     const lowStock = item.stock <= 3
     const inCart = cart.find(c => c.id === item.id)
-    const imageHtml = item.imageUrl
-      ? `<img class="product-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" onerror="this.outerHTML='<div class=\\'product-image-placeholder\\'>🍱</div>'">`
-      : '<div class="product-image-placeholder">🍱</div>'
-    const btnClass = inCart ? "add-btn in-cart" : "add-btn"
-    const btnText = inCart ? `✓ ${inCart.quantity} st` : "+ Köp"
+    const catKey = getCatKey(item.category)
+    const catIcon = getCategoryIcon(item.category, item.name)
+    const allergens = detectAllergens(item.ingredients || "")
     const ing = item.ingredients || item.description || ""
 
+    // Image or placeholder
+    const imageHtml = item.imageUrl
+      ? `<img class="product-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}"
+          onerror="this.outerHTML='<div class=\\'product-image-placeholder cat-${catKey}\\'>${catIcon}</div>'">`
+      : `<div class="product-image-placeholder cat-${catKey}">${catIcon}</div>`
+
+    const btnClass = inCart ? "add-btn in-cart" : "add-btn"
+    const btnText = inCart ? `✓ ${inCart.quantity} st` : "+ Köp"
+
+    // Allergen tags (max 4)
+    let allergenHtml = ""
+    if(allergens.length > 0){
+      allergenHtml = '<div class="allergen-tags">'
+      for(const a of allergens.slice(0,4)){
+        allergenHtml += `<span class="allergen-tag ${a.css}">${a.emoji} ${a.label}</span>`
+      }
+      if(allergens.length > 4) allergenHtml += `<span class="allergen-tag">+${allergens.length-4}</span>`
+      allergenHtml += '</div>'
+    }
+
     html += `
-      <div class="product-card">
+      <div class="product-card" data-cat="${catKey}" onclick="openDetail('${item.id}')" style="animation-delay:${Math.random()*0.3}s;">
         ${imageHtml}
         ${item.discountActive ? `<div class="discount-badge">–${item.discountPercent}%</div>` : ""}
         <div class="stock-badge ${lowStock?"low":""}">${lowStock?"⚠️ "+item.stock+" kvar":item.stock+" st"}</div>
         <div class="product-body">
           <div class="product-category">${escapeHtml(item.category||"")}</div>
           <div class="product-name">${escapeHtml(item.name)}</div>
-          ${ing ? `<div class="product-ingredients">${escapeHtml(ing)}</div>` : ""}
+          ${ing ? `<div class="product-ingredients-preview">${escapeHtml(ing)}</div>
+            <div class="product-show-more" onclick="event.stopPropagation();openDetail('${item.id}')">Visa mer ▸</div>` : ""}
+          ${allergenHtml}
           <div class="product-footer">
             <div class="product-price">
               ${item.discountActive ? `<span class="original">${item.price} kr</span>` : ""}
               ${item.finalPrice} kr
             </div>
-            <button class="${btnClass}" onclick="addToCart('${item.id}')">${btnText}</button>
+            <button class="${btnClass}" onclick="event.stopPropagation();addToCart('${item.id}')">${btnText}</button>
           </div>
         </div>
       </div>`
@@ -120,7 +194,124 @@ function renderProducts(){
 
 function filterProducts(){ renderProducts() }
 
-/* KUNDVAGN */
+
+/* ==============================
+   ALLERGEN DETECTION
+   ============================== */
+
+function detectAllergens(text){
+  if(!text) return []
+  const lower = text.toLowerCase()
+  const found = new Map()
+  for(const [keyword, info] of Object.entries(ALLERGEN_MAP)){
+    if(lower.includes(keyword) && !found.has(info.label)){
+      found.set(info.label, info)
+    }
+  }
+  return [...found.values()]
+}
+
+
+/* ==============================
+   CATEGORY HELPERS
+   ============================== */
+
+function getCatKey(category){
+  if(!category) return "default"
+  const c = category.toLowerCase()
+  if(c.includes("sallad")) return "sallad"
+  if(c.includes("sopp")) return "soppa"
+  if(c.includes("middag")) return "middag"
+  if(c.includes("fisk")) return "fisk"
+  if(c.includes("veget")) return "vegetarisk"
+  if(c.includes("meny") || c.includes("lunch")) return "meny"
+  if(c.includes("önske")) return "meny"
+  return "default"
+}
+
+function getCategoryIcon(category, name){
+  if(!category && !name) return "🍱"
+  const text = ((category||"") + " " + (name||"")).toLowerCase()
+  for(const [key, icon] of Object.entries(CATEGORY_ICONS)){
+    if(text.includes(key)) return icon
+  }
+  return "🍱"
+}
+
+
+/* ==============================
+   DETAIL MODAL (EXPANDED CARD)
+   ============================== */
+
+function openDetail(id){
+  const item = shopData.items.find(i => i.id === id)
+  if(!item) return
+
+  const catKey = getCatKey(item.category)
+  const catIcon = getCategoryIcon(item.category, item.name)
+  const allergens = detectAllergens(item.ingredients || "")
+  const inCart = cart.find(c => c.id === id)
+
+  const headerBg = item.imageUrl
+    ? `background-image:url('${item.imageUrl}');background-size:cover;background-position:center;`
+    : ""
+  const headerClass = item.imageUrl ? "" : `cat-${catKey}`
+
+  let allergenHtml = ""
+  if(allergens.length > 0){
+    allergenHtml = '<div class="detail-allergens">'
+    for(const a of allergens){
+      allergenHtml += `<span class="allergen-tag ${a.css}" style="font-size:12px;padding:4px 10px;">${a.emoji} ${a.label}</span>`
+    }
+    allergenHtml += '</div>'
+  }
+
+  const el = document.getElementById("detailModal")
+  el.innerHTML = `
+    <div class="detail-header product-image-placeholder ${headerClass}" style="${headerBg}">
+      ${!item.imageUrl ? catIcon : ""}
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      ${item.discountActive ? `<div class="discount-badge" style="position:absolute;top:12px;left:12px;">–${item.discountPercent}%</div>` : ""}
+    </div>
+    <div class="detail-body">
+      <div class="detail-category">${escapeHtml(item.category||"Matlåda")}</div>
+      <div class="detail-name">${escapeHtml(item.name)}</div>
+
+      ${item.description ? `<div class="detail-section"><h4>📝 Beskrivning</h4><p>${escapeHtml(item.description)}</p></div>` : ""}
+
+      ${item.ingredients ? `<div class="detail-section"><h4>🥕 Innehåll</h4><p>${escapeHtml(item.ingredients)}</p></div>` : ""}
+
+      ${allergens.length > 0 ? `<div class="detail-section"><h4>⚠️ Allergener</h4>${allergenHtml}</div>` : ""}
+
+      <div class="detail-section">
+        <h4>📦 Tillgänglighet</h4>
+        <p>${item.stock} st kvar ${item.stock <= 3 ? "⚠️ Få kvar!" : ""}</p>
+      </div>
+
+      <div class="detail-price-row">
+        <div class="detail-price">
+          ${item.discountActive ? `<span class="original">${item.price} kr</span>` : ""}
+          ${item.finalPrice} kr
+        </div>
+        <button class="detail-add-btn" onclick="addToCart('${item.id}');closeDetail();">
+          ${inCart ? "✓ Lägg till fler" : "🛒 Lägg i kundvagn"}
+        </button>
+      </div>
+    </div>
+  `
+
+  document.getElementById("detailOverlay").classList.add("active")
+}
+
+function closeDetail(){
+  document.getElementById("detailOverlay").classList.remove("active")
+}
+
+
+/* ==============================
+   KUNDVAGN
+   ============================== */
+
 function addToCart(id){
   const item = shopData.items.find(i => i.id === id)
   if(!item) return
@@ -131,7 +322,14 @@ function addToCart(id){
   } else {
     cart.push({ id:item.id, name:item.name, price:item.finalPrice, quantity:1 })
   }
-  updateCartUI(); renderProducts()
+  updateCartUI()
+  renderProducts()
+
+  // Pop animation
+  const floatEl = document.getElementById("cartFloat")
+  floatEl.classList.remove("cart-pop")
+  void floatEl.offsetWidth
+  floatEl.classList.add("cart-pop")
 }
 
 function removeFromCart(id){
@@ -152,15 +350,56 @@ function changeQty(id, delta){
 
 function updateCartUI(){
   const count = cart.reduce((s,c) => s+c.quantity, 0)
-  const sum = cart.reduce((s,c) => s+(c.price*c.quantity), 0)
+  const sum = getCartTotal()
   document.getElementById("cartCount").textContent = count
   document.getElementById("cartSum").textContent = sum
   document.getElementById("cartFloat").style.display = count > 0 ? "block" : "none"
 }
 
-function getCartTotal(){ return cart.reduce((s,c) => s+(c.price*c.quantity), 0) }
+function getCartTotal(){
+  let total = cart.reduce((s,c) => s+(c.price*c.quantity), 0)
+  if(appliedCoupon) total = Math.round(total * (1 - appliedCoupon.percent/100))
+  return total
+}
 
-/* MODAL */
+
+/* ==============================
+   RABATTKOD
+   ============================== */
+
+function applyCoupon(){
+  const code = document.getElementById("custCoupon").value.trim().toUpperCase()
+  const statusEl = document.getElementById("couponStatus")
+
+  // Simple coupon system (can be extended via API)
+  const coupons = {
+    "VÄLKOMMEN10": { percent:10, label:"10% rabatt" },
+    "MATLÅDA20":   { percent:20, label:"20% rabatt" },
+    "VIP30":       { percent:30, label:"30% VIP-rabatt" }
+  }
+
+  if(coupons[code]){
+    appliedCoupon = coupons[code]
+    statusEl.textContent = "✅ " + appliedCoupon.label + " tillagd!"
+    statusEl.className = "valid"
+    renderCartItems()
+  } else if(!code) {
+    appliedCoupon = null
+    statusEl.textContent = ""
+    renderCartItems()
+  } else {
+    appliedCoupon = null
+    statusEl.textContent = "❌ Ogiltig kod"
+    statusEl.className = "invalid"
+    renderCartItems()
+  }
+}
+
+
+/* ==============================
+   MODAL
+   ============================== */
+
 function openCart(){
   document.getElementById("cartModal").classList.add("active")
   document.getElementById("cartStep1").style.display = "block"
@@ -191,12 +430,22 @@ function renderCartItems(){
         <button class="cart-item-remove" onclick="removeFromCart('${c.id}')">🗑️</button>
       </div></div>`
   }
+  if(appliedCoupon){
+    const subtotal = cart.reduce((s,c) => s+(c.price*c.quantity), 0)
+    const discount = Math.round(subtotal * appliedCoupon.percent / 100)
+    html += `<div style="padding:8px 0;color:#27ae60;font-weight:bold;font-size:14px;">
+      🎟️ ${appliedCoupon.label}: –${discount} kr</div>`
+  }
   el.innerHTML = html
   document.getElementById("cartTotal").textContent = getCartTotal()
   btn.disabled = false
 }
 
-/* HÄMTDAGAR & TIDER */
+
+/* ==============================
+   HÄMTDAGAR & TIDER
+   ============================== */
+
 function buildPickupDays(){
   const sel = document.getElementById("custDay"); sel.innerHTML = ""
   const days = ["Söndag","Måndag","Tisdag","Onsdag","Torsdag","Fredag","Lördag"]
@@ -222,13 +471,19 @@ function buildPickupTimes(){
   }
 }
 
-/* BESTÄLL */
+
+/* ==============================
+   BESTÄLL
+   ============================== */
+
 async function placeOrder(){
   const name=document.getElementById("custName").value.trim()
   const phone=document.getElementById("custPhone").value.trim()
   const email=document.getElementById("custEmail").value.trim()
   const day=document.getElementById("custDay").value
   const time=document.getElementById("custTime").value
+  const coupon=document.getElementById("custCoupon").value.trim()
+
   if(!name){alert("Ange namn");return}
   if(!phone){alert("Ange telefon");return}
   if(!day){alert("Välj dag");return}
@@ -237,9 +492,13 @@ async function placeOrder(){
 
   const btn=document.getElementById("checkoutBtn")
   btn.disabled=true; btn.textContent="⏳ Beställer..."
+
   try{
     const r=await fetch(W+"/shop/order",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({name,phone,email,pickupDay:day,pickupTime:time,items:cart.map(c=>({id:c.id,quantity:c.quantity}))})})
+      body:JSON.stringify({
+        name, phone, email, pickupDay:day, pickupTime:time, coupon,
+        items:cart.map(c=>({id:c.id,quantity:c.quantity}))
+      })})
     const d=await r.json()
     if(d.error){alert("❌ "+d.error);btn.disabled=false;btn.textContent="✅ Beställ & betala med Swish";return}
     showReceipt(d.order,email,d.emailSent)
@@ -256,13 +515,35 @@ function showReceipt(order,email,emailSent){
   document.getElementById("receiptSwish").textContent=order.swishNumber||"–"
   document.getElementById("receiptSwishMsg").textContent=order.swishMessage||""
   document.getElementById("receiptTotal").textContent=order.totalPrice
+
+  // Swish QR
+  const swishNum = (order.swishNumber||"").replace(/[\s-]/g,"")
+  if(swishNum){
+    const qrData = encodeURIComponent(`C${swishNum};${order.totalPrice};${order.swishMessage||""}`)
+    document.getElementById("swishQrArea").innerHTML =
+      `<div class="swish-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${qrData}" alt="Swish QR"></div>
+       <div style="font-size:12px;margin-top:4px;opacity:0.9;">Scanna med Swish-appen</div>`
+  }
+
+  // Email status
   if(email){
     const el=document.getElementById("receiptEmailMsg"); el.style.display="block"
-    el.innerHTML=emailSent?'📧 Kvitto skickat till: <strong>'+escapeHtml(email)+'</strong> ✅':'📧 Kvitto till: <strong>'+escapeHtml(email)+'</strong>'
+    el.innerHTML=emailSent
+      ? '📧 Kvitto skickat till: <strong>'+escapeHtml(email)+'</strong> ✅'
+      : '📧 Kvitto till: <strong>'+escapeHtml(email)+'</strong>'
   }
+
+  // Order status link
+  document.getElementById("receiptStatusLink").innerHTML =
+    `<div class="status-link">📋 <a href="shop.html?order=${order.id}">Följ din beställning →</a></div>`
 }
 
-function resetCart(){ cart=[];updateCartUI();loadShop() }
+function resetCart(){ cart=[];appliedCoupon=null;updateCartUI();loadShop() }
+
+
+/* ==============================
+   HJÄLP
+   ============================== */
 
 function escapeHtml(t){const d=document.createElement("div");d.textContent=t||"";return d.innerHTML}
 function escapeAttr(t){return(t||"").replace(/'/g,"\\'").replace(/"/g,"&quot;")}
