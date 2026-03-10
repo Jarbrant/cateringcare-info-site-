@@ -15,7 +15,6 @@ background:#f5f7f6;
 color:#333;
 }
 
-/* HEADER */
 .shop-header{
 background:linear-gradient(135deg,#2f7d59,#24614a);
 color:white; padding:16px 20px;
@@ -37,7 +36,6 @@ background:rgba(255,255,255,0.15);
 }
 .header-links a:hover{ background:rgba(255,255,255,0.25); }
 
-/* HERO */
 .shop-hero{
 background:linear-gradient(135deg,#e67e22,#d35400);
 color:white; text-align:center; padding:40px 20px;
@@ -45,32 +43,22 @@ color:white; text-align:center; padding:40px 20px;
 .shop-hero h1{ margin:0; font-size:32px; }
 .shop-hero p{ margin:8px 0 0; font-size:16px; opacity:0.9; }
 
-/* STÄNGT BANNER */
-.closed-banner{
-background:#fff3cd; color:#856404; text-align:center;
-padding:20px; font-size:16px; font-weight:bold;
-}
-
-/* DISCOUNT BANNER */
 .discount-banner{
 background:linear-gradient(135deg,#e74c3c,#c0392b);
 color:white; text-align:center; padding:12px 20px;
 font-size:18px; font-weight:bold;
-animation: pulse 2s ease-in-out infinite;
+animation:pulse 2s ease-in-out infinite;
 }
 @keyframes pulse{
   0%,100%{ opacity:1; }
   50%{ opacity:0.85; }
 }
 
-/* CONTAINER */
 .container{ max-width:1100px; margin:auto; padding:0 20px; }
 
-/* INFO BAR */
 .info-bar{
 display:flex; gap:20px; justify-content:center; flex-wrap:wrap;
-padding:20px; background:white;
-border-bottom:1px solid #eee;
+padding:20px; background:white; border-bottom:1px solid #eee;
 }
 .info-item{
 display:flex; align-items:center; gap:8px;
@@ -78,7 +66,6 @@ font-size:14px; color:#555;
 }
 .info-item .icon{ font-size:20px; }
 
-/* PRODUKTER */
 .products-grid{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
@@ -119,6 +106,11 @@ color:#2f7d59; letter-spacing:1px; margin-bottom:6px;
 font-size:18px; font-weight:bold; color:#333; margin-bottom:8px;
 }
 
+.product-description{
+font-size:13px; color:#888; line-height:1.4;
+margin-bottom:6px; font-style:italic;
+}
+
 .product-ingredients{
 font-size:13px; color:#777; line-height:1.5;
 margin-bottom:12px; flex:1;
@@ -139,36 +131,22 @@ font-size:14px; color:#999; text-decoration:line-through;
 margin-right:6px; font-weight:normal;
 }
 
-.product-stock{
-font-size:12px; color:#999;
-}
+.product-stock{ font-size:12px; color:#999; }
 .product-stock.low{ color:#e74c3c; font-weight:bold; }
-
-.qty-control{
-display:flex; align-items:center; gap:0;
-border:2px solid #2f7d59; border-radius:8px; overflow:hidden;
-}
-.qty-btn{
-width:36px; height:36px; border:none; background:#f0faf4;
-font-size:18px; cursor:pointer; color:#2f7d59; font-weight:bold;
-}
-.qty-btn:hover{ background:#d4edda; }
-.qty-value{
-width:36px; text-align:center; font-size:16px; font-weight:bold;
-border:none; background:white;
-}
 
 .add-btn{
 background:#2f7d59; color:white; border:none;
 padding:10px 18px; border-radius:8px;
 font-size:14px; font-weight:bold; cursor:pointer;
-transition:background 0.2s;
+transition:all 0.2s;
 }
 .add-btn:hover{ background:#24614a; }
 .add-btn:disabled{ opacity:0.4; cursor:not-allowed; }
 .add-btn.added{ background:#27ae60; }
+.add-btn.in-cart{
+background:white; color:#2f7d59; border:2px solid #2f7d59;
+}
 
-/* KUNDVAGN */
 .cart-float{
 position:fixed; bottom:20px; right:20px;
 background:#2f7d59; color:white;
@@ -185,8 +163,10 @@ width:24px; height:24px; border-radius:50%;
 display:inline-flex; align-items:center; justify-content:center;
 font-size:13px; margin-left:8px;
 }
+.cart-float .cart-sum{
+font-size:13px; opacity:0.9; margin-left:4px;
+}
 
-/* MODAL */
 .modal-overlay{
 display:none; position:fixed; top:0; left:0; right:0; bottom:0;
 background:rgba(0,0,0,0.5); z-index:2000;
@@ -199,6 +179,7 @@ padding:20px; overflow-y:auto;
 background:white; border-radius:16px; padding:30px;
 max-width:500px; width:100%; margin-top:40px;
 box-shadow:0 10px 40px rgba(0,0,0,0.2);
+max-height:90vh; overflow-y:auto;
 }
 .modal h2{ margin:0 0 20px; color:#333; }
 .modal-close{
@@ -211,13 +192,30 @@ font-size:24px; cursor:pointer; color:#999;
 display:flex; justify-content:space-between;
 align-items:center; padding:10px 0;
 border-bottom:1px solid #f0f0f0;
+gap:10px;
 }
+.cart-item-info{ flex:1; }
 .cart-item-name{ font-weight:bold; font-size:14px; }
 .cart-item-detail{ font-size:13px; color:#777; }
 .cart-item-remove{
 background:none; border:none; color:#e74c3c;
-cursor:pointer; font-size:18px;
+cursor:pointer; font-size:18px; padding:4px;
 }
+
+.qty-control{
+display:flex; align-items:center; gap:0;
+border:2px solid #2f7d59; border-radius:8px; overflow:hidden;
+}
+.qty-btn{
+width:34px; height:34px; border:none; background:#f0faf4;
+font-size:18px; cursor:pointer; color:#2f7d59; font-weight:bold;
+}
+.qty-btn:hover{ background:#d4edda; }
+.qty-value{
+width:34px; text-align:center; font-size:15px; font-weight:bold;
+border:none; background:white;
+}
+
 .cart-total{
 font-size:22px; font-weight:bold; color:#2f7d59;
 text-align:right; padding:15px 0;
@@ -238,16 +236,16 @@ border-radius:8px; font-size:15px; box-sizing:border-box;
 outline:none; border-color:#2f7d59;
 box-shadow:0 0 0 3px rgba(47,125,89,0.1);
 }
+.form-group small{ color:#999; font-size:12px; }
 
 .checkout-btn{
 width:100%; padding:14px; font-size:16px; font-weight:bold;
 background:#2f7d59; color:white; border:none;
-border-radius:10px; cursor:pointer;
+border-radius:10px; cursor:pointer; margin-top:10px;
 }
 .checkout-btn:hover{ background:#24614a; }
 .checkout-btn:disabled{ opacity:0.5; cursor:not-allowed; }
 
-/* KVITTO */
 .receipt{
 background:#f0faf4; border:2px solid #2f7d59;
 border-radius:12px; padding:25px; text-align:center;
@@ -271,7 +269,6 @@ background:#d4edda; padding:10px 15px; border-radius:8px;
 font-size:13px; color:#155724; margin-top:10px;
 }
 
-/* FOOTER */
 .shop-footer{
 background:#2f7d59; color:white; text-align:center;
 padding:20px; margin-top:60px;
@@ -279,7 +276,6 @@ padding:20px; margin-top:60px;
 .shop-footer a{ color:white; opacity:0.8; text-decoration:none; }
 .shop-footer a:hover{ opacity:1; }
 
-/* LOADING */
 .loading{
 text-align:center; padding:60px 20px; color:#999;
 }
@@ -290,13 +286,44 @@ border-radius:50%; animation:spin 0.8s linear infinite;
 }
 @keyframes spin{ to{ transform:rotate(360deg); } }
 
-/* EMPTY STATE */
 .empty-state{
 text-align:center; padding:60px 20px;
 }
 .empty-state .icon{ font-size:60px; margin-bottom:15px; }
 .empty-state h2{ color:#999; }
-.empty-state p{ color:#bbb; }
+.empty-state p{ color:#bbb; max-width:400px; margin:10px auto; }
+
+/* SÖKNING */
+.search-bar{
+max-width:500px; margin:20px auto 0;
+position:relative;
+}
+.search-bar input{
+width:100%; padding:12px 16px 12px 42px;
+border:2px solid #e0e0e0; border-radius:30px;
+font-size:15px; box-sizing:border-box;
+background:white;
+}
+.search-bar input:focus{
+outline:none; border-color:#2f7d59;
+}
+.search-bar .search-icon{
+position:absolute; left:14px; top:50%; transform:translateY(-50%);
+font-size:18px; color:#999;
+}
+
+/* KATEGORI-FILTER */
+.category-tabs{
+display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+margin:20px auto 0; max-width:1100px; padding:0 20px;
+}
+.cat-tab{
+padding:8px 16px; border-radius:20px; border:2px solid #e0e0e0;
+background:white; cursor:pointer; font-size:13px; font-weight:600;
+color:#666; transition:all 0.2s;
+}
+.cat-tab:hover{ border-color:#2f7d59; color:#2f7d59; }
+.cat-tab.active{ background:#2f7d59; color:white; border-color:#2f7d59; }
 
 @media(max-width:600px){
   .shop-hero h1{ font-size:24px; }
@@ -304,13 +331,13 @@ text-align:center; padding:60px 20px;
   .product-image,.product-image-placeholder{ height:160px; }
   .info-bar{ flex-direction:column; align-items:center; gap:10px; }
   .modal{ margin-top:10px; padding:20px; }
+  .cart-float{ bottom:12px; right:12px; padding:12px 18px; font-size:14px; }
 }
 
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="shop-header">
 <div class="container">
   <a href="index.html" class="shop-logo">CateringCare <span>· Matlådor</span></a>
@@ -321,26 +348,25 @@ text-align:center; padding:60px 20px;
 </div>
 </header>
 
-<!-- HERO -->
 <div class="shop-hero">
   <h1>🍱 Veckans matlådor</h1>
   <p>Hemlagad mat från vårt kök – minska svinn, ät gott!</p>
+  <div class="search-bar" style="margin-top:20px;">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Sök matlåda..." oninput="filterProducts()">
+  </div>
 </div>
 
-<!-- DISCOUNT BANNER (göms/visas dynamiskt) -->
 <div id="discountBanner" class="discount-banner" style="display:none;"></div>
 
-<!-- STÄNGT BANNER (göms/visas dynamiskt) -->
-<div id="closedBanner" class="closed-banner" style="display:none;"></div>
-
-<!-- INFO BAR -->
 <div class="info-bar" id="infoBar">
   <div class="info-item"><span class="icon">📍</span> <span id="infoAddress">Laddar...</span></div>
-  <div class="info-item"><span class="icon">🕐</span> <span id="infoHours">–</span></div>
+  <div class="info-item"><span class="icon">🕐</span> Hämttider: <span id="infoHours">–</span></div>
   <div class="info-item"><span class="icon">💳</span> Betala med Swish</div>
 </div>
 
-<!-- PRODUKTER -->
+<div id="categoryTabs" class="category-tabs"></div>
+
 <div id="productsArea">
   <div class="loading">
     <div class="spinner"></div>
@@ -348,17 +374,16 @@ text-align:center; padding:60px 20px;
   </div>
 </div>
 
-<!-- KUNDVAGN FLOAT -->
 <div class="cart-float" id="cartFloat" onclick="openCart()">
-  🛒 Kundvagn <span class="cart-count" id="cartCount">0</span>
+  🛒 <span id="cartCount">0</span> st
+  <span class="cart-sum">· <span id="cartSum">0</span> kr</span>
 </div>
 
-<!-- MODAL: KUNDVAGN & CHECKOUT -->
-<div class="modal-overlay" id="cartModal">
+<!-- MODAL -->
+<div class="modal-overlay" id="cartModal" onclick="if(event.target===this)closeCart()">
 <div class="modal">
   <button class="modal-close" onclick="closeCart()">✕</button>
 
-  <!-- STEG 1: Kundvagn -->
   <div id="cartStep1">
     <h2>🛒 Din kundvagn</h2>
     <div id="cartItems"></div>
@@ -377,8 +402,9 @@ text-align:center; padding:60px 20px;
     </div>
 
     <div class="form-group">
-      <label>📧 E-post (för kvitto)</label>
+      <label>📧 E-post (för kvitto & orderbekräftelse)</label>
       <input type="email" id="custEmail" placeholder="din@email.se">
+      <small>Vi skickar kvitto till din e-post</small>
     </div>
 
     <div class="form-group">
@@ -388,25 +414,14 @@ text-align:center; padding:60px 20px;
 
     <div class="form-group">
       <label>🕐 Hämtningstid *</label>
-      <select id="custTime">
-        <option value="11:00">11:00</option>
-        <option value="11:30">11:30</option>
-        <option value="12:00">12:00</option>
-        <option value="12:30">12:30</option>
-        <option value="13:00">13:00</option>
-        <option value="13:30">13:30</option>
-        <option value="14:00">14:00</option>
-        <option value="14:30">14:30</option>
-        <option value="15:00">15:00</option>
-      </select>
+      <select id="custTime"></select>
     </div>
 
-    <button class="checkout-btn" id="checkoutBtn" onclick="placeOrder()">
+    <button class="checkout-btn" id="checkoutBtn" onclick="placeOrder()" disabled>
       ✅ Beställ & betala med Swish
     </button>
   </div>
 
-  <!-- STEG 2: Kvitto -->
   <div id="cartStep2" style="display:none;">
     <div class="receipt">
       <h2>✅ Tack för din beställning!</h2>
@@ -426,11 +441,11 @@ text-align:center; padding:60px 20px;
       </div>
 
       <div class="receipt-email" id="receiptEmailMsg" style="display:none;">
-        📧 Kvitto skickas till: <strong id="receiptEmail">–</strong>
+        📧 Kvitto skickat till: <strong id="receiptEmail">–</strong>
       </div>
 
       <p style="margin-top:15px;font-size:13px;color:#666;">
-        Visa detta kvitto när du hämtar maten. Du får SMS/mejl när betalningen är verifierad.
+        Visa detta kvitto när du hämtar maten. Du får mejl när betalningen är verifierad.
       </p>
     </div>
 
@@ -441,7 +456,6 @@ text-align:center; padding:60px 20px;
 </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="shop-footer">
   <p>© CateringCare · <a href="index.html">Hem</a> · <a href="admin.html">Admin</a></p>
 </footer>
@@ -452,6 +466,7 @@ text-align:center; padding:60px 20px;
 const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
 let shopData = null
 let cart = []
+let activeCategory = "all"
 
 loadShop()
 
@@ -475,8 +490,12 @@ function renderShop(){
 
   // Info-bar
   document.getElementById("infoAddress").textContent = shopData.pickupAddress || "–"
-  document.getElementById("infoHours").textContent =
-    (shopData.pickupHoursStart||"11:00") + " – " + (shopData.pickupHoursEnd||"15:00") + " (ons–fre)"
+  const hours = (shopData.pickupHoursStart||"11:00") + "–" + (shopData.pickupHoursEnd||"15:00") + " (ons–fre)"
+  document.getElementById("infoHours").textContent = hours
+
+  // Hämttider i dropdown
+  buildPickupTimes()
+  buildPickupDays()
 
   // Rabatt-banner
   if(shopData.discountActive){
@@ -485,38 +504,105 @@ function renderShop(){
     db.style.display = "block"
   }
 
-  // Stängt?
-  if(!shopData.isOpen || !shopData.items || shopData.items.length === 0){
+  // Inga matlådor?
+  if(!shopData.items || shopData.items.length === 0){
     area.innerHTML = `
       <div class="empty-state">
         <div class="icon">🍱</div>
-        <h2>Vi har inga matlådor just nu</h2>
-        <p>Vi säljer matlådor onsdag – fredag. Kom tillbaka då!</p>
+        <h2>Inga matlådor just nu</h2>
+        <p>Vi uppdaterar sortimentet varje vecka. Kom tillbaka snart!</p>
       </div>
     `
-    if(!shopData.isOpen){
-      document.getElementById("closedBanner").textContent =
-        "⏰ Butiken öppnar onsdag–fredag. Välkommen tillbaka!"
-      document.getElementById("closedBanner").style.display = "block"
-    }
+    document.getElementById("categoryTabs").innerHTML = ""
     return
   }
 
+  // Kategori-tabs
+  buildCategoryTabs()
+
   // Rendera produkter
+  renderProducts()
+}
+
+/* ==============================
+   KATEGORI-TABS
+   ============================== */
+
+function buildCategoryTabs(){
+  const cats = [...new Set(shopData.items.map(i => i.category || "Matlåda"))]
+  const el = document.getElementById("categoryTabs")
+
+  if(cats.length <= 1){ el.innerHTML = ""; return }
+
+  let html = `<div class="cat-tab active" onclick="setCategory('all',this)">Alla (${shopData.items.length})</div>`
+  for(const cat of cats){
+    const count = shopData.items.filter(i => (i.category||"Matlåda") === cat).length
+    html += `<div class="cat-tab" onclick="setCategory('${escapeAttr(cat)}',this)">${escapeHtml(cat)} (${count})</div>`
+  }
+  el.innerHTML = html
+}
+
+function setCategory(cat, el){
+  activeCategory = cat
+  document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"))
+  if(el) el.classList.add("active")
+  renderProducts()
+}
+
+/* ==============================
+   RENDERA PRODUKTER
+   ============================== */
+
+function renderProducts(){
+  const area = document.getElementById("productsArea")
+  const search = (document.getElementById("searchInput").value || "").toLowerCase().trim()
+
+  let items = shopData.items
+
+  // Filtrera kategori
+  if(activeCategory !== "all"){
+    items = items.filter(i => (i.category||"Matlåda") === activeCategory)
+  }
+
+  // Filtrera sök
+  if(search){
+    items = items.filter(i =>
+      i.name.toLowerCase().includes(search) ||
+      (i.ingredients||"").toLowerCase().includes(search) ||
+      (i.description||"").toLowerCase().includes(search) ||
+      (i.category||"").toLowerCase().includes(search)
+    )
+  }
+
+  if(items.length === 0){
+    area.innerHTML = `
+      <div class="empty-state" style="padding:40px 20px;">
+        <div class="icon">🔍</div>
+        <h2>Inga träffar</h2>
+        <p>Prova ett annat sökord eller välj en annan kategori.</p>
+      </div>
+    `
+    return
+  }
+
   let html = '<div class="products-grid">'
 
-  for(const item of shopData.items){
-
+  for(const item of items){
     const stockClass = item.stock <= 3 ? "low" : ""
     const stockText = item.stock <= 3
       ? "⚠️ Bara " + item.stock + " kvar!"
       : item.stock + " st kvar"
 
     const imageHtml = item.imageUrl
-      ? `<img class="product-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" onerror="this.outerHTML='<div class=product-image-placeholder>🍱</div>'">`
+      ? `<img class="product-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" onerror="this.outerHTML='<div class=\\'product-image-placeholder\\'>🍱</div>'">`
       : '<div class="product-image-placeholder">🍱</div>'
 
-    const ingredients = item.ingredients || item.description || ""
+    const inCart = cart.find(c => c.id === item.id)
+    const btnClass = inCart ? "add-btn in-cart" : "add-btn"
+    const btnText = inCart ? `✓ ${inCart.quantity} i vagnen` : "+ Lägg till"
+
+    const desc = item.description || ""
+    const ing = item.ingredients || ""
 
     html += `
       <div class="product-card" id="card-${item.id}">
@@ -524,7 +610,8 @@ function renderShop(){
         <div class="product-body">
           <div class="product-category">${escapeHtml(item.category||"Matlåda")}</div>
           <div class="product-name">${escapeHtml(item.name)}</div>
-          ${ingredients ? `<div class="product-ingredients"><strong>Innehåll:</strong> ${escapeHtml(ingredients)}</div>` : ""}
+          ${desc ? `<div class="product-description">${escapeHtml(desc)}</div>` : ""}
+          ${ing ? `<div class="product-ingredients"><strong>Innehåll:</strong> ${escapeHtml(ing)}</div>` : ""}
           <div class="product-footer">
             <div>
               <div class="product-price">
@@ -533,11 +620,9 @@ function renderShop(){
               </div>
               <div class="product-stock ${stockClass}">${stockText}</div>
             </div>
-            <div>
-              <button class="add-btn" id="btn-${item.id}" onclick="addToCart('${item.id}')">
-                + Lägg till
-              </button>
-            </div>
+            <button class="${btnClass}" id="btn-${item.id}" onclick="addToCart('${item.id}')">
+              ${btnText}
+            </button>
           </div>
         </div>
       </div>
@@ -546,9 +631,10 @@ function renderShop(){
 
   html += '</div>'
   area.innerHTML = html
+}
 
-  // Hämtdagar
-  buildPickupDays()
+function filterProducts(){
+  renderProducts()
 }
 
 /* ==============================
@@ -570,59 +656,42 @@ function addToCart(id){
   if(existing){
     existing.quantity++
   } else {
-    cart.push({
-      id: item.id,
-      name: item.name,
-      price: item.finalPrice,
-      quantity: 1
-    })
+    cart.push({ id:item.id, name:item.name, price:item.finalPrice, quantity:1 })
   }
 
   updateCartUI()
-
-  // Animera knapp
-  const btn = document.getElementById("btn-" + id)
-  btn.textContent = "✓ Tillagd"
-  btn.classList.add("added")
-  setTimeout(()=>{
-    btn.textContent = "+ Lägg till"
-    btn.classList.remove("added")
-  }, 1000)
+  renderProducts() // Uppdatera knapptext
 }
 
 function removeFromCart(id){
   cart = cart.filter(c => c.id !== id)
   updateCartUI()
   renderCartItems()
+  renderProducts()
 }
 
 function changeQty(id, delta){
   const item = cart.find(c => c.id === id)
   if(!item) return
-
   const shopItem = shopData.items.find(i => i.id === id)
   const newQty = item.quantity + delta
-
-  if(newQty <= 0){
-    removeFromCart(id)
-    return
-  }
+  if(newQty <= 0){ removeFromCart(id); return }
   if(shopItem && newQty > shopItem.stock){
     alert("Max " + shopItem.stock + " st tillgängliga!")
     return
   }
-
   item.quantity = newQty
   updateCartUI()
   renderCartItems()
+  renderProducts()
 }
 
 function updateCartUI(){
-  const total = cart.reduce((s,c) => s + c.quantity, 0)
-  const el = document.getElementById("cartFloat")
-  const countEl = document.getElementById("cartCount")
-  countEl.textContent = total
-  el.style.display = total > 0 ? "block" : "none"
+  const count = cart.reduce((s,c) => s + c.quantity, 0)
+  const sum = cart.reduce((s,c) => s + (c.price * c.quantity), 0)
+  document.getElementById("cartCount").textContent = count
+  document.getElementById("cartSum").textContent = sum
+  document.getElementById("cartFloat").style.display = count > 0 ? "block" : "none"
 }
 
 function getCartTotal(){
@@ -646,11 +715,12 @@ function closeCart(){
 
 function renderCartItems(){
   const el = document.getElementById("cartItems")
+  const btn = document.getElementById("checkoutBtn")
 
   if(cart.length === 0){
-    el.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">Kundvagnen är tom</p>'
+    el.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">Kundvagnen är tom. Lägg till matlådor först!</p>'
     document.getElementById("cartTotal").textContent = "0"
-    document.getElementById("checkoutBtn").disabled = true
+    btn.disabled = true
     return
   }
 
@@ -658,11 +728,11 @@ function renderCartItems(){
   for(const c of cart){
     html += `
       <div class="cart-item">
-        <div>
+        <div class="cart-item-info">
           <div class="cart-item-name">${escapeHtml(c.name)}</div>
           <div class="cart-item-detail">${c.price} kr × ${c.quantity} = ${c.price * c.quantity} kr</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;align-items:center;gap:6px;">
           <div class="qty-control">
             <button class="qty-btn" onclick="changeQty('${c.id}',-1)">−</button>
             <span class="qty-value">${c.quantity}</span>
@@ -676,11 +746,11 @@ function renderCartItems(){
 
   el.innerHTML = html
   document.getElementById("cartTotal").textContent = getCartTotal()
-  document.getElementById("checkoutBtn").disabled = false
+  btn.disabled = false
 }
 
 /* ==============================
-   HÄMTDAGAR
+   HÄMTDAGAR & TIDER
    ============================== */
 
 function buildPickupDays(){
@@ -689,17 +759,40 @@ function buildPickupDays(){
   const days = ["Söndag","Måndag","Tisdag","Onsdag","Torsdag","Fredag","Lördag"]
   const openDays = [3,4,5] // ons-fre
 
-  for(let i = 0; i < 7; i++){
+  for(let i = 0; i < 14; i++){
     const d = new Date()
     d.setDate(d.getDate() + i)
     if(!openDays.includes(d.getDay())) continue
 
     const dateStr = d.toISOString().split("T")[0]
-    const label = (i===0?"Idag":"") + " " + days[d.getDay()] + " " + dateStr
+    const dayName = days[d.getDay()]
+    const month = d.getDate() + "/" + (d.getMonth()+1)
+    const label = dayName + " " + month + (i===0?" (idag)":i===1?" (imorgon)":"")
     const opt = document.createElement("option")
     opt.value = dateStr
-    opt.textContent = label.trim()
+    opt.textContent = label
     sel.appendChild(opt)
+  }
+}
+
+function buildPickupTimes(){
+  const sel = document.getElementById("custTime")
+  sel.innerHTML = ""
+
+  const startStr = shopData.pickupHoursStart || "11:00"
+  const endStr = shopData.pickupHoursEnd || "15:00"
+  const [startH,startM] = startStr.split(":").map(Number)
+  const [endH,endM] = endStr.split(":").map(Number)
+
+  let h = startH, m = startM
+  while(h < endH || (h === endH && m <= endM)){
+    const timeStr = String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0")
+    const opt = document.createElement("option")
+    opt.value = timeStr
+    opt.textContent = timeStr
+    sel.appendChild(opt)
+    m += 30
+    if(m >= 60){ m = 0; h++ }
   }
 }
 
@@ -718,6 +811,7 @@ async function placeOrder(){
   if(!phone){ alert("Ange telefonnummer"); return }
   if(!day){ alert("Välj hämtningsdag"); return }
   if(!time){ alert("Välj hämtningstid"); return }
+  if(cart.length === 0){ alert("Kundvagnen är tom"); return }
 
   const btn = document.getElementById("checkoutBtn")
   btn.disabled = true
@@ -744,8 +838,7 @@ async function placeOrder(){
       return
     }
 
-    // Visa kvitto
-    showReceipt(d.order, email)
+    showReceipt(d.order, email, d.emailSent)
 
   } catch(e){
     alert("❌ Något gick fel: " + e.message)
@@ -754,7 +847,7 @@ async function placeOrder(){
   }
 }
 
-function showReceipt(order, email){
+function showReceipt(order, email, emailSent){
   document.getElementById("cartStep1").style.display = "none"
   document.getElementById("cartStep2").style.display = "block"
 
@@ -769,15 +862,22 @@ function showReceipt(order, email){
   document.getElementById("receiptTotal").textContent = order.totalPrice
 
   if(email){
-    document.getElementById("receiptEmailMsg").style.display = "block"
+    const emailEl = document.getElementById("receiptEmailMsg")
+    emailEl.style.display = "block"
     document.getElementById("receiptEmail").textContent = email
+    if(emailSent){
+      emailEl.innerHTML = '📧 Kvitto skickat till: <strong>' + escapeHtml(email) + '</strong> ✅'
+    } else {
+      emailEl.innerHTML = '📧 Kvitto till: <strong>' + escapeHtml(email) + '</strong> (kontrollera skräpposten)'
+    }
   }
 }
 
 function resetCart(){
   cart = []
   updateCartUI()
-  loadShop() // Ladda om för uppdaterade lagersaldon
+  // Ladda om för uppdaterade lagersaldon
+  loadShop()
 }
 
 /* ==============================
@@ -788,6 +888,10 @@ function escapeHtml(t){
   const d = document.createElement("div")
   d.textContent = t || ""
   return d.innerHTML
+}
+
+function escapeAttr(t){
+  return (t||"").replace(/'/g,"\\'").replace(/"/g,"&quot;")
 }
 
 </script>
