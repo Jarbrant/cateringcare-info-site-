@@ -1,1 +1,945 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CateringCare – Matlådor till salu</title>
 
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f5f7f6;
+  color: #333;
+}
+
+/* HEADER */
+header {
+  background: #2f7d59;
+  color: white;
+  padding: 16px 20px;
+}
+
+header .container {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo { font-weight: bold; font-size: 22px; }
+.logo a { color: white; text-decoration: none; }
+
+.header-nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 15px;
+  opacity: 0.85;
+}
+.header-nav a:hover { opacity: 1; text-decoration: underline; }
+
+/* HERO */
+.shop-hero {
+  background: linear-gradient(135deg, #2f7d59 0%, #1a5c3a 100%);
+  color: white;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.shop-hero h1 { font-size: 32px; margin-bottom: 10px; }
+.shop-hero p { font-size: 17px; opacity: 0.9; max-width: 600px; margin: auto; }
+
+.badge-closed {
+  display: inline-block;
+  background: #e74c3c;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.badge-open {
+  display: inline-block;
+  background: #27ae60;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.badge-discount {
+  display: inline-block;
+  background: #f39c12;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* MAIN */
+.container { max-width: 900px; margin: auto; padding: 20px; }
+
+/* INFO CARDS */
+.info-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 25px 0;
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.info-card .icon { font-size: 28px; margin-bottom: 8px; }
+.info-card h3 { font-size: 15px; color: #666; margin-bottom: 4px; }
+.info-card p { font-size: 16px; font-weight: bold; color: #2f7d59; }
+
+/* MATLÅDOR GRID */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.item-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.item-card:hover { transform: translateY(-2px); }
+
+.item-category {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.item-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.item-desc {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.item-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.item-price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2f7d59;
+}
+
+.item-price-original {
+  font-size: 15px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.item-discount-tag {
+  background: #f39c12;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.item-stock {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.item-stock.low { color: #e74c3c; font-weight: bold; }
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #2f7d59;
+  background: white;
+  color: #2f7d59;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover { background: #2f7d59; color: white; }
+.qty-num { font-size: 18px; font-weight: bold; min-width: 24px; text-align: center; }
+
+.add-btn {
+  margin-left: auto;
+  background: #2f7d59;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-btn:hover { background: #24614a; }
+.add-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* KUNDVAGN */
+.cart-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  margin: 25px 0;
+  display: none;
+}
+
+.cart-section.active { display: block; }
+
+.cart-section h2 { font-size: 20px; margin-bottom: 15px; color: #333; }
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-item-name { font-weight: bold; }
+.cart-item-qty { color: #666; }
+.cart-item-price { font-weight: bold; color: #2f7d59; }
+
+.cart-remove {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  border-top: 2px solid #2f7d59;
+  margin-top: 10px;
+}
+
+/* BESTÄLLNINGSFORMULÄR */
+.order-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.form-group { margin-bottom: 15px; }
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2f7d59;
+  box-shadow: 0 0 0 3px rgba(47,125,89,0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.order-btn {
+  width: 100%;
+  background: #2f7d59;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.order-btn:hover { background: #24614a; }
+.order-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* BEKRÄFTELSE */
+.confirmation {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  margin: 25px 0;
+  text-align: center;
+  display: none;
+}
+
+.confirmation.active { display: block; }
+.confirmation h2 { color: #2f7d59; font-size: 24px; margin-bottom: 15px; }
+
+.swish-box {
+  background: #f0faf4;
+  border: 2px solid #2f7d59;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 20px 0;
+}
+
+.swish-number {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2f7d59;
+  letter-spacing: 2px;
+}
+
+.swish-amount {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.swish-message {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.swish-qr {
+  margin: 15px auto;
+  max-width: 200px;
+}
+
+.swish-qr img { width: 100%; border-radius: 8px; }
+
+.pickup-info {
+  background: #fff9e6;
+  border: 1px solid #f0d060;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+  text-align: left;
+}
+
+.pickup-info h3 { font-size: 15px; color: #856d0a; margin-bottom: 5px; }
+.pickup-info p { font-size: 14px; color: #666; }
+
+/* KARTA */
+.map-section {
+  margin: 25px 0;
+}
+
+.map-section iframe {
+  width: 100%;
+  height: 250px;
+  border: none;
+  border-radius: 12px;
+}
+
+/* FOOTER */
+footer {
+  background: #2f7d59;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+footer a { color: white; }
+
+/* STÄNGD-MEDDELANDE */
+.closed-message {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  margin: 25px 0;
+}
+
+.closed-message h2 { color: #e74c3c; margin-bottom: 10px; }
+.closed-message p { color: #666; font-size: 16px; }
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid #eee;
+  border-top: 3px solid #2f7d59;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .shop-hero h1 { font-size: 24px; }
+  .form-row { grid-template-columns: 1fr; }
+  .info-row { grid-template-columns: 1fr; }
+  .items-grid { grid-template-columns: 1fr; }
+  .header-nav a { font-size: 13px; margin-left: 10px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo"><a href="index.html">🍱 CateringCare</a></div>
+    <nav class="header-nav">
+      <a href="index.html">Hem</a>
+      <a href="shop.html">Matlådor</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="shop-hero">
+  <h1>🍱 Matlådor till salu</h1>
+  <p>Hemlagad mat från vårt kök – minska svinn, ät gott! Hämta i Solna onsdag-fredag.</p>
+  <div id="statusBadge"></div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- LOADING -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Laddar matlådor...</p>
+  </div>
+
+  <!-- STÄNGD -->
+  <div id="closedMessage" class="closed-message" style="display:none;">
+    <h2>⏰ Stängt just nu</h2>
+    <p>Vår matlådebutik är öppen <strong>onsdag–fredag</strong>.</p>
+    <p>Kom tillbaka då för att se veckans utbud!</p>
+    <p style="margin-top:15px;font-size:14px;color:#999;">Hämtplats: Ekelundsvägen 18, 171 73 Solna</p>
+  </div>
+
+  <!-- INFO KORT -->
+  <div id="infoCards" class="info-row" style="display:none;">
+    <div class="info-card">
+      <div class="icon">📍</div>
+      <h3>Hämtplats</h3>
+      <p id="infoAddress">Ekelundsvägen 18, Solna</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">🕐</div>
+      <h3>Hämttider</h3>
+      <p id="infoHours">11:00 – 15:00</p>
+    </div>
+    <div class="info-card">
+      <div class="icon">📅</div>
+      <h3>Öppet</h3>
+      <p>Onsdag – Fredag</p>
+    </div>
+  </div>
+
+  <!-- MATLÅDOR -->
+  <div id="itemsSection" style="display:none;">
+    <h2 style="margin-bottom:15px;">Välj dina matlådor</h2>
+    <div id="itemsGrid" class="items-grid"></div>
+  </div>
+
+  <!-- KUNDVAGN -->
+  <div id="cartSection" class="cart-section">
+    <h2>🛒 Din kundvagn</h2>
+    <div id="cartItems"></div>
+    <div class="cart-total">
+      <span>Totalt:</span>
+      <span id="cartTotal">0 kr</span>
+    </div>
+
+    <div class="order-form">
+      <h3 style="margin-bottom:15px;">Dina uppgifter</h3>
+
+      <div class="form-group">
+        <label>Namn *</label>
+        <input type="text" id="customerName" placeholder="Ditt namn">
+      </div>
+
+      <div class="form-group">
+        <label>Telefonnummer *</label>
+        <input type="tel" id="customerPhone" placeholder="070-123 45 67">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Hämtningsdag *</label>
+          <select id="pickupDay">
+            <option value="">Välj dag...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Hämtningstid *</label>
+          <select id="pickupTime">
+            <option value="">Välj tid...</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+            <option value="15:00">15:00</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="order-btn" onclick="placeOrder()" id="orderBtn">
+        💳 Beställ & betala med Swish
+      </button>
+    </div>
+  </div>
+
+  <!-- BEKRÄFTELSE -->
+  <div id="confirmation" class="confirmation">
+    <h2>✅ Beställning mottagen!</h2>
+    <p>Ordernummer: <strong id="orderId"></strong></p>
+
+    <div class="swish-box">
+      <p style="font-size:14px;color:#666;margin-bottom:8px;">Swisha till:</p>
+      <div class="swish-number" id="swishNumber"></div>
+      <div class="swish-amount" id="swishAmount"></div>
+      <div class="swish-message" id="swishMsg"></div>
+      <div class="swish-qr" id="swishQR"></div>
+    </div>
+
+    <div class="pickup-info">
+      <h3>📍 Hämtning</h3>
+      <p><strong>Dag:</strong> <span id="confirmDay"></span></p>
+      <p><strong>Tid:</strong> <span id="confirmTime"></span></p>
+      <p><strong>Adress:</strong> <span id="confirmAddress"></span></p>
+    </div>
+
+    <p style="margin-top:20px;font-size:14px;color:#999;">
+      Spara ditt ordernummer. Vi verifierar din Swish-betalning.
+    </p>
+
+    <button onclick="location.reload()" style="margin-top:15px;background:#2f7d59;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:15px;">
+      ← Tillbaka till butiken
+    </button>
+  </div>
+
+  <!-- KARTA -->
+  <div id="mapSection" class="map-section" style="display:none;">
+    <h3 style="margin-bottom:10px;">📍 Hämtplats</h3>
+    <iframe
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Ekelundsvägen+18,+171+73+Solna&zoom=15"
+      allowfullscreen
+      loading="lazy"
+    ></iframe>
+  </div>
+
+</div>
+
+<footer>
+  <p>© CateringCare – <a href="index.html">Tillbaka till startsidan</a></p>
+</footer>
+
+
+<script>
+
+/* ==============================
+   KONFIGURATION
+   ============================== */
+
+const API_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
+
+let shopData = null
+let cart = []
+
+/* ==============================
+   LADDA BUTIKEN
+   ============================== */
+
+async function loadShop() {
+  try {
+    const res = await fetch(API_URL + "/shop/items")
+    shopData = await res.json()
+
+    document.getElementById("loading").style.display = "none"
+
+    // Fyll i hämtdagar
+    fillPickupDays()
+
+    if (!shopData.isOpen) {
+      document.getElementById("closedMessage").style.display = "block"
+      document.getElementById("statusBadge").innerHTML =
+        '<div class="badge-closed">⏰ Stängt – öppnar onsdag</div>'
+      // Visa karta ändå
+      document.getElementById("mapSection").style.display = "block"
+      return
+    }
+
+    if (shopData.items.length === 0) {
+      document.getElementById("closedMessage").style.display = "block"
+      document.getElementById("closedMessage").innerHTML =
+        '<h2>🍽️ Inga matlådor just nu</h2><p>Alla matlådor är tyvärr slutsålda eller har inte lagts ut ännu.</p><p style="margin-top:15px;font-size:14px;color:#999;">Kolla tillbaka senare idag!</p>'
+      document.getElementById("statusBadge").innerHTML =
+        '<div class="badge-open">✅ Öppet idag</div>'
+      document.getElementById("mapSection").style.display = "block"
+      return
+    }
+
+    // Visa butiken!
+    document.getElementById("statusBadge").innerHTML =
+      '<div class="badge-open">✅ Öppet – ' + shopData.items.length + ' matlådor!</div>' +
+      (shopData.discountActive
+        ? '<div class="badge-discount">🏷️ RABATT ' + shopData.discountPercent + '% på allt!</div>'
+        : '')
+
+    document.getElementById("infoCards").style.display = "grid"
+    document.getElementById("infoAddress").textContent = shopData.pickupAddress
+    document.getElementById("infoHours").textContent = shopData.pickupHoursStart + " – " + shopData.pickupHoursEnd
+    document.getElementById("itemsSection").style.display = "block"
+    document.getElementById("mapSection").style.display = "block"
+
+    renderItems()
+
+  } catch (e) {
+    document.getElementById("loading").innerHTML =
+      '<p style="color:#e74c3c;">Kunde inte ladda butiken. Försök igen senare.</p>'
+  }
+}
+
+
+/* ==============================
+   VISA MATLÅDOR
+   ============================== */
+
+function renderItems() {
+  const grid = document.getElementById("itemsGrid")
+  grid.innerHTML = ""
+
+  for (const item of shopData.items) {
+    const stockClass = item.stock <= 3 ? "low" : ""
+    const stockText = item.stock <= 3
+      ? "⚠️ Bara " + item.stock + " kvar!"
+      : item.stock + " kvar"
+
+    // Klipp ned beskrivning
+    let desc = item.description || item.ingredients || ""
+    if (desc.length > 100) desc = desc.substring(0, 100) + "..."
+
+    const card = document.createElement("div")
+    card.className = "item-card"
+    card.innerHTML = `
+      <div class="item-category">${escapeHtml(item.category || "Meny")}</div>
+      <div class="item-name">${escapeHtml(item.name)}</div>
+      ${desc ? '<div class="item-desc">' + escapeHtml(desc) + '</div>' : ''}
+      <div class="item-price-row">
+        <span class="item-price">${item.finalPrice} kr</span>
+        ${item.discountActive
+          ? '<span class="item-price-original">' + item.price + ' kr</span><span class="item-discount-tag">-' + item.discountPercent + '%</span>'
+          : ''}
+      </div>
+      <div class="item-stock ${stockClass}">${stockText}</div>
+      <div class="qty-row">
+        <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
+        <span class="qty-num" id="qty-${item.id}">0</span>
+        <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+        <button class="add-btn" onclick="addToCart('${item.id}')" id="addBtn-${item.id}">Lägg till</button>
+      </div>
+    `
+    grid.appendChild(card)
+  }
+}
+
+
+/* ==============================
+   KVANTITET
+   ============================== */
+
+function changeQty(itemId, delta) {
+  const el = document.getElementById("qty-" + itemId)
+  const item = shopData.items.find(i => i.id === itemId)
+  if (!item) return
+
+  let qty = parseInt(el.textContent) + delta
+  if (qty < 0) qty = 0
+  if (qty > item.stock) qty = item.stock
+
+  el.textContent = qty
+}
+
+
+/* ==============================
+   KUNDVAGN
+   ============================== */
+
+function addToCart(itemId) {
+  const el = document.getElementById("qty-" + itemId)
+  const qty = parseInt(el.textContent)
+  if (qty < 1) return
+
+  const item = shopData.items.find(i => i.id === itemId)
+  if (!item) return
+
+  // Kolla om redan i vagnen
+  const existing = cart.find(c => c.id === itemId)
+  if (existing) {
+    existing.quantity += qty
+    if (existing.quantity > item.stock) existing.quantity = item.stock
+  } else {
+    cart.push({
+      id: item.id,
+      name: item.name,
+      price: item.finalPrice,
+      quantity: qty
+    })
+  }
+
+  el.textContent = "0"
+  renderCart()
+}
+
+function removeFromCart(itemId) {
+  cart = cart.filter(c => c.id !== itemId)
+  renderCart()
+}
+
+function renderCart() {
+  const section = document.getElementById("cartSection")
+  const itemsDiv = document.getElementById("cartItems")
+  const totalEl = document.getElementById("cartTotal")
+
+  if (cart.length === 0) {
+    section.classList.remove("active")
+    return
+  }
+
+  section.classList.add("active")
+
+  let html = ""
+  let total = 0
+
+  for (const c of cart) {
+    const lineTotal = c.price * c.quantity
+    total += lineTotal
+    html += `
+      <div class="cart-item">
+        <span class="cart-item-name">${escapeHtml(c.name)}</span>
+        <span class="cart-item-qty">${c.quantity} st × ${c.price} kr</span>
+        <span class="cart-item-price">${lineTotal} kr</span>
+        <button class="cart-remove" onclick="removeFromCart('${c.id}')">✕</button>
+      </div>
+    `
+  }
+
+  itemsDiv.innerHTML = html
+  totalEl.textContent = total + " kr"
+}
+
+
+/* ==============================
+   HÄMTDAGAR
+   ============================== */
+
+function fillPickupDays() {
+  const select = document.getElementById("pickupDay")
+  const days = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"]
+  const openDays = shopData ? (shopData.openDays || [3, 4, 5]) : [3, 4, 5]
+
+  // Visa kommande öppna dagar (denna vecka)
+  const now = new Date()
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now)
+    d.setDate(d.getDate() + i)
+    const dayNum = d.getDay()
+
+    if (openDays.includes(dayNum)) {
+      const dateStr = d.toLocaleDateString("sv-SE", { weekday: "long", day: "numeric", month: "long" })
+      const value = d.toISOString().split("T")[0]
+      const opt = document.createElement("option")
+      opt.value = value
+      opt.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1)
+      if (i === 0) opt.textContent += " (idag)"
+      select.appendChild(opt)
+    }
+  }
+}
+
+
+/* ==============================
+   BESTÄLL
+   ============================== */
+
+async function placeOrder() {
+  const name = document.getElementById("customerName").value.trim()
+  const phone = document.getElementById("customerPhone").value.trim()
+  const day = document.getElementById("pickupDay").value
+  const time = document.getElementById("pickupTime").value
+  const btn = document.getElementById("orderBtn")
+
+  if (!name) return alert("Fyll i ditt namn")
+  if (!phone) return alert("Fyll i ditt telefonnummer")
+  if (!day) return alert("Välj hämtningsdag")
+  if (!time) return alert("Välj hämtningstid")
+  if (cart.length === 0) return alert("Din kundvagn är tom")
+
+  btn.disabled = true
+  btn.textContent = "Beställer..."
+
+  try {
+    const res = await fetch(API_URL + "/shop/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        phone,
+        pickupDay: day,
+        pickupTime: time,
+        items: cart.map(c => ({ id: c.id, quantity: c.quantity }))
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.error) {
+      alert("Fel: " + data.error)
+      btn.disabled = false
+      btn.textContent = "💳 Beställ & betala med Swish"
+      return
+    }
+
+    // Visa bekräftelse!
+    showConfirmation(data.order)
+
+  } catch (e) {
+    alert("Något gick fel. Försök igen.")
+    btn.disabled = false
+    btn.textContent = "💳 Beställ & betala med Swish"
+  }
+}
+
+
+/* ==============================
+   BEKRÄFTELSE
+   ============================== */
+
+function showConfirmation(order) {
+  // Göm butiken
+  document.getElementById("infoCards").style.display = "none"
+  document.getElementById("itemsSection").style.display = "none"
+  document.getElementById("cartSection").style.display = "none"
+
+  // Visa bekräftelse
+  const conf = document.getElementById("confirmation")
+  conf.classList.add("active")
+
+  document.getElementById("orderId").textContent = order.id
+  document.getElementById("swishNumber").textContent = order.swishNumber || "Ej konfigurerat"
+  document.getElementById("swishAmount").textContent = order.totalPrice + " kr"
+  document.getElementById("swishMsg").textContent = "Meddelande: " + (order.swishMessage || order.id)
+  document.getElementById("confirmDay").textContent = order.pickupDay
+  document.getElementById("confirmTime").textContent = order.pickupTime
+  document.getElementById("confirmAddress").textContent = order.pickupAddress
+
+  // Swish QR-kod (om nummer finns)
+  if (order.swishNumber) {
+    const qrData = `C${order.swishNumber};${order.totalPrice};${order.swishMessage || order.id};0`
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`
+    document.getElementById("swishQR").innerHTML = `<img src="${qrUrl}" alt="Swish QR-kod">`
+  }
+
+  // Scrolla upp
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
+
+/* ==============================
+   HJÄLPFUNKTIONER
+   ============================== */
+
+function escapeHtml(text) {
+  const div = document.createElement("div")
+  div.textContent = text || ""
+  return div.innerHTML
+}
+
+
+/* ==============================
+   STARTA!
+   ============================== */
+
+loadShop()
+
+</script>
+
+</body>
+</html>
