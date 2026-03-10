@@ -1,5 +1,5 @@
 /* ==============================
-   CateringCare Admin JS
+   CateringCare Admin v2
    ============================== */
 
 const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
@@ -68,11 +68,11 @@ function headers() {
    NAVIGATION
    ============================== */
 
-function showSection(name) {
+function showSection(name, el) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"))
   document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"))
   document.getElementById("section-" + name).classList.add("active")
-  event.target.classList.add("active")
+  if (el) el.classList.add("active")
 
   if (name === "orders") loadOrders()
   if (name === "stats") loadStats()
@@ -80,6 +80,7 @@ function showSection(name) {
   if (name === "faq") loadFaq()
   if (name === "notifications") loadNotifications()
   if (name === "customers") loadCustomers()
+  if (name === "receipts") loadReceipts()
 }
 
 function showStatus(msg, type) {
@@ -139,7 +140,12 @@ async function loadMenuFromAPI() {
       if (d2.items && d2.items.length > 0) {
         for (const saved of d2.items) {
           const m = shopItems.find(s => s.name.toLowerCase() === saved.name.toLowerCase())
-          if (m) { m.stock = saved.stock; m.price = saved.price; m.enabled = saved.enabled; m.id = saved.id }
+          if (m) {
+            m.stock = saved.stock
+            m.price = saved.price
+            m.enabled = saved.enabled
+            m.id = saved.id
+          }
         }
       }
     } catch (e) {}
@@ -163,7 +169,9 @@ async function loadMenuFromAPI() {
 
 function buildCategoryFilters() {
   const cats = new Set()
-  for (const item of shopItems) if (item.category) cats.add(item.category)
+  for (const item of shopItems) {
+    if (item.category) cats.add(item.category)
+  }
   allCategories = [...cats]
   selectedCategories = new Set(allCategories)
   renderCategoryCheckboxes()
@@ -179,11 +187,12 @@ function renderCategoryCheckboxes() {
   for (const cat of allCategories) {
     const checked = selectedCategories.has(cat)
     const count = shopItems.filter(i => i.category === cat).length
-    h += `<label class="checkbox-label ${checked ? "checked" : ""}" onclick="toggleCat(this,'${escapeAttr(cat)}')">
-      <span class="checkbox-mark">${checked ? "✓" : ""}</span>${escapeHtml(cat)} (${count})</label>`
+    h += '<label class="checkbox-label ' + (checked ? "checked" : "") + '" onclick="toggleCat(this,\'' + escapeAttr(cat) + '\')">'
+      + '<span class="checkbox-mark">' + (checked ? "✓" : "") + '</span>'
+      + escapeHtml(cat) + ' (' + count + ')</label>'
   }
-  h += `<button class="btn btn-sm btn-outline" onclick="selAllCats()">Alla</button>`
-  h += `<button class="btn btn-sm btn-outline" onclick="deselAllCats()">Inga</button>`
+  h += '<button class="btn btn-sm btn-outline" onclick="selAllCats()">Alla</button>'
+  h += '<button class="btn btn-sm btn-outline" onclick="deselAllCats()">Inga</button>'
   c.innerHTML = h
 }
 
@@ -208,7 +217,7 @@ function deselAllCats() {
 
 
 /* ==============================
-   LADDA SPARADE ITEMS
+   LADDA SPARADE
    ============================== */
 
 async function loadShopItems() {
@@ -244,10 +253,9 @@ function renderShopItems() {
   const activeCount = filtered.filter(i => i.enabled).length
   const stockCount = filtered.filter(i => i.enabled && i.stock > 0).length
 
-  countEl.innerHTML = `<span class="items-count">
-    Visar ${filtered.length} av ${shopItems.length} rätter · 
-    ${activeCount} aktiverade · ${stockCount} live i shop
-  </span>`
+  countEl.innerHTML = '<span class="items-count">'
+    + 'Visar ' + filtered.length + ' av ' + shopItems.length + ' rätter · '
+    + activeCount + ' aktiverade · ' + stockCount + ' live i shop</span>'
 
   if (!filtered.length) {
     el.innerHTML = '<p class="muted center">Inga rätter i valda menyer.</p>'
@@ -255,31 +263,24 @@ function renderShopItems() {
     return
   }
 
-  let h = `<div class="shop-item-row header">
-    <div>Rätt</div><div style="text-align:center">Pris</div>
-    <div style="text-align:center">Antal</div><div style="text-align:center">Aktiv</div>
-  </div>`
+  let h = '<div class="shop-item-row header">'
+    + '<div>Rätt</div><div style="text-align:center">Pris</div>'
+    + '<div style="text-align:center">Antal</div><div style="text-align:center">Aktiv</div></div>'
 
   for (const item of filtered) {
     const idx = shopItems.indexOf(item)
     const isActive = item.enabled && item.stock > 0
-    h += `<div class="shop-item-row ${isActive ? "active-row" : ""}">
-      <div class="shop-item-name">
-        ${escapeHtml(item.name)}
-        <small>${escapeHtml(item.category || "")}</small>
-      </div>
-      <div><input class="shop-input" type="number" value="${item.price || ""}" 
-        placeholder="79" onchange="shopItems[${idx}].price=parseFloat(this.value)||null"></div>
-      <div><input class="shop-input" type="number" value="${item.stock || 0}" 
-        min="0" onchange="shopItems[${idx}].stock=parseInt(this.value)||0"></div>
-      <div style="text-align:center;">
-        <label class="toggle-switch">
-          <input type="checkbox" ${item.enabled ? "checked" : ""} 
-            onchange="shopItems[${idx}].enabled=this.checked;renderShopItems()">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>`
+    h += '<div class="shop-item-row ' + (isActive ? "active-row" : "") + '">'
+      + '<div class="shop-item-name">' + escapeHtml(item.name)
+      + '<small>' + escapeHtml(item.category || "") + '</small></div>'
+      + '<div><input class="shop-input" type="number" value="' + (item.price || "") + '" '
+      + 'placeholder="79" onchange="shopItems[' + idx + '].price=parseFloat(this.value)||null"></div>'
+      + '<div><input class="shop-input" type="number" value="' + (item.stock || 0) + '" '
+      + 'min="0" onchange="shopItems[' + idx + '].stock=parseInt(this.value)||0"></div>'
+      + '<div style="text-align:center;"><label class="toggle-switch">'
+      + '<input type="checkbox" ' + (item.enabled ? "checked" : "") + ' '
+      + 'onchange="shopItems[' + idx + '].enabled=this.checked;renderShopItems()">'
+      + '<span class="toggle-slider"></span></label></div></div>'
   }
 
   el.innerHTML = h
@@ -389,12 +390,12 @@ function renderPublicMenuTags() {
   let h = ""
   for (const cat of allCategories) {
     const isPublic = publicMenus.includes(cat)
-    h += `<div class="public-tag ${isPublic ? "active" : ""}" 
-      onclick="togglePublicMenu('${escapeAttr(cat)}')">
-      ${isPublic ? "👁️" : "🔒"} ${escapeHtml(cat)}</div>`
+    h += '<div class="public-tag ' + (isPublic ? "active" : "") + '" '
+      + 'onclick="togglePublicMenu(\'' + escapeAttr(cat) + '\')">'
+      + (isPublic ? "👁️" : "🔒") + " " + escapeHtml(cat) + '</div>'
   }
   if (!publicMenus.length) {
-    h += `<p style="font-size:12px;color:#999;margin-left:8px;">⚠️ Inga valda = alla visas</p>`
+    h += '<p style="font-size:12px;color:#999;margin-left:8px;">⚠️ Inga valda = alla visas</p>'
   }
   el.innerHTML = h
 }
@@ -417,33 +418,58 @@ async function loadSettings() {
     const d = await r.json()
     if (d.error === "unauthorized") { logout(); return }
     const s = d.settings || {}
+
+    // Butik
     document.getElementById("setDefaultPrice").value = s.defaultPrice || 79
     document.getElementById("setSwishNumber").value = s.swishNumber || ""
     document.getElementById("setSwishMessage").value = s.swishMessage || "CateringCare Matlåda"
     document.getElementById("setAddress").value = s.pickupAddress || "Ekelundsvägen 18, 171 73 Solna"
     document.getElementById("setPickupStart").value = s.pickupHoursStart || "11:00"
     document.getElementById("setPickupEnd").value = s.pickupHoursEnd || "15:00"
+
+    // Rabatt
     document.getElementById("setDiscountPercent").value = s.discountPercent || 30
     document.getElementById("setDiscountDay").value = s.discountDay || 5
     document.getElementById("setDiscountHour").value = s.discountStartHour || 13
     document.getElementById("setDiscountMinute").value = s.discountStartMinute || 0
+
+    // Företag
+    document.getElementById("setCompanyName").value = s.companyName || "CateringCare AB"
+    document.getElementById("setOrgNumber").value = s.orgNumber || ""
+    document.getElementById("setCompanyAddress").value = s.companyAddress || "Ekelundsvägen 18, 171 73 Solna"
+    document.getElementById("setCompanyEmail").value = s.companyEmail || "info@cateringcare.se"
+    document.getElementById("setCompanyPhone").value = s.companyPhone || ""
+    document.getElementById("setVatPercent").value = s.vatPercent ?? 12
+    document.getElementById("setCompanyWeb").value = s.companyWeb || "www.cateringcare.se"
+    document.getElementById("setFskatt").value = s.fskatt || "yes"
   } catch (e) {}
 }
 
 async function saveAllSettings() {
   try {
     const body = {
+      // Butik
       defaultPrice: parseFloat(document.getElementById("setDefaultPrice").value) || 79,
       swishNumber: document.getElementById("setSwishNumber").value.trim(),
       swishMessage: document.getElementById("setSwishMessage").value.trim(),
       pickupAddress: document.getElementById("setAddress").value.trim(),
       pickupHoursStart: document.getElementById("setPickupStart").value,
       pickupHoursEnd: document.getElementById("setPickupEnd").value,
+      // Rabatt
       discountPercent: parseInt(document.getElementById("setDiscountPercent").value) || 30,
       discountDay: parseInt(document.getElementById("setDiscountDay").value) || 5,
       discountStartHour: parseInt(document.getElementById("setDiscountHour").value) || 13,
       discountStartMinute: parseInt(document.getElementById("setDiscountMinute").value) || 0,
-      openDays: [3, 4, 5]
+      openDays: [3, 4, 5],
+      // Företag
+      companyName: document.getElementById("setCompanyName").value.trim(),
+      orgNumber: document.getElementById("setOrgNumber").value.trim(),
+      companyAddress: document.getElementById("setCompanyAddress").value.trim(),
+      companyEmail: document.getElementById("setCompanyEmail").value.trim(),
+      companyPhone: document.getElementById("setCompanyPhone").value.trim(),
+      vatPercent: parseFloat(document.getElementById("setVatPercent").value) ?? 12,
+      companyWeb: document.getElementById("setCompanyWeb").value.trim(),
+      fskatt: document.getElementById("setFskatt").value
     }
     await fetch(W + "/shop/admin/settings", {
       method: "POST", headers: headers(), body: JSON.stringify(body)
@@ -484,7 +510,8 @@ async function loadOrders() {
     }
 
     const priority = { pending: 0, paid: 1, picked_up: 2, cancelled: 3 }
-    const sorted = [...orders].sort((a, b) => (priority[a.status] || 9) - (priority[b.status] || 9))
+    const sorted = [...orders].sort((a, b) =>
+      (priority[a.status] || 9) - (priority[b.status] || 9))
 
     const statusText = {
       pending: "⏳ Inväntar", paid: "✅ Betalad",
@@ -494,35 +521,36 @@ async function loadOrders() {
     let h = ""
     for (const o of sorted) {
       const items = o.items.map(i => i.quantity + "× " + escapeHtml(i.name)).join(", ")
-      h += `<div class="order-card ${o.status}">
-        <div class="order-header">
-          <span class="order-id">${o.id}</span>
-          <span class="order-status ${o.status}">${statusText[o.status] || o.status}</span>
-        </div>
-        <div class="order-customer">
-          👤 ${escapeHtml(o.customerName)} · 📱 ${escapeHtml(o.customerPhone)}
-          ${o.customerEmail ? " · 📧 " + escapeHtml(o.customerEmail) : ""}
-          · 📅 ${o.pickupDay} kl ${o.pickupTime}
-        </div>
-        <div class="order-items">📦 ${items}</div>
-        <div class="order-total">
-          ${o.totalPrice} kr
-          ${o.emailSent ? " · 📧 Kvitto skickat" : ""}
-          ${o.discountActive ? " (–" + o.discountPercent + "%)" : ""}
-        </div>
-        <div class="order-actions">
-          ${o.status === "pending" ? `
-            <button class="btn btn-sm" onclick="markOrder('${o.id}','paid')">✅ Betalad</button>
-            <button class="btn btn-sm btn-red" onclick="markOrder('${o.id}','cancelled')">❌ Avbryt</button>
-          ` : ""}
-          ${o.status === "paid" ? `
-            <button class="btn btn-sm btn-blue" onclick="markOrder('${o.id}','picked_up')">📦 Hämtad</button>
-          ` : ""}
-        </div>
-        <div style="font-size:12px;color:#999;margin-top:6px;">
-          ${new Date(o.createdAt).toLocaleString("sv-SE")}
-        </div>
-      </div>`
+      h += '<div class="order-card ' + o.status + '">'
+        + '<div class="order-header">'
+        + '<span class="order-id">' + o.id + '</span>'
+        + '<span class="order-status ' + o.status + '">' + (statusText[o.status] || o.status) + '</span>'
+        + '</div>'
+        + '<div class="order-customer">'
+        + '👤 ' + escapeHtml(o.customerName) + ' · 📱 ' + escapeHtml(o.customerPhone)
+        + (o.customerEmail ? " · 📧 " + escapeHtml(o.customerEmail) : "")
+        + ' · 📅 ' + o.pickupDay + ' kl ' + o.pickupTime
+        + '</div>'
+        + '<div class="order-items">📦 ' + items + '</div>'
+        + '<div class="order-total">' + o.totalPrice + ' kr'
+        + (o.receiptNumber ? ' · 🧾 ' + o.receiptNumber : '')
+        + (o.emailSent ? ' · 📧 Kvitto skickat' : '')
+        + (o.discountActive ? ' (–' + o.discountPercent + '%)' : '')
+        + '</div>'
+        + '<div class="order-actions">'
+
+      if (o.status === "pending") {
+        h += '<button class="btn btn-sm" onclick="markOrder(\'' + o.id + '\',\'paid\')">✅ Betalad</button>'
+          + '<button class="btn btn-sm btn-red" onclick="markOrder(\'' + o.id + '\',\'cancelled\')">❌ Avbryt</button>'
+      }
+      if (o.status === "paid") {
+        h += '<button class="btn btn-sm btn-blue" onclick="markOrder(\'' + o.id + '\',\'picked_up\')">📦 Hämtad</button>'
+      }
+      h += '<button class="btn btn-sm btn-outline" onclick="viewReceipt(\'' + o.id + '\')">🧾 Kvitto</button>'
+        + '</div>'
+        + '<div style="font-size:12px;color:#999;margin-top:6px;">'
+        + new Date(o.createdAt).toLocaleString("sv-SE")
+        + '</div></div>'
     }
     el.innerHTML = h
   } catch (e) {
@@ -559,26 +587,23 @@ async function loadCustomers() {
 
     const customers = d.customers || []
     document.getElementById("customerCount").innerHTML =
-      `<span class="items-count">👥 ${customers.length} kunder</span>`
+      '<span class="items-count">👥 ' + customers.length + ' kunder</span>'
 
     if (!customers.length) {
       document.getElementById("customerList").innerHTML = '<p class="muted">Inga kunder ännu.</p>'
       return
     }
 
-    let h = `<div class="customer-row header">
-      <div>E-post</div><div>Namn</div><div>Beställn.</div><div>Totalt</div><div>Senast</div>
-    </div>`
+    let h = '<div class="customer-row header">'
+      + '<div>E-post</div><div>Namn</div><div>Beställn.</div><div>Totalt</div><div>Senast</div></div>'
     for (const c of customers) {
-      h += `<div class="customer-row">
-        <div>${escapeHtml(c.email)}</div>
-        <div>${escapeHtml(c.name)}</div>
-        <div>${c.orderCount}</div>
-        <div>${c.totalSpent} kr</div>
-        <div style="font-size:12px;color:#999;">
-          ${new Date(c.lastOrder).toLocaleDateString("sv-SE")}
-        </div>
-      </div>`
+      h += '<div class="customer-row">'
+        + '<div>' + escapeHtml(c.email) + '</div>'
+        + '<div>' + escapeHtml(c.name) + '</div>'
+        + '<div>' + c.orderCount + '</div>'
+        + '<div>' + c.totalSpent + ' kr</div>'
+        + '<div style="font-size:12px;color:#999;">'
+        + new Date(c.lastOrder).toLocaleDateString("sv-SE") + '</div></div>'
     }
     document.getElementById("customerList").innerHTML = h
   } catch (e) {
@@ -588,6 +613,114 @@ async function loadCustomers() {
 
 function exportCustomers() {
   window.open(W + "/shop/admin/customers/export?token=" + T, "_blank")
+}
+
+
+/* ==============================
+   KASSABOK / KVITTOARKIV
+   ============================== */
+
+async function loadReceipts() {
+  const from = document.getElementById("receiptDateFrom").value || ""
+  const to = document.getElementById("receiptDateTo").value || ""
+  const search = document.getElementById("receiptSearch").value.trim() || ""
+
+  try {
+    const params = new URLSearchParams()
+    if (from) params.set("from", from)
+    if (to) params.set("to", to)
+    if (search) params.set("search", search)
+
+    const r = await fetch(W + "/shop/admin/receipts?" + params.toString(), { headers: headers() })
+    const d = await r.json()
+    if (d.error === "unauthorized") { logout(); return }
+
+    const receipts = d.receipts || []
+    const el = document.getElementById("receiptsList")
+    const vatPercent = d.vatPercent || 12
+
+    // Stats
+    const totalRevenue = receipts.reduce((s, r) => s + (r.totalPrice || 0), 0)
+    const vatAmount = Math.round(totalRevenue * vatPercent / (100 + vatPercent))
+    const avg = receipts.length > 0 ? Math.round(totalRevenue / receipts.length) : 0
+
+    document.getElementById("rcptTotal").textContent = receipts.length
+    document.getElementById("rcptRevenue").textContent = totalRevenue + " kr"
+    document.getElementById("rcptVat").textContent = vatAmount + " kr"
+    document.getElementById("rcptAvg").textContent = avg + " kr"
+
+    // Sammanfattning per status
+    const paid = receipts.filter(r => r.status === "paid" || r.status === "picked_up")
+    const paidTotal = paid.reduce((s, r) => s + (r.totalPrice || 0), 0)
+    const paidVat = Math.round(paidTotal * vatPercent / (100 + vatPercent))
+    document.getElementById("receiptsSummary").innerHTML =
+      '<div style="background:#f0faf4;border:1px solid #2f7d59;border-radius:8px;padding:12px;font-size:13px;">'
+      + '✅ <strong>Betalat:</strong> ' + paid.length + ' kvitton · '
+      + paidTotal + ' kr inkl. moms · ' + paidVat + ' kr moms · '
+      + (paidTotal - paidVat) + ' kr exkl. moms</div>'
+
+    if (!receipts.length) {
+      el.innerHTML = '<p class="muted center">Inga kvitton hittades.</p>'
+      return
+    }
+
+    let h = '<table class="data-table"><thead><tr>'
+      + '<th>Kvitto-nr</th><th>Datum</th><th>Kund</th>'
+      + '<th>Artiklar</th><th style="text-align:right;">Belopp</th>'
+      + '<th style="text-align:right;">Moms</th><th>Status</th><th></th>'
+      + '</tr></thead><tbody>'
+
+    for (const r of receipts) {
+      const vat = Math.round((r.totalPrice || 0) * vatPercent / (100 + vatPercent))
+      const items = (r.items || []).map(i => i.quantity + "× " + escapeHtml(i.name)).join(", ")
+      const date = new Date(r.createdAt).toLocaleString("sv-SE")
+      const statusColors = { pending:"#f39c12", paid:"#2f7d59", picked_up:"#0d6efd", cancelled:"#e74c3c" }
+      const statusLabels = { pending:"Inväntar", paid:"Betalad", picked_up:"Hämtad", cancelled:"Avbruten" }
+
+      h += '<tr>'
+        + '<td><strong>' + (r.receiptNumber || r.orderId || "–") + '</strong></td>'
+        + '<td style="font-size:12px;">' + date + '</td>'
+        + '<td>' + escapeHtml(r.customerName || "")
+        + '<br><span style="font-size:11px;color:#999;">' + escapeHtml(r.customerEmail || "") + '</span></td>'
+        + '<td style="font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;">' + items + '</td>'
+        + '<td style="text-align:right;font-weight:bold;">' + (r.totalPrice || 0) + ' kr</td>'
+        + '<td style="text-align:right;color:#666;">' + vat + ' kr</td>'
+        + '<td><span style="color:' + (statusColors[r.status] || "#999")
+        + ';font-weight:bold;font-size:12px;">' + (statusLabels[r.status] || r.status || "–") + '</span></td>'
+        + '<td><button class="btn btn-sm btn-outline" onclick="viewReceipt(\'' + (r.orderId || r.id || "") + '\')">🧾</button></td>'
+        + '</tr>'
+    }
+
+    h += '</tbody></table>'
+    el.innerHTML = h
+  } catch (e) {
+    showStatus("❌ " + e.message, "error")
+  }
+}
+
+function viewReceipt(orderId) {
+  window.open(W + "/shop/receipt/" + orderId + "?token=" + T, "_blank")
+}
+
+function exportReceipts() {
+  const from = document.getElementById("receiptDateFrom").value || ""
+  const to = document.getElementById("receiptDateTo").value || ""
+  const params = new URLSearchParams()
+  if (from) params.set("from", from)
+  if (to) params.set("to", to)
+  params.set("format", "csv")
+  window.open(W + "/shop/admin/receipts/export?" + params.toString() + "&token=" + T, "_blank")
+}
+
+function exportReceiptsPdf() {
+  // Öppna kassabok i nytt fönster för utskrift
+  const from = document.getElementById("receiptDateFrom").value || ""
+  const to = document.getElementById("receiptDateTo").value || ""
+  const params = new URLSearchParams()
+  if (from) params.set("from", from)
+  if (to) params.set("to", to)
+  params.set("format", "print")
+  window.open(W + "/shop/admin/receipts/export?" + params.toString() + "&token=" + T, "_blank")
 }
 
 
@@ -606,6 +739,13 @@ async function checkNotifications() {
       dot.textContent = d.unseen
       dot.classList.add("active")
       document.title = "(" + d.unseen + ") Admin"
+
+      // Spela ljud vid ny beställning
+      try {
+        const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2JkYyGfHBkWlBHTUM/PD08P0RMV2NvfImTmZqXkIR4bGJVS0E5NDEwMjY8RlFdanmGkZqgnpqTiHxvYlVKQDkzLy4uMTdARk5YY3B8iJGXm5qXkIV6bmFVS0E5NC8uLjE3P0ZOWGNxfYmSmJualpCFem5hVUxCOTQvLi4xN0BGR1hjcX2JkpmbnJiRhn1xZFlPRj03Mi8vMjhBSFRganeFkJmfn5uUi391aVxSR0A5NC8vMTY+Rk9ZY3J+iZOZnJuXkIN4bWBVTEI6NC8uLzI5QUlVYmt5hZCZnp+blI+EeW1gVUxCOjUwLy8yOUFIVWJqeYWQmp6fm5SPg3hs")
+        audio.volume = 0.3
+        audio.play().catch(() => {})
+      } catch (e) {}
     } else {
       dot.classList.remove("active")
       document.title = "CateringCare Admin"
@@ -629,15 +769,15 @@ async function loadNotifications() {
 
     let h = ""
     for (const n of notifs.slice(0, 30)) {
-      h += `<div class="notif-item ${n.seen ? "" : "unseen"}">
-        <div class="notif-icon">🛒</div>
-        <div class="notif-text">
-          <strong>${escapeHtml(n.orderId || "")} – ${escapeHtml(n.customerName || "")}</strong>
-          ${n.customerEmail ? " · " + escapeHtml(n.customerEmail) : ""}
-          <br><small>${getTimeAgo(n.time)}</small>
-        </div>
-        <div class="notif-amount">${n.totalPrice || 0} kr</div>
-      </div>`
+      h += '<div class="notif-item ' + (n.seen ? "" : "unseen") + '">'
+        + '<div class="notif-icon">🛒</div>'
+        + '<div class="notif-text">'
+        + '<strong>' + escapeHtml(n.orderId || "") + ' – ' + escapeHtml(n.customerName || "") + '</strong>'
+        + (n.customerEmail ? " · " + escapeHtml(n.customerEmail) : "")
+        + '<br><small>' + getTimeAgo(n.time) + '</small>'
+        + '</div>'
+        + '<div class="notif-amount">' + (n.totalPrice || 0) + ' kr</div>'
+        + '</div>'
     }
     el.innerHTML = h
     document.getElementById("notifDot").classList.remove("active")
@@ -700,10 +840,10 @@ async function loadStats() {
     if (d.daily && d.daily.length > 0) {
       const mx = Math.max(...d.daily.map(x => x.count), 1)
       ;[...d.daily].reverse().forEach(day => {
-        const h = Math.max((day.count / mx) * 110, day.count > 0 ? 4 : 1)
+        const barH = Math.max((day.count / mx) * 110, day.count > 0 ? 4 : 1)
         const b = document.createElement("div")
         b.className = "chart-bar"
-        b.style.height = h + "px"
+        b.style.height = barH + "px"
         b.style.background = day.count > 0 ? "#2f7d59" : "#e0e0e0"
         b.innerHTML = '<div class="chart-tooltip">' + day.date + ": " + day.count + "</div>"
         ch.appendChild(b)
@@ -716,8 +856,8 @@ async function loadStats() {
     if (d.recent && d.recent.length > 0) {
       d.recent.slice(0, 20).forEach(q => {
         const tr = document.createElement("tr")
-        tr.innerHTML = "<td>" + escapeHtml(q.question) + "</td>" +
-          "<td class='time-ago'>" + getTimeAgo(q.time) + "</td>"
+        tr.innerHTML = "<td>" + escapeHtml(q.question) + "</td>"
+          + "<td class='time-ago'>" + getTimeAgo(q.time) + "</td>"
         tb.appendChild(tr)
       })
     } else {
