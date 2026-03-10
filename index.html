@@ -31,11 +31,56 @@ header .container{
 display:flex;
 justify-content:space-between;
 align-items:center;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.header-left{
+display:flex;
+align-items:center;
+gap:20px;
 }
 
 .logo{
 font-weight:bold;
 font-size:22px;
+}
+
+.header-nav{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.header-nav a{
+color:white;
+text-decoration:none;
+font-size:14px;
+padding:6px 14px;
+border-radius:20px;
+transition:all 0.2s;
+}
+
+.header-nav a:hover{
+background:rgba(255,255,255,0.2);
+}
+
+.header-nav a.shop-link{
+background:#e67e22;
+font-weight:bold;
+}
+
+.header-nav a.shop-link:hover{
+background:#d35400;
+}
+
+.header-nav a.admin-link{
+opacity:0.4;
+font-size:12px;
+}
+
+.header-nav a.admin-link:hover{
+opacity:0.8;
 }
 
 /* SPRÅKVÄLJARE */
@@ -64,6 +109,31 @@ background:white;
 color:#2f7d59;
 font-weight:bold;
 border-color:white;
+}
+
+/* MATLÅDE-BANNER */
+.shop-banner{
+background:linear-gradient(135deg,#e67e22,#d35400);
+color:white;
+text-align:center;
+padding:14px 20px;
+}
+
+.shop-banner a{
+color:white;
+text-decoration:none;
+font-size:16px;
+font-weight:bold;
+}
+
+.shop-banner a:hover{
+text-decoration:underline;
+}
+
+.shop-banner .banner-sub{
+font-size:13px;
+opacity:0.9;
+margin-top:2px;
 }
 
 .hero{
@@ -138,11 +208,21 @@ max-width:85%;
 line-height:1.5;
 }
 
+.chat-bubble a{
+color:#2f7d59;
+font-weight:bold;
+text-decoration:underline;
+}
+
 .chat-user{
 background:#2f7d59;
 color:white;
 margin-left:auto;
 border-bottom-right-radius:4px;
+}
+
+.chat-user a{
+color:white;
 }
 
 .chat-bot{
@@ -184,6 +264,26 @@ footer .container{
 text-align:center;
 }
 
+footer a{
+color:white;
+text-decoration:none;
+opacity:0.8;
+}
+
+footer a:hover{
+opacity:1;
+text-decoration:underline;
+}
+
+@media(max-width:600px){
+  .header-left{ flex-wrap:wrap; }
+  .header-nav a{ padding:4px 10px; font-size:13px; }
+  .lang-switcher{ flex-wrap:wrap; }
+  .lang-btn{ padding:4px 10px; font-size:12px; }
+  .hero h1{ font-size:26px; }
+  .shop-banner a{ font-size:14px; }
+}
+
 </style>
 
 </head>
@@ -192,7 +292,13 @@ text-align:center;
 
 <header>
 <div class="container">
-<div class="logo">CateringCare</div>
+<div class="header-left">
+  <div class="logo">CateringCare</div>
+  <nav class="header-nav">
+    <a href="shop.html" class="shop-link">🍱 Matlådor</a>
+    <a href="admin.html" class="admin-link">🔒 Admin</a>
+  </nav>
+</div>
 <div class="lang-switcher">
   <button class="lang-btn active" onclick="setLang('sv')">🇸🇪 Svenska</button>
   <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
@@ -201,6 +307,14 @@ text-align:center;
 </div>
 </div>
 </header>
+
+<!-- MATLÅDE-BANNER -->
+<div class="shop-banner">
+<a href="shop.html">
+  🍱 Matlådor till salu! Hemlagad mat från vårt kök – minska svinn, ät gott!
+  <div class="banner-sub">Se veckans matlådor →</div>
+</a>
+</div>
 
 <section class="hero">
 <div class="container">
@@ -259,7 +373,7 @@ Skicka fråga
 
 <footer>
 <div class="container">
-<p>© CateringCare</p>
+<p>© CateringCare · <a href="shop.html">🍱 Matlådor</a> · <a href="admin.html">🔒 Admin</a></p>
 </div>
 </footer>
 
@@ -409,7 +523,6 @@ const data = await res.json()
 const thinking = document.getElementById("thinking")
 if(thinking) thinking.remove()
 
-// ANVÄND formatAnswer för klickbara länkar!
 chatBox.innerHTML += '<div class="chat-bubble chat-bot">' + formatAnswer(data.answer) + '</div>'
 
 chatHistory.push({ role: "user", content: question })
@@ -439,25 +552,20 @@ chatBox.scrollTop = chatBox.scrollHeight
 function formatAnswer(text) {
   if (!text) return ""
 
-  // 1. Escapa HTML först (säkerhet)
   let safe = escapeHtml(text)
 
-  // 2. Omvandla markdown-länkar [text](url) → klickbar <a>
   safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-    '<a href="$2" target="_blank" style="color:#2f7d59;font-weight:bold;text-decoration:underline;">$1</a>'
+    '<a href="$2" target="_blank">$1</a>'
   )
 
-  // 3. Omvandla rena URL:er (https://...) som INTE redan är i en <a> → klickbar <a>
   safe = safe.replace(/(?<!href="|">)(https?:\/\/[^\s<,)]+)/g,
-    '<a href="$1" target="_blank" style="color:#2f7d59;text-decoration:underline;">$1</a>'
+    '<a href="$1" target="_blank">$1</a>'
   )
 
-  // 4. Gör e-postadresser klickbara
   safe = safe.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
-    '<a href="mailto:$1" style="color:#2f7d59;text-decoration:underline;">$1</a>'
+    '<a href="mailto:$1">$1</a>'
   )
 
-  // 5. Omvandla radbrytningar till <br>
   safe = safe.replace(/\n/g, '<br>')
 
   return safe
@@ -470,3 +578,6 @@ function escapeHtml(text){
 }
 
 </script>
+
+</body>
+</html>
