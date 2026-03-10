@@ -23,7 +23,7 @@
 <div class="topbar">
   <h1>🍽️ CateringCare Admin</h1>
   <div>
-    <span class="notif-badge" onclick="showSection('notifications')">
+    <span class="notif-badge" onclick="showSection('notifications',this)">
       <button class="btn btn-sm btn-orange">🔔 Notiser <span class="notif-dot" id="notifDot">0</span></button>
     </span>
     <button class="btn btn-sm btn-red" onclick="logout()">🚪 Logga ut</button>
@@ -31,45 +31,60 @@
 </div>
 
 <div class="nav-tabs">
-  <button class="nav-tab active" onclick="showSection('shop')">🍱 Matlådor</button>
-  <button class="nav-tab" onclick="showSection('orders')">📋 Beställningar</button>
-  <button class="nav-tab" onclick="showSection('customers')">👥 Kunder</button>
-  <button class="nav-tab" onclick="showSection('settings')">⚙️ Inställningar</button>
-  <button class="nav-tab" onclick="showSection('faq')">📝 FAQ</button>
-  <button class="nav-tab" onclick="showSection('stats')">📊 Statistik</button>
-  <button class="nav-tab" onclick="showSection('help')">❓ Hjälp</button>
+  <button class="nav-tab active" onclick="showSection('shop',this)">🍱 Matlådor</button>
+  <button class="nav-tab" onclick="showSection('orders',this)">📋 Beställningar</button>
+  <button class="nav-tab" onclick="showSection('customers',this)">👥 Kunder</button>
+  <button class="nav-tab" onclick="showSection('receipts',this)">🧾 Kassabok</button>
+  <button class="nav-tab" onclick="showSection('settings',this)">⚙️ Inställningar</button>
+  <button class="nav-tab" onclick="showSection('faq',this)">📝 FAQ</button>
+  <button class="nav-tab" onclick="showSection('stats',this)">📊 Statistik</button>
+  <button class="nav-tab" onclick="showSection('help',this)">❓ Hjälp</button>
 </div>
 
 <div id="status"></div>
 
-<!-- MATLÅDOR -->
+<!-- ============================
+     MATLÅDOR
+     ============================ -->
 <div id="section-shop" class="section active">
 <div class="card">
   <h2>🍱 Veckans matlådor</h2>
   <p class="subtitle">Välj dag → hämta meny → aktivera rätter → publicera till shop.</p>
+
   <div class="filter-box">
-    <h3>📅 Välj dag</h3>
+    <h3>📅 Välj dag att hämta meny för</h3>
     <div class="filter-row">
-      <div class="filter-group"><label>Datum</label><select id="menuDaySelect"></select></div>
+      <div class="filter-group">
+        <label>Datum</label>
+        <select id="menuDaySelect"></select>
+      </div>
     </div>
     <div style="margin-top:14px;">
       <h3>🍽️ Filtrera menyer</h3>
-      <div class="checkbox-group" id="menuFilterCheckboxes"><p class="muted">Hämta menyn först.</p></div>
+      <div class="checkbox-group" id="menuFilterCheckboxes">
+        <p class="muted">Hämta menyn först.</p>
+      </div>
     </div>
   </div>
+
   <div class="button-row">
     <button class="btn" onclick="loadMenuFromAPI()" id="loadMenuBtn">📥 Hämta meny</button>
     <button class="btn btn-outline" onclick="loadShopItems()">🔄 Ladda sparade</button>
     <button class="btn btn-red btn-sm" onclick="clearWeek()" style="margin-left:auto;">🗑️ Rensa vecka</button>
   </div>
+
   <div class="button-row" id="quickActions">
     <button class="btn btn-sm" onclick="enableAllWithStock()">✅ Aktivera alla med lager</button>
     <button class="btn btn-sm btn-outline" onclick="disableAll()">⬜ Avaktivera alla</button>
     <button class="btn btn-sm btn-orange" onclick="setAllPrice()">💰 Sätt pris</button>
     <button class="btn btn-sm btn-blue" onclick="setAllStock()">📦 Sätt antal</button>
   </div>
+
   <div id="shopItemsCount" style="margin-top:10px;"></div>
-  <div id="shopItemsList" style="margin-top:10px;"><p class="muted center">Klicka "Hämta meny" för att börja.</p></div>
+  <div id="shopItemsList" style="margin-top:10px;">
+    <p class="muted center">Klicka "Hämta meny" för att börja.</p>
+  </div>
+
   <div id="shopSaveBar" style="display:none;" class="save-bar">
     <button class="btn btn-orange btn-lg" onclick="saveShopItems()">🚀 Publicera till shop</button>
     <button class="btn btn-outline btn-sm" onclick="saveShopItems()">💾 Spara utkast</button>
@@ -78,21 +93,36 @@
 </div>
 </div>
 
-<!-- BESTÄLLNINGAR -->
+<!-- ============================
+     BESTÄLLNINGAR
+     ============================ -->
 <div id="section-orders" class="section">
 <div class="card">
   <h2>📋 Beställningar</h2>
   <button class="btn btn-sm" onclick="loadOrders()">🔄 Uppdatera</button>
   <div class="stats-cards">
-    <div class="stat-card"><div class="stat-number" id="orderCountTotal">0</div><div class="stat-label">Beställningar</div></div>
-    <div class="stat-card orange"><div class="stat-number" id="orderCountPending">0</div><div class="stat-label">Inväntar betalning</div></div>
-    <div class="stat-card green"><div class="stat-number" id="orderRevenue">0 kr</div><div class="stat-label">Betalat totalt</div></div>
+    <div class="stat-card">
+      <div class="stat-number" id="orderCountTotal">0</div>
+      <div class="stat-label">Beställningar</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-number" id="orderCountPending">0</div>
+      <div class="stat-label">Inväntar betalning</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-number" id="orderRevenue">0 kr</div>
+      <div class="stat-label">Betalat totalt</div>
+    </div>
   </div>
-  <div id="ordersList"><p class="muted center">Klicka "Uppdatera".</p></div>
+  <div id="ordersList" style="margin-top:20px;">
+    <p class="muted center">Klicka "Uppdatera".</p>
+  </div>
 </div>
 </div>
 
-<!-- KUNDER -->
+<!-- ============================
+     KUNDER
+     ============================ -->
 <div id="section-customers" class="section">
 <div class="card">
   <h2>👥 Kundstock</h2>
@@ -104,81 +134,269 @@
 </div>
 </div>
 
-<!-- INSTÄLLNINGAR -->
+<!-- ============================
+     KASSABOK
+     ============================ -->
+<div id="section-receipts" class="section">
+<div class="card">
+  <h2>🧾 Kassabok / Kvittoarkiv</h2>
+  <p class="subtitle">Alla kvitton sparade enligt bokföringslagen (7 år). Sök, filtrera och exportera för bokföring.</p>
+
+  <div class="filter-box">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>📅 Från</label>
+        <input type="date" id="receiptDateFrom">
+      </div>
+      <div class="filter-group">
+        <label>📅 Till</label>
+        <input type="date" id="receiptDateTo">
+      </div>
+      <div class="filter-group">
+        <label>🔍 Sök</label>
+        <input type="text" id="receiptSearch" placeholder="Order-ID, namn, e-post...">
+      </div>
+      <div class="filter-group" style="align-self:flex-end;">
+        <button class="btn btn-sm" onclick="loadReceipts()">🔍 Sök</button>
+        <button class="btn btn-sm btn-blue" onclick="exportReceipts()">📊 CSV</button>
+        <button class="btn btn-sm btn-outline" onclick="exportReceiptsPdf()">🖨️ Skriv ut</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-cards" style="margin-top:15px;">
+    <div class="stat-card">
+      <div class="stat-number" id="rcptTotal">0</div>
+      <div class="stat-label">Kvitton</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-number" id="rcptRevenue">0 kr</div>
+      <div class="stat-label">Omsättning inkl. moms</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-number" id="rcptVat">0 kr</div>
+      <div class="stat-label">Varav moms</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-number" id="rcptAvg">0 kr</div>
+      <div class="stat-label">Snittorder</div>
+    </div>
+  </div>
+
+  <div id="receiptsSummary" style="margin-top:15px;"></div>
+  <div id="receiptsList" style="margin-top:15px;overflow-x:auto;"></div>
+</div>
+</div>
+
+<!-- ============================
+     INSTÄLLNINGAR
+     ============================ -->
 <div id="section-settings" class="section">
 <div class="card">
   <h2>⚙️ Butiksinställningar</h2>
   <button class="btn btn-sm" onclick="loadSettings()">🔄 Ladda</button>
+
+  <h3>🛒 Butik & hämtning</h3>
   <div class="settings-grid">
-    <div class="settings-group"><label>💰 Standardpris (kr)</label><input type="number" id="setDefaultPrice" value="79"></div>
-    <div class="settings-group"><label>💳 Swish-nummer</label><input type="text" id="setSwishNumber" placeholder="123 456 7890"></div>
-    <div class="settings-group"><label>📝 Swish-meddelande</label><input type="text" id="setSwishMessage" value="CateringCare Matlåda"></div>
-    <div class="settings-group"><label>📍 Hämtadress</label><input type="text" id="setAddress" value="Ekelundsvägen 18, 171 73 Solna"></div>
-    <div class="settings-group"><label>🕐 Start</label><input type="time" id="setPickupStart" value="11:00"></div>
-    <div class="settings-group"><label>🕐 Slut</label><input type="time" id="setPickupEnd" value="15:00"></div>
+    <div class="settings-group">
+      <label>💰 Standardpris (kr)</label>
+      <input type="number" id="setDefaultPrice" value="79">
+    </div>
+    <div class="settings-group">
+      <label>💳 Swish-nummer</label>
+      <input type="text" id="setSwishNumber" placeholder="123 456 7890">
+    </div>
+    <div class="settings-group">
+      <label>📝 Swish-meddelande</label>
+      <input type="text" id="setSwishMessage" value="CateringCare Matlåda">
+    </div>
+    <div class="settings-group">
+      <label>📍 Hämtadress</label>
+      <input type="text" id="setAddress" value="Ekelundsvägen 18, 171 73 Solna">
+    </div>
+    <div class="settings-group">
+      <label>🕐 Hämttid start</label>
+      <input type="time" id="setPickupStart" value="11:00">
+    </div>
+    <div class="settings-group">
+      <label>🕐 Hämttid slut</label>
+      <input type="time" id="setPickupEnd" value="15:00">
+    </div>
   </div>
+
   <h3>🏷️ Rabatt</h3>
   <div class="settings-grid">
-    <div class="settings-group"><label>Rabatt (%)</label><input type="number" id="setDiscountPercent" value="30"></div>
-    <div class="settings-group"><label>Rabattdag</label><select id="setDiscountDay"><option value="3">Onsdag</option><option value="4">Torsdag</option><option value="5" selected>Fredag</option></select></div>
-    <div class="settings-group"><label>Timme</label><input type="number" id="setDiscountHour" value="13" min="0" max="23"></div>
-    <div class="settings-group"><label>Minut</label><input type="number" id="setDiscountMinute" value="0" min="0" max="59"></div>
+    <div class="settings-group">
+      <label>Rabatt (%)</label>
+      <input type="number" id="setDiscountPercent" value="30">
+    </div>
+    <div class="settings-group">
+      <label>Rabattdag</label>
+      <select id="setDiscountDay">
+        <option value="1">Måndag</option>
+        <option value="2">Tisdag</option>
+        <option value="3">Onsdag</option>
+        <option value="4">Torsdag</option>
+        <option value="5" selected>Fredag</option>
+      </select>
+    </div>
+    <div class="settings-group">
+      <label>Startar (timme)</label>
+      <input type="number" id="setDiscountHour" value="13" min="0" max="23">
+    </div>
+    <div class="settings-group">
+      <label>Startar (minut)</label>
+      <input type="number" id="setDiscountMinute" value="0" min="0" max="59">
+    </div>
   </div>
-  <h3>🔒 Publika menyer</h3>
+
+  <h3>🏢 Företagsuppgifter (kvitto)</h3>
+  <p class="subtitle">Visas på kvitton & mejl. Krävs enligt svensk lag.</p>
+  <div class="settings-grid">
+    <div class="settings-group">
+      <label>🏢 Företagsnamn</label>
+      <input type="text" id="setCompanyName" value="CateringCare AB">
+    </div>
+    <div class="settings-group">
+      <label>🔢 Organisationsnummer</label>
+      <input type="text" id="setOrgNumber" placeholder="XXXXXX-XXXX">
+    </div>
+    <div class="settings-group">
+      <label>📍 Företagsadress</label>
+      <input type="text" id="setCompanyAddress" value="Ekelundsvägen 18, 171 73 Solna">
+    </div>
+    <div class="settings-group">
+      <label>📧 Företagsmail</label>
+      <input type="email" id="setCompanyEmail" value="info@cateringcare.se">
+    </div>
+    <div class="settings-group">
+      <label>📱 Företagstelefon</label>
+      <input type="tel" id="setCompanyPhone" placeholder="08-XXX XX XX">
+    </div>
+    <div class="settings-group">
+      <label>💰 Momssats livsmedel (%)</label>
+      <input type="number" id="setVatPercent" value="12" min="0" max="25">
+    </div>
+    <div class="settings-group">
+      <label>🌐 Webbplats</label>
+      <input type="text" id="setCompanyWeb" value="www.cateringcare.se">
+    </div>
+    <div class="settings-group">
+      <label>🏦 F-skattesedel</label>
+      <select id="setFskatt">
+        <option value="yes" selected>Ja, innehar F-skattesedel</option>
+        <option value="no">Nej</option>
+      </select>
+    </div>
+  </div>
+
+  <h3>🔒 Publika menyer (synliga för kunder & AI)</h3>
   <p class="subtitle">Menyer som INTE är valda visas bara i admin.</p>
-  <div id="publicMenuTags" style="display:flex;flex-wrap:wrap;gap:8px;"><p class="muted">Hämta menyn först.</p></div>
+  <div id="publicMenuTags" style="display:flex;flex-wrap:wrap;gap:8px;">
+    <p class="muted">Hämta menyn först under "Matlådor".</p>
+  </div>
+
   <hr>
-  <button class="btn" onclick="saveAllSettings()">💾 Spara alla inställningar</button>
+  <button class="btn" onclick="saveAllSettings()" style="margin-top:15px;">💾 Spara alla inställningar</button>
 </div>
 </div>
 
-<!-- NOTISER -->
+<!-- ============================
+     NOTISER
+     ============================ -->
 <div id="section-notifications" class="section">
-<div class="card"><h2>🔔 Notiser</h2><div id="notifList"><p class="muted center">Inga notiser</p></div></div>
+<div class="card">
+  <h2>🔔 Notiser</h2>
+  <div id="notifList">
+    <p class="muted center">Inga notiser</p>
+  </div>
+</div>
 </div>
 
-<!-- FAQ -->
+<!-- ============================
+     FAQ
+     ============================ -->
 <div id="section-faq" class="section">
 <div class="card">
   <h2>📝 FAQ – AI-kunskap</h2>
+  <p class="subtitle">Denna text används av AI-assistenten för att svara kunder.</p>
   <button class="btn btn-sm" onclick="loadFaq()">📥 Ladda</button>
   <button class="btn btn-sm" onclick="saveFaq()">💾 Spara</button>
   <textarea id="faq" placeholder="Skriv FAQ här..."></textarea>
 </div>
 </div>
 
-<!-- STATISTIK -->
+<!-- ============================
+     STATISTIK
+     ============================ -->
 <div id="section-stats" class="section">
 <div class="card">
   <h2>📊 Chattstatistik</h2>
   <button class="btn btn-sm" onclick="loadStats()">🔄 Uppdatera</button>
   <div class="stats-cards">
-    <div class="stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Totalt</div></div>
-    <div class="stat-card purple"><div class="stat-number" id="statToday">-</div><div class="stat-label">Idag</div></div>
-    <div class="stat-card blue"><div class="stat-number" id="statAvg">-</div><div class="stat-label">Snitt/dag</div></div>
+    <div class="stat-card">
+      <div class="stat-number" id="statTotal">-</div>
+      <div class="stat-label">Totalt frågor</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-number" id="statToday">-</div>
+      <div class="stat-label">Idag</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-number" id="statAvg">-</div>
+      <div class="stat-label">Snitt/dag</div>
+    </div>
   </div>
   <h3>📈 Per dag</h3>
   <div id="chartContainer" class="chart-bar-container"></div>
-  <h3>💬 Senaste</h3>
-  <table class="data-table"><thead><tr><th>Fråga</th><th>Tid</th></tr></thead><tbody id="recentBody"></tbody></table>
+  <h3>💬 Senaste frågor</h3>
+  <table class="data-table">
+    <thead><tr><th>Fråga</th><th>Tid</th></tr></thead>
+    <tbody id="recentBody"></tbody>
+  </table>
 </div>
 </div>
 
-<!-- HJÄLP -->
+<!-- ============================
+     HJÄLP
+     ============================ -->
 <div id="section-help" class="section">
 <div class="card">
-  <h2>📖 Hjälp</h2>
+  <h2>📖 Hjälp & Guide</h2>
+
   <h3>🍱 Publicera matlådor</h3>
-  <div class="help-step"><strong>1.</strong> Välj datum → "📥 Hämta meny"</div>
-  <div class="help-step"><strong>2.</strong> "✅ Aktivera alla med lager" eller toggle manuellt</div>
-  <div class="help-step"><strong>3.</strong> Sätt antal + pris (snabbknappar eller manuellt)</div>
-  <div class="help-step"><strong>4.</strong> "🚀 Publicera till shop"</div>
-  <div class="help-tip">💡 Bara toggle PÅ + antal > 0 visas i shopen!</div>
+  <div class="help-step"><strong>1.</strong> Välj datum i datumväljaren</div>
+  <div class="help-step"><strong>2.</strong> Klicka "📥 Hämta meny"</div>
+  <div class="help-step"><strong>3.</strong> Klicka "✅ Aktivera alla med lager" (eller toggle manuellt)</div>
+  <div class="help-step"><strong>4.</strong> Använd "📦 Sätt antal" och "💰 Sätt pris" snabbknapparna</div>
+  <div class="help-step"><strong>5.</strong> Klicka "🚀 Publicera till shop"</div>
+  <div class="help-tip">💡 Bara rätter med toggle PÅ + antal > 0 visas i shopen!</div>
+
   <h3>🔒 Publika menyer</h3>
-  <div class="help-step">⚙️ Inställningar → Välj vilka menyer kunder/AI ser</div>
+  <div class="help-step">Gå till ⚙️ Inställningar → Välj vilka menyer kunder & AI ser</div>
+  <div class="help-warning">⚠️ Om inga valda = alla visas</div>
+
   <h3>📧 E-postkvitto</h3>
-  <div class="help-step">Kunder med e-post får automatiskt kvitto via Resend</div>
-  <div class="help-step">👥 Kunder-fliken visar alla insamlade e-poster</div>
+  <div class="help-step">Kunder som anger e-post får automatiskt kvitto med företagsuppgifter</div>
+  <div class="help-step">Kvitton innehåller: org.nr, moms, löpnummer (svensk standard)</div>
+
+  <h3>🧾 Kassabok</h3>
+  <div class="help-step">Alla kvitton sparas automatiskt i 7 år (bokföringslagen)</div>
+  <div class="help-step">Exportera som CSV för din bokföring/revisor</div>
+  <div class="help-step">Sök på datum, kund, order-ID</div>
+
+  <h3>🏢 Företagsuppgifter</h3>
+  <div class="help-step">Fyll i under ⚙️ Inställningar → Företagsuppgifter</div>
+  <div class="help-step">Org.nr, adress, F-skatt, moms – visas på alla kvitton</div>
+  <div class="help-warning">⚠️ Krävs enligt svensk lag på alla kvitton!</div>
+
+  <h3>🎟️ Rabattkoder</h3>
+  <div class="help-step">Kunder kan ange kod i kassan: VÄLKOMMEN10, MATLÅDA20, VIP30</div>
+  <div class="help-tip">💡 Fler koder kan läggas till i shop.js</div>
+
+  <h3>⚠️ Allergener</h3>
+  <div class="help-step">Detekteras automatiskt från ingredienserna</div>
+  <div class="help-step">Visas som badges: 🥛 Mjölk, 🌾 Gluten, 🥚 Ägg, 🐟 Fisk etc.</div>
 </div>
 </div>
 
