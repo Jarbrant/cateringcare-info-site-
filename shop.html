@@ -34,7 +34,7 @@
 <div class="toolbar">
   <div class="search-box">
     <span class="sicon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Sök matlåda..." oninput="filterProducts()">
+    <input type="text" id="searchInput" placeholder="Sök matlåda, ingrediens eller allergen..." oninput="filterProducts()">
   </div>
   <div class="category-tabs" id="categoryTabs"></div>
 </div>
@@ -48,12 +48,18 @@
   </div>
 </div>
 
+<!-- EXPANDED CARD MODAL -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+<div class="detail-modal" id="detailModal"></div>
+</div>
+
+<!-- CART FLOAT -->
 <div class="cart-float" id="cartFloat" onclick="openCart()">
   🛒 <span id="cartCount">0</span> st
   <span class="cart-sum">· <span id="cartSum">0</span> kr</span>
 </div>
 
-<!-- MODAL -->
+<!-- CART MODAL -->
 <div class="modal-overlay" id="cartModal" onclick="if(event.target===this)closeCart()">
 <div class="modal">
   <button class="modal-close" onclick="closeCart()">✕</button>
@@ -75,7 +81,7 @@
     <div class="form-group">
       <label>📧 E-post (för kvitto)</label>
       <input type="email" id="custEmail" placeholder="din@email.se">
-      <small>Vi skickar kvitto till din e-post</small>
+      <small>Vi skickar orderbekräftelse & kvitto till din e-post</small>
     </div>
     <div class="form-group">
       <label>📅 Hämtningsdag *</label>
@@ -84,6 +90,14 @@
     <div class="form-group">
       <label>🕐 Hämtningstid *</label>
       <select id="custTime"></select>
+    </div>
+    <div class="form-group">
+      <label>🎟️ Rabattkod</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="custCoupon" placeholder="T.ex. VÄLKOMMEN10" style="flex:1;">
+        <button class="coupon-btn" onclick="applyCoupon()">Använd</button>
+      </div>
+      <small id="couponStatus"></small>
     </div>
     <button class="checkout-btn" id="checkoutBtn" onclick="placeOrder()" disabled>
       ✅ Beställ & betala med Swish
@@ -104,8 +118,10 @@
         <strong id="receiptSwish">–</strong>
         <div style="font-size:14px;margin-top:5px;">Meddelande: <span id="receiptSwishMsg">–</span></div>
         <div style="font-size:20px;margin-top:6px;"><span id="receiptTotal">–</span> kr</div>
+        <div id="swishQrArea" style="margin-top:12px;"></div>
       </div>
       <div class="receipt-email" id="receiptEmailMsg" style="display:none;"></div>
+      <div id="receiptStatusLink" style="margin-top:10px;"></div>
       <p style="margin-top:12px;font-size:12px;color:#666;">Visa detta kvitto när du hämtar maten.</p>
     </div>
     <button class="checkout-btn" onclick="closeCart();resetCart();" style="margin-top:12px;background:#666;">Stäng</button>
