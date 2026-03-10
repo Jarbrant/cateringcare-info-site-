@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CateringCare Admin</title>
 <style>
 
 body{
-font-family:Arial;
-max-width:900px;
+font-family:'Segoe UI',Arial;
+max-width:960px;
 margin:auto;
-padding:40px;
+padding:20px 20px 60px;
 background:#f5f7f6;
 }
 
@@ -37,65 +39,119 @@ color:white; border:none; border-radius:6px; cursor:pointer;
 .login-button:hover{ background:#24614a; }
 .login-error{ color:#dc3545; margin-top:10px; display:none; }
 
-/* ADMIN */
+/* ADMIN PANEL */
 .admin-panel{ display:none; }
-textarea{
-width:100%; height:400px; font-size:15px; padding:15px;
-border:1px solid #ccc; border-radius:8px; box-sizing:border-box;
-font-family:monospace; line-height:1.6;
-}
-button{
-padding:12px 24px; font-size:16px; background:#2f7d59; color:white;
-border:none; border-radius:6px; cursor:pointer; margin-top:15px; margin-right:10px;
-}
-button:hover{ background:#24614a; }
-.logout-btn{ background:#dc3545; float:right; margin-top:0; }
-.logout-btn:hover{ background:#b02a37; }
-.help-btn{ background:#0d6efd; }
-.help-btn:hover{ background:#0b5ed7; }
-.stats-btn{ background:#6f42c1; }
-.stats-btn:hover{ background:#5a32a3; }
 
+/* TOPBAR */
+.topbar{
+display:flex; justify-content:space-between; align-items:center;
+margin-bottom:15px; flex-wrap:wrap; gap:10px;
+}
+.topbar h1{ margin:0; font-size:24px; }
+
+/* NOTIS BADGE */
+.notif-badge{
+position:relative; display:inline-block;
+}
+.notif-dot{
+position:absolute; top:-5px; right:-8px;
+background:#e74c3c; color:white;
+font-size:11px; font-weight:bold;
+width:20px; height:20px; border-radius:50%;
+display:flex; align-items:center; justify-content:center;
+display:none;
+}
+.notif-dot.active{ display:flex; }
+
+/* NAVIGATION TABS */
+.nav-tabs{
+display:flex; gap:4px; margin-bottom:20px;
+border-bottom:2px solid #e0e0e0;
+padding-bottom:0;
+flex-wrap:wrap;
+}
+.nav-tab{
+padding:10px 18px; background:none; color:#666;
+border:none; border-bottom:3px solid transparent;
+cursor:pointer; font-size:14px; font-weight:600;
+transition:all 0.2s;
+}
+.nav-tab:hover{ color:#2f7d59; background:#f0faf4; }
+.nav-tab.active{ color:#2f7d59; border-bottom-color:#2f7d59; }
+
+/* SEKTIONER */
+.section{ display:none; }
+.section.active{ display:block; }
+
+/* KNAPPAR */
+.btn{
+padding:10px 18px; font-size:14px; background:#2f7d59; color:white;
+border:none; border-radius:6px; cursor:pointer; margin:4px 2px;
+display:inline-flex; align-items:center; gap:6px;
+}
+.btn:hover{ background:#24614a; }
+.btn-red{ background:#dc3545; }
+.btn-red:hover{ background:#b02a37; }
+.btn-purple{ background:#6f42c1; }
+.btn-purple:hover{ background:#5a32a3; }
+.btn-blue{ background:#0d6efd; }
+.btn-blue:hover{ background:#0b5ed7; }
+.btn-orange{ background:#e67e22; }
+.btn-orange:hover{ background:#d35400; }
+.btn-sm{ padding:6px 12px; font-size:13px; }
+.btn-outline{
+background:white; color:#2f7d59; border:2px solid #2f7d59;
+}
+.btn-outline:hover{ background:#f0faf4; }
+.btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+/* CARD */
+.card{
+background:white; border-radius:12px; padding:25px;
+box-shadow:0 2px 10px rgba(0,0,0,0.06); margin-bottom:16px;
+}
+
+.card h2{ font-size:18px; color:#333; margin:0 0 15px 0; }
+.card h3{ font-size:16px; color:#555; margin:15px 0 10px; }
+
+/* STATUS */
 #status{
-margin-top:15px; padding:10px; border-radius:6px; display:none;
+margin:10px 0; padding:10px 15px; border-radius:6px; display:none; font-size:14px;
 }
 .success{ background:#d4edda; color:#155724; }
 .error{ background:#f8d7da; color:#721c24; }
 
+/* TEXTAREA */
+textarea{
+width:100%; height:350px; font-size:14px; padding:15px;
+border:1px solid #ccc; border-radius:8px; box-sizing:border-box;
+font-family:monospace; line-height:1.6;
+}
+
 /* STATISTIK */
-.stats-panel{
-display:none; background:white; border-radius:12px;
-padding:30px; margin-top:20px; box-shadow:0 2px 12px rgba(0,0,0,0.08);
-}
-
 .stats-cards{
-display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px; margin:20px 0;
+display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px; margin:15px 0;
 }
-
 .stat-card{
 background:linear-gradient(135deg,#2f7d59,#24614a);
-color:white; padding:25px; border-radius:12px; text-align:center;
+color:white; padding:20px; border-radius:12px; text-align:center;
 }
 .stat-card.purple{ background:linear-gradient(135deg,#6f42c1,#5a32a3); }
 .stat-card.blue{ background:linear-gradient(135deg,#0d6efd,#0b5ed7); }
-
-.stat-number{ font-size:42px; font-weight:bold; }
-.stat-label{ font-size:14px; opacity:0.9; margin-top:5px; }
+.stat-card.orange{ background:linear-gradient(135deg,#e67e22,#d35400); }
+.stat-number{ font-size:36px; font-weight:bold; }
+.stat-label{ font-size:13px; opacity:0.9; margin-top:4px; }
 
 .chart-bar-container{
 display:flex; align-items:flex-end; gap:3px;
-height:150px; margin:20px 0; padding:10px 0;
-border-bottom:2px solid #ddd;
+height:120px; margin:15px 0; padding:10px 0; border-bottom:2px solid #ddd;
 }
-
 .chart-bar{
 flex:1; background:#2f7d59; border-radius:3px 3px 0 0;
-min-width:8px; position:relative; cursor:pointer;
-transition: opacity 0.2s;
+min-width:6px; position:relative; cursor:pointer; transition:opacity 0.2s;
 }
 .chart-bar:hover{ opacity:0.8; }
-
 .chart-tooltip{
 display:none; position:absolute; bottom:100%; left:50%;
 transform:translateX(-50%); background:#333; color:white;
@@ -104,52 +160,138 @@ white-space:nowrap; margin-bottom:5px;
 }
 .chart-bar:hover .chart-tooltip{ display:block; }
 
-.recent-table{
-width:100%; border-collapse:collapse; margin-top:15px;
+/* TABELLER */
+.data-table{
+width:100%; border-collapse:collapse; font-size:14px;
 }
-.recent-table th{
-background:#2f7d59; color:white; padding:10px; text-align:left;
+.data-table th{
+background:#2f7d59; color:white; padding:10px; text-align:left; font-size:13px;
 }
-.recent-table td{
+.data-table td{
 padding:10px; border-bottom:1px solid #eee;
 }
-.recent-table tr:hover{ background:#f8f9fa; }
-
+.data-table tr:hover{ background:#f8f9fa; }
 .time-ago{ color:#999; font-size:13px; }
 
-/* HJÄLP */
-.help-panel{
-display:none; background:white; border-radius:12px;
-padding:30px; margin-top:20px; box-shadow:0 2px 12px rgba(0,0,0,0.08);
+/* SHOP ITEMS */
+.shop-item-row{
+display:grid;
+grid-template-columns:1fr 80px 80px 60px;
+gap:10px;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #f0f0f0;
 }
-.help-panel h2{ color:#2f7d59; border-bottom:2px solid #e6f4ec; padding-bottom:10px; }
-.help-panel h3{ color:#333; margin-top:25px; }
+.shop-item-row.header{
+font-weight:bold; font-size:13px; color:#666;
+border-bottom:2px solid #ddd; padding-bottom:8px;
+}
+.shop-item-name{ font-weight:600; }
+.shop-item-name small{ font-weight:normal; color:#999; display:block; font-size:12px; }
+.shop-input{
+width:100%; padding:6px 8px; border:1px solid #ddd;
+border-radius:6px; font-size:14px; text-align:center;
+}
+.shop-input:focus{ outline:none; border-color:#2f7d59; }
+
+.toggle-switch{
+position:relative; width:44px; height:24px;
+}
+.toggle-switch input{ opacity:0; width:0; height:0; }
+.toggle-slider{
+position:absolute; top:0; left:0; right:0; bottom:0;
+background:#ccc; border-radius:24px; cursor:pointer;
+transition:0.3s;
+}
+.toggle-slider:before{
+content:""; position:absolute; height:18px; width:18px;
+left:3px; bottom:3px; background:white; border-radius:50%;
+transition:0.3s;
+}
+.toggle-switch input:checked + .toggle-slider{ background:#2f7d59; }
+.toggle-switch input:checked + .toggle-slider:before{ transform:translateX(20px); }
+
+/* BESTÄLLNINGAR */
+.order-card{
+background:white; border-radius:10px; padding:18px;
+box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:12px;
+border-left:4px solid #ccc;
+}
+.order-card.pending{ border-left-color:#f39c12; }
+.order-card.paid{ border-left-color:#2f7d59; }
+.order-card.picked_up{ border-left-color:#0d6efd; }
+.order-card.cancelled{ border-left-color:#e74c3c; opacity:0.6; }
+
+.order-header{
+display:flex; justify-content:space-between; align-items:center;
+margin-bottom:10px; flex-wrap:wrap; gap:8px;
+}
+.order-id{ font-weight:bold; font-size:16px; }
+.order-status{
+padding:4px 12px; border-radius:12px; font-size:12px;
+font-weight:bold; color:white;
+}
+.order-status.pending{ background:#f39c12; }
+.order-status.paid{ background:#2f7d59; }
+.order-status.picked_up{ background:#0d6efd; }
+.order-status.cancelled{ background:#e74c3c; }
+
+.order-customer{ color:#555; font-size:14px; margin-bottom:8px; }
+.order-items{ font-size:13px; color:#777; margin-bottom:10px; }
+.order-total{ font-size:18px; font-weight:bold; color:#2f7d59; }
+.order-actions{ margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+
+/* INSTÄLLNINGAR */
+.settings-grid{
+display:grid; grid-template-columns:1fr 1fr; gap:15px;
+}
+.settings-group{ margin-bottom:15px; }
+.settings-group label{
+display:block; font-size:13px; font-weight:bold; color:#555; margin-bottom:4px;
+}
+.settings-group input,
+.settings-group select{
+width:100%; padding:8px 10px; border:1px solid #ddd;
+border-radius:6px; font-size:14px; box-sizing:border-box;
+}
+
+/* NOTISER */
+.notif-item{
+display:flex; align-items:center; gap:12px;
+padding:12px; border-bottom:1px solid #f0f0f0;
+}
+.notif-item.unseen{ background:#f0faf4; }
+.notif-icon{ font-size:24px; }
+.notif-text{ flex:1; }
+.notif-text strong{ display:block; font-size:14px; }
+.notif-text small{ color:#999; }
+.notif-amount{ font-weight:bold; color:#2f7d59; font-size:16px; }
+
+/* HJÄLP */
 .help-step{
 background:#f8f9fa; border-left:4px solid #2f7d59;
-padding:15px; margin:10px 0; border-radius:0 8px 8px 0;
+padding:12px 15px; margin:8px 0; border-radius:0 8px 8px 0; font-size:14px;
 }
 .help-step strong{ color:#2f7d59; }
-.help-example{
-background:#e6f4ec; padding:15px; border-radius:8px; margin:10px 0;
-font-family:monospace; font-size:14px; line-height:1.8; white-space:pre-wrap;
+.help-tip{
+background:#d1ecf1; border-left:4px solid #0dcaf0;
+padding:10px 15px; margin:8px 0; border-radius:0 8px 8px 0; font-size:14px;
 }
 .help-warning{
 background:#fff3cd; border-left:4px solid #ffc107;
-padding:12px 15px; margin:10px 0; border-radius:0 8px 8px 0;
+padding:10px 15px; margin:8px 0; border-radius:0 8px 8px 0; font-size:14px;
 }
-.help-tip{
-background:#d1ecf1; border-left:4px solid #0dcaf0;
-padding:12px 15px; margin:10px 0; border-radius:0 8px 8px 0;
+.help-example{
+background:#e6f4ec; padding:15px; border-radius:8px; margin:8px 0;
+font-family:monospace; font-size:13px; line-height:1.8; white-space:pre-wrap;
 }
-.tab-buttons{ display:flex; gap:5px; margin-bottom:20px; flex-wrap:wrap; }
-.tab-btn{
-padding:8px 16px; background:#e9ecef; color:#333;
-border:none; border-radius:20px; cursor:pointer; font-size:14px;
+
+@media(max-width:600px){
+  .shop-item-row{ grid-template-columns:1fr 70px 70px 50px; gap:6px; }
+  .settings-grid{ grid-template-columns:1fr; }
+  .nav-tab{ padding:8px 12px; font-size:13px; }
+  .topbar h1{ font-size:20px; }
 }
-.tab-btn:hover{ background:#dee2e6; }
-.tab-btn.active{ background:#2f7d59; color:white; }
-.tab-content{ display:none; }
-.tab-content.active{ display:block; }
 
 </style>
 </head>
@@ -160,7 +302,7 @@ border:none; border-radius:20px; cursor:pointer; font-size:14px;
 <div id="loginPage" class="login-box">
 <h1>🔒</h1>
 <h1>CateringCare Admin</h1>
-<p>Logga in för att hantera FAQ</p>
+<p>Logga in för att hantera FAQ & Matlådor</p>
 <input id="password" type="password" class="login-input"
   placeholder="Ange lösenord..." onkeydown="if(event.key==='Enter')login()">
 <button class="login-button" onclick="login()">Logga in</button>
@@ -170,222 +312,687 @@ border:none; border-radius:20px; cursor:pointer; font-size:14px;
 <!-- ADMIN -->
 <div id="adminPanel" class="admin-panel">
 
-<button class="logout-btn" onclick="logout()">🚪 Logga ut</button>
+<!-- TOPBAR -->
+<div class="topbar">
+  <h1>🍽️ CateringCare Admin</h1>
+  <div>
+    <span class="notif-badge" onclick="showSection('notifications')">
+      <button class="btn btn-sm btn-orange">🔔 Notiser <span class="notif-dot" id="notifDot">0</span></button>
+    </span>
+    <button class="btn btn-sm btn-red" onclick="logout()">🚪 Logga ut</button>
+  </div>
+</div>
 
-<h1>🍽️ CateringCare FAQ Admin</h1>
-<p>Här kan du lägga till eller uppdatera AI-kunskap.</p>
-
-<button onclick="loadFaq()">📥 Ladda befintlig FAQ</button>
-<button onclick="save()">💾 Spara FAQ</button>
-<button class="stats-btn" onclick="toggleStats()">📊 Statistik</button>
-<button class="help-btn" onclick="toggleHelp()">❓ Hjälp</button>
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('shop')">🍱 Matlådor</button>
+  <button class="nav-tab" onclick="showSection('orders')">📋 Beställningar</button>
+  <button class="nav-tab" onclick="showSection('settings')">⚙️ Inställningar</button>
+  <button class="nav-tab" onclick="showSection('faq')">📝 FAQ</button>
+  <button class="nav-tab" onclick="showSection('stats')">📊 Statistik</button>
+  <button class="nav-tab" onclick="showSection('help')">❓ Hjälp</button>
+</div>
 
 <div id="status"></div>
 
-<!-- ======================== -->
-<!-- STATISTIK-PANEL          -->
-<!-- ======================== -->
+<!-- ============================== -->
+<!-- SEKTION: MATLÅDOR              -->
+<!-- ============================== -->
+<div id="section-shop" class="section active">
+<div class="card">
+  <h2>🍱 Veckans matlådor</h2>
+  <p style="color:#666;font-size:14px;margin-bottom:15px;">
+    Hämta veckomenyn från MenyIT → fyll i antal och pris → spara.
+  </p>
 
-<div id="statsPanel" class="stats-panel">
+  <button class="btn" onclick="loadMenuFromAPI()" id="loadMenuBtn">📥 Hämta veckomeny från MenyIT</button>
+  <button class="btn btn-outline" onclick="loadShopItems()">🔄 Ladda sparade matlådor</button>
+  <button class="btn btn-red btn-sm" onclick="clearWeek()" style="float:right;">🗑️ Rensa vecka</button>
 
-<h2>📊 Statistik – Chattanvändning</h2>
-
-<button onclick="loadStats()" style="margin-bottom:15px;">🔄 Uppdatera</button>
-
-<div class="stats-cards">
-  <div class="stat-card">
-    <div class="stat-number" id="statTotal">-</div>
-    <div class="stat-label">Totalt antal frågor</div>
+  <div id="shopItemsList" style="margin-top:20px;">
+    <p style="color:#999;text-align:center;padding:20px;">Klicka "Hämta veckomeny" för att börja.</p>
   </div>
-  <div class="stat-card purple">
-    <div class="stat-number" id="statToday">-</div>
-    <div class="stat-label">Frågor idag</div>
-  </div>
-  <div class="stat-card blue">
-    <div class="stat-number" id="statAvg">-</div>
-    <div class="stat-label">Snitt per dag (30d)</div>
+
+  <div id="shopSaveBar" style="display:none;margin-top:15px;padding-top:15px;border-top:2px solid #2f7d59;">
+    <button class="btn" onclick="saveShopItems()" style="font-size:16px;padding:12px 30px;">💾 Spara matlådor</button>
+    <span id="shopSaveStatus" style="margin-left:10px;color:#999;font-size:14px;"></span>
   </div>
 </div>
-
-<h3>📈 Frågor per dag (senaste 30 dagarna)</h3>
-<div id="chartContainer" class="chart-bar-container"></div>
-
-<h3>💬 Senaste frågorna</h3>
-<table class="recent-table">
-  <thead>
-    <tr>
-      <th>Fråga</th>
-      <th>Tid</th>
-    </tr>
-  </thead>
-  <tbody id="recentBody"></tbody>
-</table>
-
 </div>
 
-<!-- HJÄLP-PANEL -->
-<div id="helpPanel" class="help-panel">
+<!-- ============================== -->
+<!-- SEKTION: BESTÄLLNINGAR         -->
+<!-- ============================== -->
+<div id="section-orders" class="section">
+<div class="card">
+  <h2>📋 Beställningar denna vecka</h2>
+  <button class="btn btn-sm" onclick="loadOrders()">🔄 Uppdatera</button>
 
-<h2>📖 Hjälp – Så använder du admin-panelen</h2>
+  <div class="stats-cards" style="margin-top:15px;">
+    <div class="stat-card">
+      <div class="stat-number" id="orderCountTotal">0</div>
+      <div class="stat-label">Beställningar</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-number" id="orderCountPending">0</div>
+      <div class="stat-label">Inväntar betalning</div>
+    </div>
+    <div class="stat-card" style="background:linear-gradient(135deg,#27ae60,#1e8449);">
+      <div class="stat-number" id="orderRevenue">0 kr</div>
+      <div class="stat-label">Betalat totalt</div>
+    </div>
+  </div>
 
-<div class="tab-buttons">
-  <button class="tab-btn active" onclick="showTab('overview')">🏠 Översikt</button>
-  <button class="tab-btn" onclick="showTab('kv')">📝 KV-rutan</button>
-  <button class="tab-btn" onclick="showTab('md')">📁 MD-filer</button>
-  <button class="tab-btn" onclick="showTab('tips')">💡 Tips</button>
-  <button class="tab-btn" onclick="showTab('examples')">📋 Exempel</button>
+  <div id="ordersList" style="margin-top:20px;">
+    <p style="color:#999;text-align:center;padding:20px;">Laddar beställningar...</p>
+  </div>
+</div>
 </div>
 
-<div id="tab-overview" class="tab-content active">
-<h3>Hur AI-assistenten får sin kunskap</h3>
-<div class="help-step"><strong>1️⃣ MD-filer på GitHub</strong> (automatiskt)<br>
-Alla <code>.md</code>-filer i <code>content/faq/</code>-mapparna läses automatiskt.</div>
-<div class="help-step"><strong>2️⃣ KV-rutan nedan</strong> (manuellt)<br>
-Texten du skriver i rutan sparas i Cloudflare KV.</div>
-<div class="help-tip">💡 <strong>Båda kombineras!</strong> AI:n läser MD-filer + KV-rutan.</div>
+<!-- ============================== -->
+<!-- SEKTION: INSTÄLLNINGAR         -->
+<!-- ============================== -->
+<div id="section-settings" class="section">
+<div class="card">
+  <h2>⚙️ Butiksinställningar</h2>
+  <button class="btn btn-sm" onclick="loadSettings()">🔄 Ladda</button>
+
+  <div class="settings-grid" style="margin-top:20px;">
+
+    <div class="settings-group">
+      <label>💰 Standardpris (kr)</label>
+      <input type="number" id="setDefaultPrice" value="79">
+    </div>
+
+    <div class="settings-group">
+      <label>💳 Swish-nummer</label>
+      <input type="text" id="setSwishNumber" placeholder="123 456 7890">
+    </div>
+
+    <div class="settings-group">
+      <label>📝 Swish-meddelande prefix</label>
+      <input type="text" id="setSwishMessage" value="CateringCare Matlåda">
+    </div>
+
+    <div class="settings-group">
+      <label>📍 Hämtadress</label>
+      <input type="text" id="setAddress" value="Ekelundsvägen 18, 171 73 Solna">
+    </div>
+
+    <div class="settings-group">
+      <label>🕐 Hämttid start</label>
+      <input type="time" id="setPickupStart" value="11:00">
+    </div>
+
+    <div class="settings-group">
+      <label>🕐 Hämttid slut</label>
+      <input type="time" id="setPickupEnd" value="15:00">
+    </div>
+
+  </div>
+
+  <h3 style="margin-top:25px;">🏷️ Rabattinställningar</h3>
+  <div class="settings-grid">
+
+    <div class="settings-group">
+      <label>Rabatt (%)</label>
+      <input type="number" id="setDiscountPercent" value="30">
+    </div>
+
+    <div class="settings-group">
+      <label>Rabattdag</label>
+      <select id="setDiscountDay">
+        <option value="3">Onsdag</option>
+        <option value="4">Torsdag</option>
+        <option value="5" selected>Fredag</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label>Rabatt startar (timme)</label>
+      <input type="number" id="setDiscountHour" value="13" min="0" max="23">
+    </div>
+
+    <div class="settings-group">
+      <label>Rabatt startar (minut)</label>
+      <input type="number" id="setDiscountMinute" value="0" min="0" max="59">
+    </div>
+
+  </div>
+
+  <button class="btn" onclick="saveSettings()" style="margin-top:15px;">💾 Spara inställningar</button>
+</div>
 </div>
 
-<div id="tab-kv" class="tab-content">
-<h3>Så här använder du KV-rutan</h3>
-<div class="help-step"><strong>Steg 1:</strong> Klicka "📥 Ladda befintlig FAQ"</div>
-<div class="help-step"><strong>Steg 2:</strong> Skriv FAQ-text i rutan</div>
-<div class="help-step"><strong>Steg 3:</strong> Klicka "💾 Spara FAQ"</div>
-<div class="help-warning">⚠️ Att spara skriver över gammal data. Ladda alltid först!</div>
+<!-- ============================== -->
+<!-- SEKTION: NOTISER               -->
+<!-- ============================== -->
+<div id="section-notifications" class="section">
+<div class="card">
+  <h2>🔔 Notiser</h2>
+  <div id="notifList">
+    <p style="color:#999;text-align:center;padding:20px;">Inga notiser</p>
+  </div>
+</div>
 </div>
 
-<div id="tab-md" class="tab-content">
-<h3>Så skapar du en ny MD-fil</h3>
-<div class="help-step"><strong>Steg 1:</strong> Gå till <a href="https://github.com/Jarbrant/cateringcare-info-site-" target="_blank">GitHub-repot</a></div>
-<div class="help-step"><strong>Steg 2:</strong> Gå till rätt mapp (fakturering/kost/leverans/support)</div>
-<div class="help-step"><strong>Steg 3:</strong> Klicka "Add file" → "Create new file"</div>
-<div class="help-step"><strong>Steg 4:</strong> Ge filen namn med <code>.md</code> och skriv innehåll</div>
-<div class="help-step"><strong>Steg 5:</strong> Klicka "Commit" – klar!</div>
+<!-- ============================== -->
+<!-- SEKTION: FAQ                   -->
+<!-- ============================== -->
+<div id="section-faq" class="section">
+<div class="card">
+  <h2>📝 FAQ – AI-kunskap</h2>
+  <p style="color:#666;font-size:14px;margin-bottom:15px;">Extra kunskap som läggs till MD-filerna från GitHub.</p>
+
+  <button class="btn btn-sm" onclick="loadFaq()">📥 Ladda FAQ</button>
+  <button class="btn btn-sm" onclick="saveFaq()">💾 Spara FAQ</button>
+
+  <textarea id="faq" placeholder="Skriv FAQ-information här..." style="margin-top:15px;"></textarea>
+</div>
 </div>
 
-<div id="tab-tips" class="tab-content">
-<h3>💡 Tips</h3>
-<div class="help-step"><strong>✅</strong> Skriv korta, tydliga svar</div>
-<div class="help-step"><strong>✅</strong> Skriv rubriker som frågor</div>
-<div class="help-step"><strong>✅</strong> En sak per MD-fil</div>
-<div class="help-step"><strong>✅</strong> Testa efter ändring</div>
+<!-- ============================== -->
+<!-- SEKTION: STATISTIK             -->
+<!-- ============================== -->
+<div id="section-stats" class="section">
+<div class="card">
+  <h2>📊 Chattstatistik</h2>
+  <button class="btn btn-sm" onclick="loadStats()">🔄 Uppdatera</button>
+
+  <div class="stats-cards" style="margin-top:15px;">
+    <div class="stat-card">
+      <div class="stat-number" id="statTotal">-</div>
+      <div class="stat-label">Totalt antal frågor</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-number" id="statToday">-</div>
+      <div class="stat-label">Frågor idag</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-number" id="statAvg">-</div>
+      <div class="stat-label">Snitt/dag (30d)</div>
+    </div>
+  </div>
+
+  <h3>📈 Frågor per dag</h3>
+  <div id="chartContainer" class="chart-bar-container"></div>
+
+  <h3>💬 Senaste frågorna</h3>
+  <table class="data-table">
+    <thead><tr><th>Fråga</th><th>Tid</th></tr></thead>
+    <tbody id="recentBody"></tbody>
+  </table>
+</div>
 </div>
 
-<div id="tab-examples" class="tab-content">
-<h3>📋 Kopierbara exempel</h3>
-<div class="help-example">---
-title: Kan jag pausa matleveransen?
-category: leverans
-keywords: paus semester sjukhus
----
+<!-- ============================== -->
+<!-- SEKTION: HJÄLP                 -->
+<!-- ============================== -->
+<div id="section-help" class="section">
+<div class="card">
+  <h2>📖 Hjälp</h2>
 
-Ja, meddela hemtjänsten senast 3 dagar innan.
-Kontakt: info@cateringcare.se</div>
+  <h3>🍱 Matlådor – Så gör du</h3>
+  <div class="help-step"><strong>1.</strong> Gå till fliken "🍱 Matlådor"</div>
+  <div class="help-step"><strong>2.</strong> Klicka "📥 Hämta veckomeny från MenyIT" – alla rätter laddas</div>
+  <div class="help-step"><strong>3.</strong> Fyll i <strong>antal</strong> lådor och <strong>pris</strong> per rätt</div>
+  <div class="help-step"><strong>4.</strong> Slå PÅ toggle-knappen för rätter du vill sälja</div>
+  <div class="help-step"><strong>5.</strong> Klicka "💾 Spara matlådor"</div>
+  <div class="help-tip">💡 Du kan ändra antal och pris när som helst under veckan!</div>
+
+  <h3>📋 Beställningar</h3>
+  <div class="help-step"><strong>Pending</strong> = Kund har beställt, inväntar Swish</div>
+  <div class="help-step"><strong>Betalad</strong> = Du har verifierat Swish-betalningen</div>
+  <div class="help-step"><strong>Hämtad</strong> = Kunden har hämtat maten</div>
+  <div class="help-step"><strong>Avbruten</strong> = Beställningen avbröts (lagret återställs)</div>
+
+  <h3>⚙️ Inställningar</h3>
+  <div class="help-step">Ställ in <strong>Swish-nummer</strong> – VIKTIGT! Utan det kan kunder inte betala</div>
+  <div class="help-step">Ställ in <strong>standardpris</strong> – används om du inte sätter pris per rätt</div>
+  <div class="help-step">Ställ in <strong>rabatt</strong> – tid + procent för fredags-rea</div>
+
+  <h3>📝 FAQ / MD-filer</h3>
+  <div class="help-step">MD-filer i <a href="https://github.com/Jarbrant/cateringcare-info-site-" target="_blank">GitHub-repot</a> läses automatiskt av AI:n</div>
+  <div class="help-step">Extra FAQ i KV-rutan läggs till utöver MD-filerna</div>
+</div>
 </div>
 
-</div>
+</div><!-- /adminPanel -->
 
-<br><br>
-<textarea id="faq" placeholder="Skriv FAQ-information här..."></textarea>
-
-</div>
 
 <script>
 
-const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
-let adminToken = sessionStorage.getItem("adminToken") || ""
-if(adminToken) showAdmin()
+const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
+let T = sessionStorage.getItem("adminToken") || ""
+let shopItems = []
+let notifInterval = null
 
-/* INLOGGNING */
+if(T) showAdmin()
+
+/* ==============================
+   AUTH
+   ============================== */
+
 async function login(){
-  const password = document.getElementById("password").value
+  const pw = document.getElementById("password").value
   try {
-    const res = await fetch(WORKER_URL + "/admin/login", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password })
-    })
-    const data = await res.json()
-    if(data.success){
-      adminToken = data.token
-      sessionStorage.setItem("adminToken", adminToken)
-      document.getElementById("loginError").style.display = "none"
+    const r = await fetch(W+"/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:pw})})
+    const d = await r.json()
+    if(d.success){
+      T = d.token; sessionStorage.setItem("adminToken",T)
+      document.getElementById("loginError").style.display="none"
       showAdmin()
     } else {
-      document.getElementById("loginError").style.display = "block"
+      document.getElementById("loginError").style.display="block"
     }
-  } catch(err) {
-    document.getElementById("loginError").textContent = "❌ Kunde inte ansluta"
-    document.getElementById("loginError").style.display = "block"
+  } catch(e){
+    document.getElementById("loginError").textContent="❌ Kunde inte ansluta"
+    document.getElementById("loginError").style.display="block"
   }
 }
 
 function showAdmin(){
-  document.getElementById("loginPage").style.display = "none"
-  document.getElementById("adminPanel").style.display = "block"
-  loadFaq()
+  document.getElementById("loginPage").style.display="none"
+  document.getElementById("adminPanel").style.display="block"
+  loadShopItems()
+  checkNotifications()
+  // Kolla notiser var 30:e sekund
+  notifInterval = setInterval(checkNotifications, 30000)
 }
 
 function logout(){
-  adminToken = ""
-  sessionStorage.removeItem("adminToken")
-  document.getElementById("loginPage").style.display = "block"
-  document.getElementById("adminPanel").style.display = "none"
-  document.getElementById("password").value = ""
+  T=""; sessionStorage.removeItem("adminToken")
+  document.getElementById("loginPage").style.display="block"
+  document.getElementById("adminPanel").style.display="none"
+  document.getElementById("password").value=""
+  if(notifInterval) clearInterval(notifInterval)
 }
 
-/* HJÄLP & STATISTIK TOGGLE */
-function toggleHelp(){
-  const p = document.getElementById("helpPanel")
-  p.style.display = p.style.display === "block" ? "none" : "block"
-  document.getElementById("statsPanel").style.display = "none"
-}
+function headers(){ return {"Content-Type":"application/json","Authorization":"Bearer "+T} }
 
-function toggleStats(){
-  const p = document.getElementById("statsPanel")
-  const isHidden = p.style.display !== "block"
-  p.style.display = isHidden ? "block" : "none"
-  document.getElementById("helpPanel").style.display = "none"
-  if(isHidden) loadStats()
-}
+/* ==============================
+   NAVIGATION
+   ============================== */
 
-function showTab(name){
-  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"))
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"))
-  document.getElementById("tab-" + name).classList.add("active")
+function showSection(name){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
+  document.querySelectorAll(".nav-tab").forEach(t=>t.classList.remove("active"))
+  document.getElementById("section-"+name).classList.add("active")
   event.target.classList.add("active")
+
+  if(name==="orders") loadOrders()
+  if(name==="stats") loadStats()
+  if(name==="settings") loadSettings()
+  if(name==="faq") loadFaq()
+  if(name==="notifications") loadNotifications()
 }
 
-/* FAQ */
-function showStatus(msg, type){
-  const el = document.getElementById("status")
-  el.textContent = msg; el.className = type; el.style.display = "block"
-  setTimeout(() => { el.style.display = "none" }, 3000)
+/* ==============================
+   STATUS
+   ============================== */
+
+function showStatus(msg,type){
+  const el=document.getElementById("status")
+  el.textContent=msg; el.className=type; el.style.display="block"
+  setTimeout(()=>{el.style.display="none"},4000)
 }
+
+/* ==============================
+   SHOP: HÄMTA MENY FRÅN API
+   ============================== */
+
+async function loadMenuFromAPI(){
+  const btn=document.getElementById("loadMenuBtn")
+  btn.disabled=true; btn.textContent="⏳ Hämtar..."
+
+  try{
+    const r=await fetch(W+"/shop/admin/load-menu",{method:"POST",headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    if(d.error){showStatus("❌ "+d.error,"error");return}
+
+    shopItems=d.dishes||[]
+
+    // Kolla om vi redan har sparade items
+    try{
+      const r2=await fetch(W+"/shop/admin/get-items",{headers:headers()})
+      const d2=await r2.json()
+      if(d2.items&&d2.items.length>0){
+        // Merge: behåll antal/pris/enabled från sparade
+        for(const saved of d2.items){
+          const match=shopItems.find(s=>s.name.toLowerCase()===saved.name.toLowerCase())
+          if(match){
+            match.stock=saved.stock
+            match.price=saved.price
+            match.enabled=saved.enabled
+            match.id=saved.id
+          }
+        }
+      }
+    }catch(e){}
+
+    renderShopItems()
+    showStatus("✅ "+shopItems.length+" rätter hämtade från MenyIT!","success")
+  }catch(e){
+    showStatus("❌ "+e.message,"error")
+  }finally{
+    btn.disabled=false; btn.textContent="📥 Hämta veckomeny från MenyIT"
+  }
+}
+
+/* ==============================
+   SHOP: LADDA SPARADE
+   ============================== */
+
+async function loadShopItems(){
+  try{
+    const r=await fetch(W+"/shop/admin/get-items",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    shopItems=d.items||[]
+    if(shopItems.length>0) renderShopItems()
+  }catch(e){}
+}
+
+/* ==============================
+   SHOP: RENDERA ITEMS
+   ============================== */
+
+function renderShopItems(){
+  const el=document.getElementById("shopItemsList")
+
+  if(shopItems.length===0){
+    el.innerHTML='<p style="color:#999;text-align:center;">Inga rätter. Klicka "Hämta veckomeny".</p>'
+    document.getElementById("shopSaveBar").style.display="none"
+    return
+  }
+
+  let html=`
+    <div class="shop-item-row header">
+      <div>Rätt</div>
+      <div style="text-align:center">Pris (kr)</div>
+      <div style="text-align:center">Antal</div>
+      <div style="text-align:center">Aktiv</div>
+    </div>
+  `
+
+  for(let i=0;i<shopItems.length;i++){
+    const item=shopItems[i]
+    html+=`
+      <div class="shop-item-row">
+        <div class="shop-item-name">
+          ${escapeHtml(item.name)}
+          <small>${escapeHtml(item.category||"")}</small>
+        </div>
+        <div>
+          <input class="shop-input" type="number" value="${item.price||""}"
+            placeholder="79" onchange="shopItems[${i}].price=parseFloat(this.value)||null">
+        </div>
+        <div>
+          <input class="shop-input" type="number" value="${item.stock||0}"
+            min="0" onchange="shopItems[${i}].stock=parseInt(this.value)||0">
+        </div>
+        <div style="text-align:center;">
+          <label class="toggle-switch">
+            <input type="checkbox" ${item.enabled?"checked":""}
+              onchange="shopItems[${i}].enabled=this.checked">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    `
+  }
+
+  el.innerHTML=html
+  document.getElementById("shopSaveBar").style.display="block"
+}
+
+/* ==============================
+   SHOP: SPARA
+   ============================== */
+
+async function saveShopItems(){
+  try{
+    const r=await fetch(W+"/shop/admin/save-items",{
+      method:"POST",headers:headers(),
+      body:JSON.stringify({items:shopItems})
+    })
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    if(d.error){showStatus("❌ "+d.error,"error");return}
+
+    showStatus("✅ Matlådor sparade! ("+d.count+" rätter)","success")
+    document.getElementById("shopSaveStatus").textContent="Sparad "+new Date().toLocaleTimeString("sv-SE")
+  }catch(e){showStatus("❌ "+e.message,"error")}
+}
+
+/* ==============================
+   SHOP: RENSA VECKA
+   ============================== */
+
+async function clearWeek(){
+  if(!confirm("Vill du rensa alla matlådor och beställningar denna vecka?")) return
+  try{
+    const r=await fetch(W+"/shop/admin/clear-week",{method:"POST",headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    shopItems=[]
+    renderShopItems()
+    showStatus("✅ Veckan rensad","success")
+  }catch(e){showStatus("❌ "+e.message,"error")}
+}
+
+/* ==============================
+   BESTÄLLNINGAR
+   ============================== */
+
+async function loadOrders(){
+  try{
+    const r=await fetch(W+"/shop/admin/orders",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+
+    const orders=d.orders||[]
+    const el=document.getElementById("ordersList")
+
+    // Stats
+    document.getElementById("orderCountTotal").textContent=orders.length
+    document.getElementById("orderCountPending").textContent=orders.filter(o=>o.status==="pending").length
+    const revenue=orders.filter(o=>o.status==="paid"||o.status==="picked_up").reduce((s,o)=>s+o.totalPrice,0)
+    document.getElementById("orderRevenue").textContent=revenue+" kr"
+
+    if(orders.length===0){
+      el.innerHTML='<p style="color:#999;text-align:center;padding:20px;">Inga beställningar denna vecka</p>'
+      return
+    }
+
+    // Sortera: pending först
+    const sorted=[...orders].sort((a,b)=>{
+      const pri={pending:0,paid:1,picked_up:2,cancelled:3}
+      return(pri[a.status]||9)-(pri[b.status]||9)
+    })
+
+    let html=""
+    for(const o of sorted){
+      const statusText={pending:"⏳ Inväntar betalning",paid:"✅ Betalad",picked_up:"📦 Hämtad",cancelled:"❌ Avbruten"}
+      const items=o.items.map(i=>`${i.quantity}× ${escapeHtml(i.name)}`).join(", ")
+
+      html+=`
+        <div class="order-card ${o.status}">
+          <div class="order-header">
+            <span class="order-id">${o.id}</span>
+            <span class="order-status ${o.status}">${statusText[o.status]||o.status}</span>
+          </div>
+          <div class="order-customer">
+            👤 ${escapeHtml(o.customerName)} · 📱 ${escapeHtml(o.customerPhone)}
+            · 📅 ${o.pickupDay} kl ${o.pickupTime}
+          </div>
+          <div class="order-items">📦 ${items}</div>
+          <div class="order-total">${o.totalPrice} kr${o.discountActive?" (rabatt -"+o.discountPercent+"%)":""}</div>
+          <div class="order-actions">
+            ${o.status==="pending"?`
+              <button class="btn btn-sm" onclick="markOrder('${o.id}','paid')">✅ Markera betalad</button>
+              <button class="btn btn-sm btn-red" onclick="markOrder('${o.id}','cancelled')">❌ Avbryt</button>
+            `:""}
+            ${o.status==="paid"?`
+              <button class="btn btn-sm btn-blue" onclick="markOrder('${o.id}','picked_up')">📦 Markera hämtad</button>
+            `:""}
+          </div>
+          <div style="font-size:12px;color:#999;margin-top:8px;">${new Date(o.createdAt).toLocaleString("sv-SE")}</div>
+        </div>
+      `
+    }
+    el.innerHTML=html
+
+  }catch(e){showStatus("❌ "+e.message,"error")}
+}
+
+async function markOrder(id,status){
+  const labels={paid:"betalad",picked_up:"hämtad",cancelled:"avbruten"}
+  if(!confirm("Markera order "+id+" som "+labels[status]+"?")) return
+  try{
+    const r=await fetch(W+"/shop/admin/mark-paid",{
+      method:"POST",headers:headers(),
+      body:JSON.stringify({orderId:id,status})
+    })
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    if(d.error){showStatus("❌ "+d.error,"error");return}
+    showStatus("✅ Order "+id+" uppdaterad","success")
+    loadOrders()
+    // Uppdatera lager i minnet om det ändrades
+    loadShopItems()
+  }catch(e){showStatus("❌ "+e.message,"error")}
+}
+
+/* ==============================
+   INSTÄLLNINGAR
+   ============================== */
+
+async function loadSettings(){
+  try{
+    const r=await fetch(W+"/shop/admin/settings",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    const s=d.settings||{}
+    document.getElementById("setDefaultPrice").value=s.defaultPrice||79
+    document.getElementById("setSwishNumber").value=s.swishNumber||""
+    document.getElementById("setSwishMessage").value=s.swishMessage||"CateringCare Matlåda"
+    document.getElementById("setAddress").value=s.pickupAddress||"Ekelundsvägen 18, 171 73 Solna"
+    document.getElementById("setPickupStart").value=s.pickupHoursStart||"11:00"
+    document.getElementById("setPickupEnd").value=s.pickupHoursEnd||"15:00"
+    document.getElementById("setDiscountPercent").value=s.discountPercent||30
+    document.getElementById("setDiscountDay").value=s.discountDay||5
+    document.getElementById("setDiscountHour").value=s.discountStartHour||13
+    document.getElementById("setDiscountMinute").value=s.discountStartMinute||0
+  }catch(e){}
+}
+
+async function saveSettings(){
+  try{
+    const body={
+      defaultPrice:parseFloat(document.getElementById("setDefaultPrice").value)||79,
+      swishNumber:document.getElementById("setSwishNumber").value.trim(),
+      swishMessage:document.getElementById("setSwishMessage").value.trim(),
+      pickupAddress:document.getElementById("setAddress").value.trim(),
+      pickupHoursStart:document.getElementById("setPickupStart").value,
+      pickupHoursEnd:document.getElementById("setPickupEnd").value,
+      discountPercent:parseInt(document.getElementById("setDiscountPercent").value)||30,
+      discountDay:parseInt(document.getElementById("setDiscountDay").value)||5,
+      discountStartHour:parseInt(document.getElementById("setDiscountHour").value)||13,
+      discountStartMinute:parseInt(document.getElementById("setDiscountMinute").value)||0,
+      openDays:[3,4,5]
+    }
+    const r=await fetch(W+"/shop/admin/settings",{method:"POST",headers:headers(),body:JSON.stringify(body)})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    if(d.error){showStatus("❌ "+d.error,"error");return}
+    showStatus("✅ Inställningar sparade!","success")
+  }catch(e){showStatus("❌ "+e.message,"error")}
+}
+
+/* ==============================
+   NOTISER
+   ============================== */
+
+async function checkNotifications(){
+  try{
+    const r=await fetch(W+"/shop/admin/notifications",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized") return
+
+    const dot=document.getElementById("notifDot")
+    if(d.unseen>0){
+      dot.textContent=d.unseen
+      dot.classList.add("active")
+      // Ljud-notis (valfritt)
+      if(d.unseen>0) document.title="("+d.unseen+") CateringCare Admin"
+    }else{
+      dot.classList.remove("active")
+      document.title="CateringCare Admin"
+    }
+  }catch(e){}
+}
+
+async function loadNotifications(){
+  try{
+    const r=await fetch(W+"/shop/admin/notifications",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+
+    const el=document.getElementById("notifList")
+    const notifs=d.notifications||[]
+
+    if(notifs.length===0){
+      el.innerHTML='<p style="color:#999;text-align:center;padding:20px;">Inga notiser</p>'
+      return
+    }
+
+    let html=""
+    for(const n of notifs.slice(0,30)){
+      html+=`
+        <div class="notif-item ${n.seen?"":"unseen"}">
+          <div class="notif-icon">🛒</div>
+          <div class="notif-text">
+            <strong>Ny beställning: ${escapeHtml(n.orderId||"")}</strong>
+            ${escapeHtml(n.customerName||"")} – ${n.itemCount||0} matlåda(or)
+            <br><small>${getTimeAgo(n.time)}</small>
+          </div>
+          <div class="notif-amount">${n.totalPrice||0} kr</div>
+        </div>
+      `
+    }
+    el.innerHTML=html
+
+    // Nollställ badge
+    document.getElementById("notifDot").classList.remove("active")
+    document.title="CateringCare Admin"
+  }catch(e){}
+}
+
+/* ==============================
+   FAQ
+   ============================== */
 
 async function loadFaq(){
-  try {
-    const res = await fetch(WORKER_URL + "/admin/get", {
-      headers: { "Authorization": "Bearer " + adminToken }
-    })
-    const data = await res.json()
-    if(data.error === "unauthorized"){ logout(); return }
-    document.getElementById("faq").value = data.faq || ""
-    showStatus("✅ FAQ laddad!", "success")
-  } catch(err) { showStatus("❌ " + err.message, "error") }
+  try{
+    const r=await fetch(W+"/admin/get",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    document.getElementById("faq").value=d.faq||""
+    showStatus("✅ FAQ laddad","success")
+  }catch(e){showStatus("❌ "+e.message,"error")}
 }
 
-async function save(){
-  const text = document.getElementById("faq").value
-  try {
-    const res = await fetch(WORKER_URL + "/admin/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + adminToken },
-      body: JSON.stringify({ text })
-    })
-    const data = await res.json()
-    if(data.error === "unauthorized"){ logout(); return }
-    if(data.status === "saved") showStatus("✅ FAQ sparad!", "success")
-    else showStatus("❌ " + JSON.stringify(data), "error")
-  } catch(err) { showStatus("❌ " + err.message, "error") }
+async function saveFaq(){
+  const text=document.getElementById("faq").value
+  try{
+    const r=await fetch(W+"/admin/save",{method:"POST",headers:headers(),body:JSON.stringify({text})})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
+    if(d.status==="saved") showStatus("✅ FAQ sparad!","success")
+    else showStatus("❌ "+JSON.stringify(d),"error")
+  }catch(e){showStatus("❌ "+e.message,"error")}
 }
 
 /* ==============================
@@ -393,76 +1000,65 @@ async function save(){
    ============================== */
 
 async function loadStats(){
-  try {
-    const res = await fetch(WORKER_URL + "/admin/stats", {
-      headers: { "Authorization": "Bearer " + adminToken }
-    })
-    const data = await res.json()
-    if(data.error === "unauthorized"){ logout(); return }
+  try{
+    const r=await fetch(W+"/admin/stats",{headers:headers()})
+    const d=await r.json()
+    if(d.error==="unauthorized"){logout();return}
 
-    // Uppdatera kort
-    document.getElementById("statTotal").textContent = data.total || 0
-    document.getElementById("statToday").textContent = data.today || 0
+    document.getElementById("statTotal").textContent=d.total||0
+    document.getElementById("statToday").textContent=d.today||0
 
-    // Beräkna snitt
-    const totalDays = data.daily ? data.daily.filter(d => d.count > 0).length || 1 : 1
-    const totalInPeriod = data.daily ? data.daily.reduce((sum, d) => sum + d.count, 0) : 0
-    const avg = Math.round((totalInPeriod / Math.max(totalDays, 1)) * 10) / 10
-    document.getElementById("statAvg").textContent = avg
+    const totalDays=d.daily?d.daily.filter(x=>x.count>0).length||1:1
+    const totalInPeriod=d.daily?d.daily.reduce((s,x)=>s+x.count,0):0
+    document.getElementById("statAvg").textContent=Math.round((totalInPeriod/Math.max(totalDays,1))*10)/10
 
-    // Rita graf
-    const chart = document.getElementById("chartContainer")
-    chart.innerHTML = ""
-    if(data.daily && data.daily.length > 0){
-      const maxCount = Math.max(...data.daily.map(d => d.count), 1)
-      const reversed = [...data.daily].reverse()
-      reversed.forEach(day => {
-        const height = Math.max((day.count / maxCount) * 130, day.count > 0 ? 5 : 1)
-        const bar = document.createElement("div")
-        bar.className = "chart-bar"
-        bar.style.height = height + "px"
-        bar.style.background = day.count > 0 ? "#2f7d59" : "#e0e0e0"
-        bar.innerHTML = '<div class="chart-tooltip">' + day.date + ': ' + day.count + ' frågor</div>'
-        chart.appendChild(bar)
+    const chart=document.getElementById("chartContainer")
+    chart.innerHTML=""
+    if(d.daily&&d.daily.length>0){
+      const mx=Math.max(...d.daily.map(x=>x.count),1)
+      ;[...d.daily].reverse().forEach(day=>{
+        const h=Math.max((day.count/mx)*110,day.count>0?4:1)
+        const b=document.createElement("div")
+        b.className="chart-bar"
+        b.style.height=h+"px"
+        b.style.background=day.count>0?"#2f7d59":"#e0e0e0"
+        b.innerHTML='<div class="chart-tooltip">'+day.date+": "+day.count+"</div>"
+        chart.appendChild(b)
       })
     }
 
-    // Senaste frågorna
-    const tbody = document.getElementById("recentBody")
-    tbody.innerHTML = ""
-    if(data.recent && data.recent.length > 0){
-      data.recent.slice(0, 20).forEach(q => {
-        const tr = document.createElement("tr")
-        const timeAgo = getTimeAgo(q.time)
-        tr.innerHTML = '<td>' + escapeHtml(q.question) + '</td><td class="time-ago">' + timeAgo + '</td>'
+    const tbody=document.getElementById("recentBody")
+    tbody.innerHTML=""
+    if(d.recent&&d.recent.length>0){
+      d.recent.slice(0,20).forEach(q=>{
+        const tr=document.createElement("tr")
+        tr.innerHTML="<td>"+escapeHtml(q.question)+"</td><td class='time-ago'>"+getTimeAgo(q.time)+"</td>"
         tbody.appendChild(tr)
       })
-    } else {
-      tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#999;">Inga frågor ännu</td></tr>'
+    }else{
+      tbody.innerHTML='<tr><td colspan="2" style="text-align:center;color:#999;">Inga frågor</td></tr>'
     }
-
-  } catch(err) {
-    console.error("Stats error:", err)
-  }
+  }catch(e){console.error(e)}
 }
 
+/* ==============================
+   HJÄLPFUNKTIONER
+   ============================== */
+
 function getTimeAgo(dateStr){
-  const now = new Date()
-  const then = new Date(dateStr)
-  const diff = Math.floor((now - then) / 1000)
-  if(diff < 60) return "Just nu"
-  if(diff < 3600) return Math.floor(diff/60) + " min sedan"
-  if(diff < 86400) return Math.floor(diff/3600) + " tim sedan"
-  return Math.floor(diff/86400) + " dagar sedan"
+  const now=new Date(),then=new Date(dateStr),diff=Math.floor((now-then)/1000)
+  if(diff<60) return "Just nu"
+  if(diff<3600) return Math.floor(diff/60)+" min sedan"
+  if(diff<86400) return Math.floor(diff/3600)+" tim sedan"
+  return Math.floor(diff/86400)+" dagar sedan"
 }
 
 function escapeHtml(text){
-  const div = document.createElement("div")
-  div.textContent = text
+  const div=document.createElement("div")
+  div.textContent=text||""
   return div.innerHTML
 }
 
 </script>
-
 </body>
 </html>
