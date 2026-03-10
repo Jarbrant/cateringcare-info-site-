@@ -265,6 +265,8 @@ Skicka fråga
 
 <script>
 
+<script>
+
 /* ==============================
    SPRÅKFILER
    ============================== */
@@ -348,7 +350,6 @@ function setLang(lang) {
   currentLang = lang
   const t = translations[lang]
 
-  // Uppdatera texter
   document.getElementById("heroTitle").textContent = t.heroTitle
   document.getElementById("heroText").textContent = t.heroText
   document.getElementById("assistantTitle").textContent = t.assistantTitle
@@ -362,11 +363,9 @@ function setLang(lang) {
   document.getElementById("card3Title").textContent = t.card3Title
   document.getElementById("card3Text").textContent = t.card3Text
 
-  // Uppdatera knappar
   document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("active"))
   event.target.classList.add("active")
 
-  // Rensa chat vid språkbyte
   chatHistory = []
   document.getElementById("chatHistory").innerHTML = ""
 }
@@ -412,7 +411,8 @@ const data = await res.json()
 const thinking = document.getElementById("thinking")
 if(thinking) thinking.remove()
 
-chatBox.innerHTML += '<div class="chat-bubble chat-bot">' + data.answer + '</div>'
+// ANVÄND formatAnswer för klickbara länkar!
+chatBox.innerHTML += '<div class="chat-bubble chat-bot">' + formatAnswer(data.answer) + '</div>'
 
 chatHistory.push({ role: "user", content: question })
 chatHistory.push({ role: "assistant", content: data.answer })
@@ -434,6 +434,37 @@ chatBox.scrollTop = chatBox.scrollHeight
 
 }
 
+/* ==============================
+   FORMATERA AI-SVAR (klickbara länkar!)
+   ============================== */
+
+function formatAnswer(text) {
+  if (!text) return ""
+
+  // 1. Escapa HTML först (säkerhet)
+  let safe = escapeHtml(text)
+
+  // 2. Omvandla markdown-länkar [text](url) → klickbar <a>
+  safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" style="color:#2f7d59;font-weight:bold;text-decoration:underline;">$1</a>'
+  )
+
+  // 3. Omvandla rena URL:er (https://...) som INTE redan är i en <a> → klickbar <a>
+  safe = safe.replace(/(?<!href="|">)(https?:\/\/[^\s<,)]+)/g,
+    '<a href="$1" target="_blank" style="color:#2f7d59;text-decoration:underline;">$1</a>'
+  )
+
+  // 4. Gör e-postadresser klickbara
+  safe = safe.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
+    '<a href="mailto:$1" style="color:#2f7d59;text-decoration:underline;">$1</a>'
+  )
+
+  // 5. Omvandla radbrytningar till <br>
+  safe = safe.replace(/\n/g, '<br>')
+
+  return safe
+}
+
 function escapeHtml(text){
   const div = document.createElement("div")
   div.textContent = text
@@ -441,6 +472,3 @@ function escapeHtml(text){
 }
 
 </script>
-
-</body>
-</html>
