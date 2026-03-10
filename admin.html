@@ -173,6 +173,50 @@ padding:10px; border-bottom:1px solid #eee;
 .data-table tr:hover{ background:#f8f9fa; }
 .time-ago{ color:#999; font-size:13px; }
 
+/* FILTER BOX */
+.filter-box{
+background:#f8f9fa; border:1px solid #e0e0e0;
+border-radius:10px; padding:18px; margin:15px 0;
+}
+.filter-box h3{
+font-size:14px; color:#555; margin:0 0 10px; font-weight:600;
+}
+.filter-row{
+display:flex; gap:20px; flex-wrap:wrap; align-items:center;
+}
+.filter-group{
+display:flex; flex-direction:column; gap:4px;
+}
+.filter-group label{
+font-size:13px; color:#555; font-weight:600;
+}
+.filter-group select{
+padding:6px 10px; border:1px solid #ccc; border-radius:6px; font-size:14px;
+}
+
+.checkbox-group{
+display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;
+}
+.checkbox-label{
+display:flex; align-items:center; gap:6px;
+background:white; border:1px solid #ddd; border-radius:8px;
+padding:6px 12px; cursor:pointer; font-size:13px;
+transition:all 0.2s; user-select:none;
+}
+.checkbox-label:hover{ border-color:#2f7d59; }
+.checkbox-label input{ display:none; }
+.checkbox-label.checked{
+background:#e6f4ec; border-color:#2f7d59; color:#2f7d59; font-weight:bold;
+}
+.checkbox-mark{
+width:18px; height:18px; border:2px solid #ccc; border-radius:4px;
+display:flex; align-items:center; justify-content:center;
+font-size:12px; transition:all 0.2s;
+}
+.checkbox-label.checked .checkbox-mark{
+background:#2f7d59; border-color:#2f7d59; color:white;
+}
+
 /* SHOP ITEMS */
 .shop-item-row{
 display:grid;
@@ -286,11 +330,19 @@ background:#e6f4ec; padding:15px; border-radius:8px; margin:8px 0;
 font-family:monospace; font-size:13px; line-height:1.8; white-space:pre-wrap;
 }
 
+/* ITEMS COUNT */
+.items-count{
+background:#e6f4ec; color:#2f7d59; padding:6px 14px;
+border-radius:8px; font-size:13px; font-weight:bold;
+display:inline-block; margin:8px 0;
+}
+
 @media(max-width:600px){
   .shop-item-row{ grid-template-columns:1fr 70px 70px 50px; gap:6px; }
   .settings-grid{ grid-template-columns:1fr; }
   .nav-tab{ padding:8px 12px; font-size:13px; }
   .topbar h1{ font-size:20px; }
+  .filter-row{ flex-direction:column; gap:12px; }
 }
 
 </style>
@@ -342,14 +394,43 @@ font-family:monospace; font-size:13px; line-height:1.8; white-space:pre-wrap;
 <div class="card">
   <h2>🍱 Veckans matlådor</h2>
   <p style="color:#666;font-size:14px;margin-bottom:15px;">
-    Hämta veckomenyn från MenyIT → fyll i antal och pris → spara.
+    Hämta veckomenyn från MenyIT → välj menyer & dag → fyll i antal och pris → spara.
   </p>
 
-  <button class="btn" onclick="loadMenuFromAPI()" id="loadMenuBtn">📥 Hämta veckomeny från MenyIT</button>
-  <button class="btn btn-outline" onclick="loadShopItems()">🔄 Ladda sparade matlådor</button>
-  <button class="btn btn-red btn-sm" onclick="clearWeek()" style="float:right;">🗑️ Rensa vecka</button>
+  <!-- FILTER -->
+  <div class="filter-box" id="filterBox">
+    <h3>📋 Välj dag och menyer att hämta</h3>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>📅 Hämta meny för dag</label>
+        <select id="menuDaySelect">
+          <option value="">Idag</option>
+          <option value="1">Måndag</option>
+          <option value="2">Tisdag</option>
+          <option value="3">Onsdag</option>
+          <option value="4">Torsdag</option>
+          <option value="5">Fredag</option>
+        </select>
+      </div>
+    </div>
 
-  <div id="shopItemsList" style="margin-top:20px;">
+    <div style="margin-top:12px;">
+      <label style="font-size:13px;font-weight:600;color:#555;">🍽️ Visa menyer</label>
+      <div class="checkbox-group" id="menuFilterCheckboxes">
+        <p style="color:#999;font-size:13px;">Hämta menyn först – sedan kan du filtrera.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;">
+    <button class="btn" onclick="loadMenuFromAPI()" id="loadMenuBtn">📥 Hämta veckomeny från MenyIT</button>
+    <button class="btn btn-outline" onclick="loadShopItems()">🔄 Ladda sparade matlådor</button>
+    <button class="btn btn-red btn-sm" onclick="clearWeek()" style="float:right;">🗑️ Rensa vecka</button>
+  </div>
+
+  <div id="shopItemsCount" style="margin-top:10px;"></div>
+
+  <div id="shopItemsList" style="margin-top:10px;">
     <p style="color:#999;text-align:center;padding:20px;">Klicka "Hämta veckomeny" för att börja.</p>
   </div>
 
@@ -534,10 +615,12 @@ font-family:monospace; font-size:13px; line-height:1.8; white-space:pre-wrap;
 
   <h3>🍱 Matlådor – Så gör du</h3>
   <div class="help-step"><strong>1.</strong> Gå till fliken "🍱 Matlådor"</div>
-  <div class="help-step"><strong>2.</strong> Klicka "📥 Hämta veckomeny från MenyIT" – alla rätter laddas</div>
-  <div class="help-step"><strong>3.</strong> Fyll i <strong>antal</strong> lådor och <strong>pris</strong> per rätt</div>
-  <div class="help-step"><strong>4.</strong> Slå PÅ toggle-knappen för rätter du vill sälja</div>
-  <div class="help-step"><strong>5.</strong> Klicka "💾 Spara matlådor"</div>
+  <div class="help-step"><strong>2.</strong> Välj <strong>dag</strong> (onsdag/torsdag/fredag) i dropdown</div>
+  <div class="help-step"><strong>3.</strong> Klicka "📥 Hämta veckomeny från MenyIT"</div>
+  <div class="help-step"><strong>4.</strong> Klicka på <strong>menynamnen</strong> för att välja vilka menyer du vill ha (t.ex. bara "Stockholms menyn")</div>
+  <div class="help-step"><strong>5.</strong> Fyll i <strong>antal</strong> lådor och <strong>pris</strong> per rätt</div>
+  <div class="help-step"><strong>6.</strong> Slå PÅ toggle-knappen för rätter du vill sälja</div>
+  <div class="help-step"><strong>7.</strong> Klicka "💾 Spara matlådor"</div>
   <div class="help-tip">💡 Du kan ändra antal och pris när som helst under veckan!</div>
 
   <h3>📋 Beställningar</h3>
@@ -564,7 +647,9 @@ font-family:monospace; font-size:13px; line-height:1.8; white-space:pre-wrap;
 
 const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
 let T = sessionStorage.getItem("adminToken") || ""
-let shopItems = []
+let shopItems = []       // Alla items (från API)
+let allCategories = []   // Alla kategori-namn
+let selectedCategories = new Set() // Valda kategorier att visa
 let notifInterval = null
 
 if(T) showAdmin()
@@ -596,7 +681,6 @@ function showAdmin(){
   document.getElementById("adminPanel").style.display="block"
   loadShopItems()
   checkNotifications()
-  // Kolla notiser var 30:e sekund
   notifInterval = setInterval(checkNotifications, 30000)
 }
 
@@ -643,7 +727,7 @@ function showStatus(msg,type){
 
 async function loadMenuFromAPI(){
   const btn=document.getElementById("loadMenuBtn")
-  btn.disabled=true; btn.textContent="⏳ Hämtar..."
+  btn.disabled=true; btn.textContent="⏳ Hämtar meny..."
 
   try{
     const r=await fetch(W+"/shop/admin/load-menu",{method:"POST",headers:headers()})
@@ -653,12 +737,11 @@ async function loadMenuFromAPI(){
 
     shopItems=d.dishes||[]
 
-    // Kolla om vi redan har sparade items
+    // Kolla om vi redan har sparade items → merge
     try{
       const r2=await fetch(W+"/shop/admin/get-items",{headers:headers()})
       const d2=await r2.json()
       if(d2.items&&d2.items.length>0){
-        // Merge: behåll antal/pris/enabled från sparade
         for(const saved of d2.items){
           const match=shopItems.find(s=>s.name.toLowerCase()===saved.name.toLowerCase())
           if(match){
@@ -671,6 +754,9 @@ async function loadMenuFromAPI(){
       }
     }catch(e){}
 
+    // Extrahera alla kategorier
+    buildCategoryFilters()
+    // Visa allt
     renderShopItems()
     showStatus("✅ "+shopItems.length+" rätter hämtade från MenyIT!","success")
   }catch(e){
@@ -678,6 +764,73 @@ async function loadMenuFromAPI(){
   }finally{
     btn.disabled=false; btn.textContent="📥 Hämta veckomeny från MenyIT"
   }
+}
+
+/* ==============================
+   SHOP: KATEGORI-FILTER
+   ============================== */
+
+function buildCategoryFilters(){
+  // Hitta unika kategorier
+  const cats = new Set()
+  for(const item of shopItems){
+    if(item.category) cats.add(item.category)
+  }
+  allCategories = [...cats]
+  // Alla valda som default
+  selectedCategories = new Set(allCategories)
+
+  renderCategoryCheckboxes()
+}
+
+function renderCategoryCheckboxes(){
+  const container = document.getElementById("menuFilterCheckboxes")
+  if(allCategories.length===0){
+    container.innerHTML='<p style="color:#999;font-size:13px;">Hämta menyn först – sedan kan du filtrera.</p>'
+    return
+  }
+
+  let html = ""
+  for(const cat of allCategories){
+    const checked = selectedCategories.has(cat)
+    const count = shopItems.filter(i=>i.category===cat).length
+    html += `
+      <label class="checkbox-label ${checked?"checked":""}" onclick="toggleCategory(this,'${escapeAttr(cat)}')">
+        <span class="checkbox-mark">${checked?"✓":""}</span>
+        ${escapeHtml(cat)} (${count})
+      </label>
+    `
+  }
+
+  // Lägg till "Markera alla / Avmarkera alla"
+  html += `
+    <button class="btn btn-sm btn-outline" onclick="selectAllCategories()" style="margin-left:8px;">Alla</button>
+    <button class="btn btn-sm btn-outline" onclick="deselectAllCategories()" style="margin-left:2px;">Inga</button>
+  `
+
+  container.innerHTML = html
+}
+
+function toggleCategory(el, cat){
+  if(selectedCategories.has(cat)){
+    selectedCategories.delete(cat)
+  }else{
+    selectedCategories.add(cat)
+  }
+  renderCategoryCheckboxes()
+  renderShopItems()
+}
+
+function selectAllCategories(){
+  selectedCategories = new Set(allCategories)
+  renderCategoryCheckboxes()
+  renderShopItems()
+}
+
+function deselectAllCategories(){
+  selectedCategories.clear()
+  renderCategoryCheckboxes()
+  renderShopItems()
 }
 
 /* ==============================
@@ -690,20 +843,39 @@ async function loadShopItems(){
     const d=await r.json()
     if(d.error==="unauthorized"){logout();return}
     shopItems=d.items||[]
-    if(shopItems.length>0) renderShopItems()
+    if(shopItems.length>0){
+      buildCategoryFilters()
+      renderShopItems()
+    }
   }catch(e){}
 }
 
 /* ==============================
-   SHOP: RENDERA ITEMS
+   SHOP: RENDERA ITEMS (FILTRERADE)
    ============================== */
 
 function renderShopItems(){
   const el=document.getElementById("shopItemsList")
+  const countEl=document.getElementById("shopItemsCount")
 
   if(shopItems.length===0){
     el.innerHTML='<p style="color:#999;text-align:center;">Inga rätter. Klicka "Hämta veckomeny".</p>'
+    countEl.innerHTML=""
     document.getElementById("shopSaveBar").style.display="none"
+    return
+  }
+
+  // Filtrera baserat på valda kategorier
+  const filtered = shopItems.filter(item => {
+    if(selectedCategories.size===0) return false
+    return selectedCategories.has(item.category)
+  })
+
+  countEl.innerHTML = `<span class="items-count">Visar ${filtered.length} av ${shopItems.length} rätter</span>`
+
+  if(filtered.length===0){
+    el.innerHTML='<p style="color:#999;text-align:center;padding:15px;">Inga rätter i valda menyer. Välj menyer ovan.</p>'
+    document.getElementById("shopSaveBar").style.display="block"
     return
   }
 
@@ -716,8 +888,9 @@ function renderShopItems(){
     </div>
   `
 
-  for(let i=0;i<shopItems.length;i++){
-    const item=shopItems[i]
+  for(const item of filtered){
+    // Hitta index i den FULLSTÄNDIGA listan (shopItems)
+    const idx = shopItems.indexOf(item)
     html+=`
       <div class="shop-item-row">
         <div class="shop-item-name">
@@ -726,16 +899,16 @@ function renderShopItems(){
         </div>
         <div>
           <input class="shop-input" type="number" value="${item.price||""}"
-            placeholder="79" onchange="shopItems[${i}].price=parseFloat(this.value)||null">
+            placeholder="79" onchange="shopItems[${idx}].price=parseFloat(this.value)||null">
         </div>
         <div>
           <input class="shop-input" type="number" value="${item.stock||0}"
-            min="0" onchange="shopItems[${i}].stock=parseInt(this.value)||0">
+            min="0" onchange="shopItems[${idx}].stock=parseInt(this.value)||0">
         </div>
         <div style="text-align:center;">
           <label class="toggle-switch">
             <input type="checkbox" ${item.enabled?"checked":""}
-              onchange="shopItems[${i}].enabled=this.checked">
+              onchange="shopItems[${idx}].enabled=this.checked">
             <span class="toggle-slider"></span>
           </label>
         </div>
@@ -777,6 +950,9 @@ async function clearWeek(){
     const d=await r.json()
     if(d.error==="unauthorized"){logout();return}
     shopItems=[]
+    allCategories=[]
+    selectedCategories.clear()
+    renderCategoryCheckboxes()
     renderShopItems()
     showStatus("✅ Veckan rensad","success")
   }catch(e){showStatus("❌ "+e.message,"error")}
@@ -795,7 +971,6 @@ async function loadOrders(){
     const orders=d.orders||[]
     const el=document.getElementById("ordersList")
 
-    // Stats
     document.getElementById("orderCountTotal").textContent=orders.length
     document.getElementById("orderCountPending").textContent=orders.filter(o=>o.status==="pending").length
     const revenue=orders.filter(o=>o.status==="paid"||o.status==="picked_up").reduce((s,o)=>s+o.totalPrice,0)
@@ -806,7 +981,6 @@ async function loadOrders(){
       return
     }
 
-    // Sortera: pending först
     const sorted=[...orders].sort((a,b)=>{
       const pri={pending:0,paid:1,picked_up:2,cancelled:3}
       return(pri[a.status]||9)-(pri[b.status]||9)
@@ -860,7 +1034,6 @@ async function markOrder(id,status){
     if(d.error){showStatus("❌ "+d.error,"error");return}
     showStatus("✅ Order "+id+" uppdaterad","success")
     loadOrders()
-    // Uppdatera lager i minnet om det ändrades
     loadShopItems()
   }catch(e){showStatus("❌ "+e.message,"error")}
 }
@@ -925,8 +1098,7 @@ async function checkNotifications(){
     if(d.unseen>0){
       dot.textContent=d.unseen
       dot.classList.add("active")
-      // Ljud-notis (valfritt)
-      if(d.unseen>0) document.title="("+d.unseen+") CateringCare Admin"
+      document.title="("+d.unseen+") CateringCare Admin"
     }else{
       dot.classList.remove("active")
       document.title="CateringCare Admin"
@@ -964,7 +1136,6 @@ async function loadNotifications(){
     }
     el.innerHTML=html
 
-    // Nollställ badge
     document.getElementById("notifDot").classList.remove("active")
     document.title="CateringCare Admin"
   }catch(e){}
@@ -1057,6 +1228,10 @@ function escapeHtml(text){
   const div=document.createElement("div")
   div.textContent=text||""
   return div.innerHTML
+}
+
+function escapeAttr(text){
+  return (text||"").replace(/'/g,"\\'").replace(/"/g,"&quot;")
 }
 
 </script>
