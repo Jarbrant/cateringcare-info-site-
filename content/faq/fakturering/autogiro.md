@@ -1,16 +1,37 @@
 ---
 title: Hur skaffar jag autogiro?
 category: fakturering
-keywords: autogiro betalning faktura bank
+keywords: autogiro betalning faktura bank blankett
 ---
 
-För att skaffa autogiro för CateringCare fakturor:
+## Vad är autogiro?
 
-1. Kontakta vår kundtjänst
-2. Begär autogiroblankett
-3. Signera digitalt eller via post
+Autogiro innebär att betalningen dras automatiskt från kundens bankkonto när fakturan förfaller.
+Kunden slipper betala manuellt varje månad.
+Autogiro är kostnadsfritt.
 
-När autogiro är aktivt dras fakturan automatiskt varje månad.
+## Hur skaffar jag autogiro?
 
-Kontakt:
-info@cateringcare.se
+1. Ladda ner autogiroblanketten här: https://cdn.menyit.se/live/files/499fd0351c114a98aaa01ed9068bde18.pdf
+2. Fyll i blanketten med dina bankuppgifter
+3. Skicka den ifyllda blanketten till CateringCare via e-post: info@cateringcare.se
+4. Autogiro aktiveras inom 5-10 bankdagar
+
+Alternativt kan du kontakta din bank och registrera autogiro där.
+
+## Länk till autogiroblankett
+
+Blanketten kan laddas ner här: https://cdn.menyit.se/live/files/499fd0351c114a98aaa01ed9068bde18.pdf
+
+## Fakturaavgift
+
+Om kunden inte använder autogiro eller e-postfaktura tillkommer en fakturaavgift på 30 kr.
+
+## Hur fungerar dragningen?
+
+Pengarna dras automatiskt på fakturans förfallodatum.
+Om autogirodragningen misslyckas behöver fakturan betalas manuellt.
+
+## Kontakt
+
+E-post: info@cateringcare.se
