@@ -1,5 +1,5 @@
 /* ==============================
-   CateringCare Admin v2
+   CateringCare Admin v2.1
    ============================== */
 
 const W = "https://cateringcare-info-site-01.andersmenyit.workers.dev"
@@ -26,16 +26,17 @@ async function login() {
       body: JSON.stringify({ password: pw })
     })
     const d = await r.json()
-    if (d.success) {
+    if (d.success && d.token) {
       T = d.token
       sessionStorage.setItem("adminToken", T)
       document.getElementById("loginError").style.display = "none"
       showAdmin()
     } else {
+      document.getElementById("loginError").textContent = "❌ Fel lösenord"
       document.getElementById("loginError").style.display = "block"
     }
   } catch (e) {
-    document.getElementById("loginError").textContent = "❌ Kunde inte ansluta"
+    document.getElementById("loginError").textContent = "❌ Kunde inte ansluta till servern"
     document.getElementById("loginError").style.display = "block"
   }
 }
@@ -129,7 +130,16 @@ async function loadMenuFromAPI() {
     })
     const d = await r.json()
     if (d.error === "unauthorized") { logout(); return }
-    if (d.error) { showStatus("❌ " + d.error, "error"); return }
+    if (d.error) {
+      showStatus("❌ " + d.error, "error")
+      if (d.dishes && d.dishes.length === 0) return
+      return
+    }
+
+    if (!d.dishes || d.dishes.length === 0) {
+      showStatus("⚠️ Inga rätter hittades. Använd '➕ Lägg till rätt' istället.", "error")
+      return
+    }
 
     shopItems = d.dishes || []
 
@@ -155,11 +165,88 @@ async function loadMenuFromAPI() {
     renderPublicMenuTags()
     showStatus("✅ " + shopItems.length + " rätter hämtade för " + selectedDate, "success")
   } catch (e) {
-    showStatus("❌ " + e.message, "error")
+    showStatus("❌ " + e.message + " – Använd '➕ Lägg till rätt' istället.", "error")
   } finally {
     btn.disabled = false
-    btn.textContent = "📥 Hämta meny"
+    btn.textContent = "📥 Hämta meny från API"
   }
+}
+
+
+/* ==============================
+   LÄGG TILL MANUELLT
+   ============================== */
+
+function addManualItem() {
+  const name = prompt("Namn på rätten:")
+  if (!name || !name.trim()) return
+
+  const category = prompt("Kategori (t.ex. Husmanskost, Sallad, Soppa, Vegan):", "Husmanskost") || "Övrigt"
+  const ingredients = prompt("Innehåll/ingredienser (valfritt):", "") || ""
+  const description = prompt("Beskrivning (valfritt):", "") || ""
+  const priceStr = prompt("Pris i kr (lämna tomt för standardpris):", "")
+  const stockStr = prompt("Antal portioner:", "5")
+
+  const item = {
+    id: name.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-zåäö0-9-]/g, ""),
+    name: name.trim(),
+    category: category.trim(),
+    description: description.trim(),
+    ingredients: ingredients.trim(),
+    imageUrl: "",
+    price: priceStr ? parseFloat(priceStr) : null,
+    stock: parseInt(stockStr) || 5,
+    enabled: true
+  }
+
+  shopItems.push(item)
+  buildCategoryFilters()
+  renderShopItems()
+  showStatus("✅ " + item.name + " tillagd!", "success")
+}
+
+function addMultipleItems() {
+  const text = prompt(
+    "Skriv rätter separerade med komma:\n\nExempel: Köttbullar med mos, Laxpasta, Kycklinggryta, Vegansk curry"
+  )
+  if (!text || !text.trim()) return
+
+  const category = prompt("Kategori för alla:", "Husmanskost") || "Övrigt"
+  const stockStr = prompt("Antal portioner per rätt:", "5")
+  const stock = parseInt(stockStr) || 5
+  const names = text.split(",").map(n => n.trim()).filter(n => n.length > 0)
+
+  let count = 0
+  for (const name of names) {
+    // Kolla att den inte redan finns
+    const exists = shopItems.find(i => i.name.toLowerCase() === name.toLowerCase())
+    if (exists) continue
+
+    shopItems.push({
+      id: name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-zåäö0-9-]/g, ""),
+      name,
+      category: category.trim(),
+      description: "",
+      ingredients: "",
+      imageUrl: "",
+      price: null,
+      stock,
+      enabled: true
+    })
+    count++
+  }
+
+  buildCategoryFilters()
+  renderShopItems()
+  showStatus("✅ " + count + " rätter tillagda!", "success")
+}
+
+function removeItem(idx) {
+  if (!confirm("Ta bort " + shopItems[idx].name + "?")) return
+  shopItems.splice(idx, 1)
+  buildCategoryFilters()
+  renderShopItems()
+  showStatus("🗑️ Rätt borttagen", "success")
 }
 
 
@@ -180,7 +267,7 @@ function buildCategoryFilters() {
 function renderCategoryCheckboxes() {
   const c = document.getElementById("menuFilterCheckboxes")
   if (!allCategories.length) {
-    c.innerHTML = '<p class="muted">Hämta menyn först.</p>'
+    c.innerHTML = '<p class="muted">Hämta menyn eller lägg till rätter först.</p>'
     return
   }
   let h = ""
@@ -243,7 +330,7 @@ function renderShopItems() {
   const countEl = document.getElementById("shopItemsCount")
 
   if (!shopItems.length) {
-    el.innerHTML = '<p class="muted center">Klicka "Hämta meny" för att börja.</p>'
+    el.innerHTML = '<p class="muted center">Klicka "➕ Lägg till rätt" eller "📥 Hämta meny" för att börja.</p>'
     countEl.innerHTML = ""
     document.getElementById("shopSaveBar").style.display = "none"
     return
@@ -258,14 +345,15 @@ function renderShopItems() {
     + activeCount + ' aktiverade · ' + stockCount + ' live i shop</span>'
 
   if (!filtered.length) {
-    el.innerHTML = '<p class="muted center">Inga rätter i valda menyer.</p>'
+    el.innerHTML = '<p class="muted center">Inga rätter i valda kategorier.</p>'
     document.getElementById("shopSaveBar").style.display = "block"
     return
   }
 
   let h = '<div class="shop-item-row header">'
     + '<div>Rätt</div><div style="text-align:center">Pris</div>'
-    + '<div style="text-align:center">Antal</div><div style="text-align:center">Aktiv</div></div>'
+    + '<div style="text-align:center">Antal</div><div style="text-align:center">Aktiv</div>'
+    + '<div style="text-align:center;width:40px;"></div></div>'
 
   for (const item of filtered) {
     const idx = shopItems.indexOf(item)
@@ -280,7 +368,11 @@ function renderShopItems() {
       + '<div style="text-align:center;"><label class="toggle-switch">'
       + '<input type="checkbox" ' + (item.enabled ? "checked" : "") + ' '
       + 'onchange="shopItems[' + idx + '].enabled=this.checked;renderShopItems()">'
-      + '<span class="toggle-slider"></span></label></div></div>'
+      + '<span class="toggle-slider"></span></label></div>'
+      + '<div style="text-align:center;width:40px;">'
+      + '<button onclick="removeItem(' + idx + ')" style="background:none;border:none;cursor:pointer;font-size:14px;opacity:0.4;" '
+      + 'onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Ta bort">🗑️</button></div>'
+      + '</div>'
   }
 
   el.innerHTML = h
@@ -384,7 +476,7 @@ async function loadPublicMenus() {
 function renderPublicMenuTags() {
   const el = document.getElementById("publicMenuTags")
   if (!allCategories.length) {
-    el.innerHTML = '<p class="muted">Hämta menyn först under "Matlådor".</p>'
+    el.innerHTML = '<p class="muted">Lägg till rätter först.</p>'
     return
   }
   let h = ""
@@ -419,21 +511,16 @@ async function loadSettings() {
     if (d.error === "unauthorized") { logout(); return }
     const s = d.settings || {}
 
-    // Butik
     document.getElementById("setDefaultPrice").value = s.defaultPrice || 79
     document.getElementById("setSwishNumber").value = s.swishNumber || ""
     document.getElementById("setSwishMessage").value = s.swishMessage || "CateringCare Matlåda"
     document.getElementById("setAddress").value = s.pickupAddress || "Ekelundsvägen 18, 171 73 Solna"
     document.getElementById("setPickupStart").value = s.pickupHoursStart || "11:00"
     document.getElementById("setPickupEnd").value = s.pickupHoursEnd || "15:00"
-
-    // Rabatt
     document.getElementById("setDiscountPercent").value = s.discountPercent || 30
     document.getElementById("setDiscountDay").value = s.discountDay || 5
     document.getElementById("setDiscountHour").value = s.discountStartHour || 13
     document.getElementById("setDiscountMinute").value = s.discountStartMinute || 0
-
-    // Företag
     document.getElementById("setCompanyName").value = s.companyName || "CateringCare AB"
     document.getElementById("setOrgNumber").value = s.orgNumber || ""
     document.getElementById("setCompanyAddress").value = s.companyAddress || "Ekelundsvägen 18, 171 73 Solna"
@@ -448,20 +535,17 @@ async function loadSettings() {
 async function saveAllSettings() {
   try {
     const body = {
-      // Butik
       defaultPrice: parseFloat(document.getElementById("setDefaultPrice").value) || 79,
       swishNumber: document.getElementById("setSwishNumber").value.trim(),
       swishMessage: document.getElementById("setSwishMessage").value.trim(),
       pickupAddress: document.getElementById("setAddress").value.trim(),
       pickupHoursStart: document.getElementById("setPickupStart").value,
       pickupHoursEnd: document.getElementById("setPickupEnd").value,
-      // Rabatt
       discountPercent: parseInt(document.getElementById("setDiscountPercent").value) || 30,
       discountDay: parseInt(document.getElementById("setDiscountDay").value) || 5,
       discountStartHour: parseInt(document.getElementById("setDiscountHour").value) || 13,
       discountStartMinute: parseInt(document.getElementById("setDiscountMinute").value) || 0,
       openDays: [3, 4, 5],
-      // Företag
       companyName: document.getElementById("setCompanyName").value.trim(),
       orgNumber: document.getElementById("setOrgNumber").value.trim(),
       companyAddress: document.getElementById("setCompanyAddress").value.trim(),
@@ -639,7 +723,6 @@ async function loadReceipts() {
     const el = document.getElementById("receiptsList")
     const vatPercent = d.vatPercent || 12
 
-    // Stats
     const totalRevenue = receipts.reduce((s, r) => s + (r.totalPrice || 0), 0)
     const vatAmount = Math.round(totalRevenue * vatPercent / (100 + vatPercent))
     const avg = receipts.length > 0 ? Math.round(totalRevenue / receipts.length) : 0
@@ -649,7 +732,6 @@ async function loadReceipts() {
     document.getElementById("rcptVat").textContent = vatAmount + " kr"
     document.getElementById("rcptAvg").textContent = avg + " kr"
 
-    // Sammanfattning per status
     const paid = receipts.filter(r => r.status === "paid" || r.status === "picked_up")
     const paidTotal = paid.reduce((s, r) => s + (r.totalPrice || 0), 0)
     const paidVat = Math.round(paidTotal * vatPercent / (100 + vatPercent))
@@ -713,7 +795,6 @@ function exportReceipts() {
 }
 
 function exportReceiptsPdf() {
-  // Öppna kassabok i nytt fönster för utskrift
   const from = document.getElementById("receiptDateFrom").value || ""
   const to = document.getElementById("receiptDateTo").value || ""
   const params = new URLSearchParams()
@@ -740,7 +821,6 @@ async function checkNotifications() {
       dot.classList.add("active")
       document.title = "(" + d.unseen + ") Admin"
 
-      // Spela ljud vid ny beställning
       try {
         const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2JkYyGfHBkWlBHTUM/PD08P0RMV2NvfImTmZqXkIR4bGJVS0E5NDEwMjY8RlFdanmGkZqgnpqTiHxvYlVKQDkzLy4uMTdARk5YY3B8iJGXm5qXkIV6bmFVS0E5NC8uLjE3P0ZOWGNxfYmSmJualpCFem5hVUxCOTQvLi4xN0BGR1hjcX2JkpmbnJiRhn1xZFlPRj03Mi8vMjhBSFRganeFkJmfn5uUi391aVxSR0A5NC8vMTY+Rk9ZY3J+iZOZnJuXkIN4bWBVTEI6NC8uLzI5QUlVYmt5hZCZnp+blI+EeW1gVUxCOjUwLy8yOUFIVWJqeYWQmp6fm5SPg3hs")
         audio.volume = 0.3
@@ -834,7 +914,6 @@ async function loadStats() {
     document.getElementById("statAvg").textContent =
       Math.round((totalPeriod / Math.max(activeDays, 1)) * 10) / 10
 
-    // Chart
     const ch = document.getElementById("chartContainer")
     ch.innerHTML = ""
     if (d.daily && d.daily.length > 0) {
@@ -850,7 +929,6 @@ async function loadStats() {
       })
     }
 
-    // Recent
     const tb = document.getElementById("recentBody")
     tb.innerHTML = ""
     if (d.recent && d.recent.length > 0) {
