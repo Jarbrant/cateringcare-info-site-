@@ -14,9 +14,12 @@ const translations = {
     sendBtn:"Skicka fråga",
     thinking:"Assistenten tänker...",
     error:"Något gick fel, försök igen!",
-    card1Title:"Leverans via hemtjänsten",card1Text:"Maten levereras normalt via hemtjänstens personal.",
-    card2Title:"Fakturering",card2Text:"Fakturan skickas den 10:e varje månad.",
-    card3Title:"Information för anhöriga",card3Text:"Här hittar anhöriga information om leveranser och betalning."
+    card1Title:"Leverans via hemtjänsten",
+    card1Text:"Maten levereras normalt via hemtjänstens personal.",
+    card2Title:"Fakturering",
+    card2Text:"Fakturan skickas den 10:e varje månad.",
+    card3Title:"Information för anhöriga",
+    card3Text:"Här hittar anhöriga information om leveranser och betalning."
   },
   en: {
     heroTitle:"Safe meal delivery for the elderly",
@@ -27,9 +30,12 @@ const translations = {
     sendBtn:"Send question",
     thinking:"The assistant is thinking...",
     error:"Something went wrong, please try again!",
-    card1Title:"Delivery via home care",card1Text:"Meals are delivered by home care staff.",
-    card2Title:"Invoicing",card2Text:"The invoice is sent on the 10th of each month.",
-    card3Title:"Information for relatives",card3Text:"Here relatives can find information about deliveries and payments."
+    card1Title:"Delivery via home care",
+    card1Text:"Meals are delivered by home care staff.",
+    card2Title:"Invoicing",
+    card2Text:"The invoice is sent on the 10th of each month.",
+    card3Title:"Information for relatives",
+    card3Text:"Here relatives can find information about deliveries and payments."
   },
   ar: {
     heroTitle:"توصيل وجبات آمن لكبار السن",
@@ -40,9 +46,12 @@ const translations = {
     sendBtn:"إرسال السؤال",
     thinking:"...المساعد يفكر",
     error:"حدث خطأ، حاول مرة أخرى!",
-    card1Title:"التوصيل عبر الرعاية المنزلية",card1Text:"يتم توصيل الوجبات من قبل موظفي الرعاية المنزلية.",
-    card2Title:"الفواتير",card2Text:"يتم إرسال الفاتورة في العاشر من كل شهر.",
-    card3Title:"معلومات للأقارب",card3Text:"هنا يمكن للأقارب العثور على معلومات حول التوصيل والدفع."
+    card1Title:"التوصيل عبر الرعاية المنزلية",
+    card1Text:"يتم توصيل الوجبات من قبل موظفي الرعاية المنزلية.",
+    card2Title:"الفواتير",
+    card2Text:"يتم إرسال الفاتورة في العاشر من كل شهر.",
+    card3Title:"معلومات للأقارب",
+    card3Text:"هنا يمكن للأقارب العثور على معلومات حول التوصيل والدفع."
   },
   fi: {
     heroTitle:"Turvallinen ateriatoimitus ikääntyneille",
@@ -53,9 +62,12 @@ const translations = {
     sendBtn:"Lähetä kysymys",
     thinking:"Avustaja miettii...",
     error:"Jotain meni pieleen, yritä uudelleen!",
-    card1Title:"Toimitus kotihoidon kautta",card1Text:"Ateriat toimitetaan kotihoidon henkilökunnan toimesta.",
-    card2Title:"Laskutus",card2Text:"Lasku lähetetään kuukauden 10. päivä.",
-    card3Title:"Tietoa omaisille",card3Text:"Täältä omaiset löytävät tietoa toimituksista ja maksuista."
+    card1Title:"Toimitus kotihoidon kautta",
+    card1Text:"Ateriat toimitetaan kotihoidon henkilökunnan toimesta.",
+    card2Title:"Laskutus",
+    card2Text:"Lasku lähetetään kuukauden 10. päivä.",
+    card3Title:"Tietoa omaisille",
+    card3Text:"Täältä omaiset löytävät tietoa toimituksista ja maksuista."
   }
 }
 
@@ -65,6 +77,7 @@ let chatHistory = []
 function setLang(lang) {
   currentLang = lang
   const t = translations[lang]
+
   document.getElementById("heroTitle").textContent = t.heroTitle
   document.getElementById("heroText").textContent = t.heroText
   document.getElementById("assistantTitle").textContent = t.assistantTitle
