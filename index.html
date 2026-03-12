@@ -1,11 +1,10 @@
 <!doctype html>
-<html lang="sv">
+<html lang="sv" class="smooth">
   <head>
     <!-- ============================================================
-         CateringCare – Startsida
+         CateringCare – Startsida (Fas 2: Design)
          Flerspråkig (sv/en/ar/fi) via data-i18n + chat.js
-         Sektioner: Hero, Tjänster, Så funkar det,
-         Hemtjänst, Företag, Butiker, Privat, Chatt, Kontakt
+         SVG-ikoner, hamburgermeny, förbättrad typografi
          ============================================================ -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +25,7 @@
   <body>
     <!-- ============================================================
          HEADER / NAV
-         Flagg-knappar för språkbyte längst till höger
+         Hamburger på mobil, flaggor till höger
          ============================================================ -->
     <header class="site-header">
       <div class="container header-inner">
@@ -37,15 +36,15 @@
           <div class="tagline" data-i18n="tagline">Näringsrika måltider – enkelt och tryggt</div>
         </div>
 
-        <!-- Huvudnavigation (dold på mobil) -->
-        <nav class="nav" aria-label="Huvudmeny">
+        <!-- Huvudnavigation (toggle på mobil) -->
+        <nav class="nav" id="mainNav" aria-label="Huvudmeny">
           <a href="#tjanster"      data-i18n="navServices">Tjänster</a>
           <a href="#sa-funkar-det" data-i18n="navHow">Så fungerar det</a>
           <a href="#support-chat"  data-i18n="navSupport">Support</a>
           <a class="nav-cta" href="#kontakt" data-i18n="navContact">Kontakta oss</a>
         </nav>
 
-        <!-- Snabblänkar + Språkväljare -->
+        <!-- Snabblänkar + Flaggor + Hamburger -->
         <div class="header-right">
           <div class="header-links" aria-label="Snabblänkar">
             <a class="link" href="shop.html" data-i18n="navMenu">Meny / Beställ</a>
@@ -59,6 +58,13 @@
             <button class="lang-btn"        data-lang="ar" title="العربية">🇸🇦</button>
             <button class="lang-btn"        data-lang="fi" title="Suomi">🇫🇮</button>
           </div>
+
+          <!-- Hamburger-knapp (syns bara på mobil) -->
+          <button class="hamburger" id="menuToggle" aria-label="Öppna meny" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
 
       </div>
@@ -66,31 +72,48 @@
 
     <main>
       <!-- ============================================================
-           HERO – Huvudbudskap och call-to-action
+           HERO – Huvudbudskap, CTA och dekorativ ikon
            ============================================================ -->
       <section class="hero">
-        <div class="container">
-          <h1 data-i18n="heroTitle">Smarta måltidslösningar för äldre, företag och lokala butiker</h1>
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <h1 data-i18n="heroTitle">Smarta måltidslösningar för äldre, företag och lokala butiker</h1>
 
-          <p class="lead" data-i18n="heroText">
-            CateringCare levererar näringsrika och färdiglagade måltider – enkelt, tryggt och flexibelt.
-            Vi samarbetar med hemtjänst, företag och lokala butiker för att göra bra mat lättillgänglig där människor finns.
-          </p>
+            <p class="lead" data-i18n="heroText">
+              CateringCare levererar näringsrika och färdiglagade måltider – enkelt, tryggt och flexibelt.
+              Vi samarbetar med hemtjänst, företag och lokala butiker för att göra bra mat lättillgänglig där människor finns.
+            </p>
 
-          <div class="cta">
-            <a class="button"           href="#support-chat" data-i18n="heroChat">Chatta med oss</a>
-            <a class="button secondary" href="shop.html"     data-i18n="heroMenu">Se meny / beställ</a>
-            <a class="button secondary" href="#kontakt"       data-i18n="heroContact">Kontakta oss</a>
+            <div class="cta">
+              <a class="button"           href="#support-chat" data-i18n="heroChat">Chatta med oss</a>
+              <a class="button secondary" href="shop.html"     data-i18n="heroMenu">Se meny / beställ</a>
+              <a class="button secondary" href="#kontakt"       data-i18n="heroContact">Kontakta oss</a>
+            </div>
+
+            <div class="hero-note" data-i18n="heroNote">
+              Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen.
+            </div>
           </div>
 
-          <div class="hero-note" data-i18n="heroNote">
-            Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen.
+          <!-- Dekorativ illustration (visas på desktop) -->
+          <div class="hero-illustration" aria-hidden="true">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="100" r="90" fill="#ecfdf5" stroke="#2f7d59" stroke-width="2"/>
+              <ellipse cx="100" cy="115" rx="60" ry="12" fill="#d1fae5"/>
+              <path d="M60 90 C60 60, 140 60, 140 90 L140 105 C140 110, 60 110, 60 105Z" fill="#2f7d59" opacity="0.15"/>
+              <rect x="70" y="75" width="60" height="35" rx="6" fill="white" stroke="#2f7d59" stroke-width="2"/>
+              <line x1="82" y1="85" x2="118" y2="85" stroke="#2f7d59" stroke-width="2" stroke-linecap="round"/>
+              <line x1="82" y1="93" x2="110" y2="93" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/>
+              <line x1="82" y1="101" x2="105" y2="101" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="145" cy="70" r="18" fill="#2f7d59" opacity="0.12"/>
+              <path d="M139 70 L145 64 L151 70 M145 64 V76" stroke="#2f7d59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </div>
       </section>
 
       <!-- ============================================================
-           TJÄNSTER – 4 kort (målgrupper)
+           TJÄNSTER – 4 kort med SVG-ikoner
            ============================================================ -->
       <section id="tjanster" class="section">
         <div class="container">
@@ -98,7 +121,13 @@
 
             <!-- Kort 1: Hemtjänst -->
             <a class="card" href="#hemtjanst" aria-label="Hemtjänst">
-              <div class="card-icon" aria-hidden="true">🏥</div>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                  <path d="M12 7v0" stroke-width="2.5"/>
+                </svg>
+              </div>
               <h3 data-i18n="card1Title">Hemtjänst</h3>
               <p  data-i18n="card1Text">Näringsrika måltider och trygg leverans som förenklar vardagen för personal och brukare.</p>
               <span class="card-link" data-i18n="readMore">Läs mer →</span>
@@ -106,7 +135,16 @@
 
             <!-- Kort 2: Företag -->
             <a class="card" href="#foretag" aria-label="Företag / kontor">
-              <div class="card-icon" aria-hidden="true">🏢</div>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="9" y1="6" x2="9" y2="6" stroke-width="2.5"/>
+                  <line x1="15" y1="6" x2="15" y2="6" stroke-width="2.5"/>
+                  <line x1="9" y1="10" x2="9" y2="10" stroke-width="2.5"/>
+                  <line x1="15" y1="10" x2="15" y2="10" stroke-width="2.5"/>
+                  <rect x="9" y="14" width="6" height="8" rx="1"/>
+                </svg>
+              </div>
               <h3 data-i18n="card2Title">Företag / kontor</h3>
               <p  data-i18n="card2Text">Enkel lunchlösning: vi fyller kylskåp på jobbet med färska matlådor.</p>
               <span class="card-link" data-i18n="readMore">Läs mer →</span>
@@ -114,7 +152,15 @@
 
             <!-- Kort 3: Privat -->
             <a class="card" href="#privat" aria-label="Privatpersoner">
-              <div class="card-icon" aria-hidden="true">🍽️</div>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                  <line x1="6" y1="1" x2="6" y2="4"/>
+                  <line x1="10" y1="1" x2="10" y2="4"/>
+                  <line x1="14" y1="1" x2="14" y2="4"/>
+                </svg>
+              </div>
               <h3 data-i18n="card3Title">Privatpersoner</h3>
               <p  data-i18n="card3Text">God mat utan krångel – beställ online och hämta hos återförsäljare eller partner.</p>
               <span class="card-link" data-i18n="readMore">Läs mer →</span>
@@ -122,7 +168,16 @@
 
             <!-- Kort 4: Återförsäljare -->
             <a class="card" href="#butiker" aria-label="Bli återförsäljare">
-              <div class="card-icon" aria-hidden="true">🏪</div>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3h18l-2 13H5L3 3z"/>
+                  <path d="M1 1h4"/>
+                  <circle cx="9" cy="21" r="1.5"/>
+                  <circle cx="17" cy="21" r="1.5"/>
+                  <path d="M9 10h6" stroke-width="2"/>
+                  <path d="M12 7v6" stroke-width="2"/>
+                </svg>
+              </div>
               <h3 data-i18n="card4Title">Bli återförsäljare</h3>
               <p  data-i18n="card4Text">Öka trafiken i butiken och skapa en extra intäktskälla med enkel hantering.</p>
               <span class="card-link" data-i18n="readMore">Läs mer →</span>
@@ -145,7 +200,7 @@
           </p>
 
           <p data-i18n="howListLabel">Vi lagar färdiga måltider som levereras till:</p>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="howItem1">Hemtjänstverksamheter</li>
             <li data-i18n="howItem2">Företag och kontor</li>
             <li data-i18n="howItem3">Lokala återförsäljare och mindre butiker</li>
@@ -174,7 +229,7 @@
           </p>
 
           <h4 data-i18n="benefitsLabel">Fördelar</h4>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="homeBen1">Näringsrika måltider anpassade för äldre</li>
             <li data-i18n="homeBen2">Enkel hantering för personal</li>
             <li data-i18n="homeBen3">Trygg och stabil leverans</li>
@@ -200,7 +255,7 @@
           </p>
 
           <h4 data-i18n="benefitsLabel">Fördelar</h4>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="bizBen1">Ingen lunchstress</li>
             <li data-i18n="bizBen2">Snabb och enkel måltid</li>
             <li data-i18n="bizBen3">Perfekt för mindre kontor utan egen restaurang</li>
@@ -234,7 +289,7 @@
           </ol>
 
           <h4 data-i18n="shopBenLabel">Fördelar för butiken</h4>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="shopBen1">Fler kunder i butiken</li>
             <li data-i18n="shopBen2">Extra intäktsmöjlighet</li>
             <li data-i18n="shopBen3">Enkel hantering</li>
@@ -254,7 +309,7 @@
           <h3 data-i18n="privSub">God mat utan krångel</h3>
 
           <p data-i18n="privText">För dig som vill ha en enkel och god måltid i vardagen.</p>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="privOpt1">Beställ online</li>
             <li data-i18n="privOpt2">Hämta hos återförsäljare</li>
             <li data-i18n="privOpt3">Eller via samarbetspartners</li>
@@ -276,7 +331,6 @@
 
       <!-- ============================================================
            SUPPORT / CHATT
-           Chatten anropar Cloudflare Worker via POST
            ============================================================ -->
       <section id="support-chat" class="section">
         <div class="container">
@@ -286,12 +340,10 @@
             Skriv här så hjälper vi dig direkt.
           </p>
 
-          <!-- Statuschip -->
           <div class="chat-controls">
             <span class="chip" id="workerChip" title="Worker endpoint">Worker: ok</span>
           </div>
 
-          <!-- Chattfönster -->
           <div class="chat-box">
             <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
 
@@ -322,7 +374,7 @@
         <div class="container">
           <h2 data-i18n="ctaTitle">Vill du samarbeta med oss?</h2>
           <p data-i18n="ctaText">Vi söker just nu:</p>
-          <ul>
+          <ul class="check-list">
             <li data-i18n="ctaItem1">hemtjänstverksamheter</li>
             <li data-i18n="ctaItem2">företag</li>
             <li data-i18n="ctaItem3">butiker som vill bli återförsäljare</li>
@@ -357,8 +409,31 @@
     </footer>
 
     <!-- ============================================================
-         SCRIPTS – Extern fil hanterar språk + chatt
+         SCRIPTS
          ============================================================ -->
     <script src="chat.js"></script>
+    <script>
+      /* Hamburgermeny – toggle mobilnav */
+      (function () {
+        var btn = document.getElementById("menuToggle");
+        var nav = document.getElementById("mainNav");
+        if (!btn || !nav) return;
+
+        btn.addEventListener("click", function () {
+          var open = nav.classList.toggle("open");
+          btn.classList.toggle("active", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+
+        /* Stäng menyn vid klick på nav-länk */
+        nav.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
+            nav.classList.remove("open");
+            btn.classList.remove("active");
+            btn.setAttribute("aria-expanded", "false");
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
