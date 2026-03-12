@@ -1,1 +1,26 @@
+# ============================================================
+# CateringCare API – Cloudflare Worker
+# Hanterar: AI-chatt, shop, admin, ordrar, kvitton, MenyIT
+# Deploy: cd worker && wrangler deploy
+# ============================================================
 
+name = "cateringcare-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-01"
+
+# ── KV Namespace (koppla i Cloudflare Dashboard) ──
+# [[kv_namespaces]]
+# binding = "FAQ_DB"
+# id = "<din-kv-id>"
+
+[vars]
+# Tillåtna origins – lägg till dina Pages-domäner här
+ALLOWED_ORIGINS = "https://cateringcare.se,https://admin.cateringcare.se,https://cateringcare-site.pages.dev,https://cateringcare-admin.pages.dev"
+TIMEZONE = "Europe/Stockholm"
+
+# ── Secrets (lägg till via: wrangler secret put <NAMN>) ──
+# OPENAI_API_KEY
+# ADMIN_PASSWORD
+# ADMIN_TOKEN_SECRET
+# MENYIT_API_KEY
+# RESEND_API_KEY
