@@ -2,13 +2,9 @@
 <html lang="sv">
   <head>
     <!-- ============================================================
-         CateringCare – Startsida (PROD)
-         - Card-baserad layout (4 kort) + hover-animation
-         - Inbyggd support-chatt (OpenAI via Cloudflare Worker)
-         - Språk: sv/en/ar/fi
-         Debug-tips:
-         - Om chatten inte funkar: öppna DevTools Console och se fel
-         - Kontrollera WORKER_URL längst ned i filen
+         CateringCare – Startsida
+         Sektioner: Hero, Tjänster (kort), Så funkar det,
+         Hemtjänst, Företag, Butiker, Privat, Chatt, Kontakt
          ============================================================ -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,15 +18,13 @@
     <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Basic SEO (valfritt) -->
+    <!-- SEO -->
     <meta name="theme-color" content="#2f7d59" />
   </head>
 
   <body>
     <!-- ============================================================
          HEADER / NAV
-         - Länkar till shop/admin behåller era funktioner
-         - Nav-länkar scrollar inom sidan
          ============================================================ -->
     <header class="site-header">
       <div class="container header-inner">
@@ -55,7 +49,7 @@
 
     <main>
       <!-- ============================================================
-           HERO
+           HERO – Huvudbudskap och call-to-action
            ============================================================ -->
       <section class="hero">
         <div class="container">
@@ -67,7 +61,6 @@
           </p>
 
           <div class="cta">
-            <!-- Debug: Om knappen inte scrollar, kontrollera att id="support-chat" finns -->
             <a class="button" href="#support-chat">Chatta med oss</a>
             <a class="button secondary" href="shop.html">Se meny / beställ</a>
             <a class="button secondary" href="#kontakt">Kontakta oss</a>
@@ -80,16 +73,11 @@
       </section>
 
       <!-- ============================================================
-           CARD-BASERAD SEKTION (4 kort)
-           - Ger snabb förståelse för målgrupper/tjänster
+           TJÄNSTER – 4 kort (målgrupper)
+           Rubrik och beskrivningstext borttagna enligt plan
            ============================================================ -->
       <section id="tjanster" class="section">
         <div class="container">
-          <h2>Vem hjälper vi?</h2>
-          <p class="muted maxw">
-            Välj det som passar dig så berättar vi hur det fungerar. Kort-layouten gör att besökaren direkt förstår vad ni erbjuder.
-          </p>
-
           <div class="card-grid">
             <!-- Kort 1: Hemtjänst -->
             <a class="card" href="#hemtjanst" aria-label="Läs mer om hemtjänst">
@@ -127,7 +115,7 @@
       </section>
 
       <!-- ============================================================
-           SÅ FUNKAR DET
+           SÅ FUNGERAR DET – Översikt av konceptet
            ============================================================ -->
       <section id="sa-funkar-det" class="section alt">
         <div class="container">
@@ -155,7 +143,7 @@
       </section>
 
       <!-- ============================================================
-           HEMTJÄNST
+           HEMTJÄNST – Detaljsektion
            ============================================================ -->
       <section id="hemtjanst" class="section">
         <div class="container">
@@ -180,7 +168,7 @@
       </section>
 
       <!-- ============================================================
-           FÖRETAG
+           FÖRETAG – Detaljsektion
            ============================================================ -->
       <section id="foretag" class="section alt">
         <div class="container">
@@ -209,7 +197,7 @@
       </section>
 
       <!-- ============================================================
-           BUTIKER / ÅTERFÖRSÄLJARE
+           BUTIKER / ÅTERFÖRSÄLJARE – Detaljsektion
            ============================================================ -->
       <section id="butiker" class="section">
         <div class="container">
@@ -240,7 +228,7 @@
       </section>
 
       <!-- ============================================================
-           PRIVATPERSONER
+           PRIVATPERSONER – Detaljsektion
            ============================================================ -->
       <section id="privat" class="section alt">
         <div class="container">
@@ -269,11 +257,8 @@
       </section>
 
       <!-- ============================================================
-           SUPPORT / CHAT
-           - OBS: chatten går mot WORKER_URL (längst ned)
-           - Språkval skickas som "lang" i payload
-           Debug:
-           - Öppna DevTools -> Network och se POST mot WORKER_URL
+           SUPPORT / CHATT
+           Chatten anropar Cloudflare Worker via POST
            ============================================================ -->
       <section id="support-chat" class="section">
         <div class="container">
@@ -283,6 +268,7 @@
             Skriv här så hjälper vi dig direkt.
           </p>
 
+          <!-- Språkval och status -->
           <div class="chat-controls">
             <label for="chatLang"><strong>Välj språk:</strong></label>
             <select id="chatLang">
@@ -291,11 +277,10 @@
               <option value="ar">العربية</option>
               <option value="fi">Suomi</option>
             </select>
-
-            <!-- Debug: Visar worker-URL (utan att exponera nycklar) -->
             <span class="chip" id="workerChip" title="Worker endpoint">Worker: ok</span>
           </div>
 
+          <!-- Chattfönster -->
           <div class="chat-box">
             <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
 
@@ -334,7 +319,6 @@
           <p><strong>Kontakta oss för mer information.</strong></p>
 
           <div class="contact-box">
-            <!-- Ändra kontaktuppgifter här -->
             <div><strong>E-post:</strong> <a href="mailto:info@cateringcare.se">info@cateringcare.se</a></div>
             <div><strong>Telefon:</strong> <a href="tel:+46700000000">+46 70 000 00 00</a></div>
           </div>
@@ -347,6 +331,9 @@
       </section>
     </main>
 
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
     <footer class="site-footer">
       <div class="container footer-inner">
         <div>© <span id="year"></span> CateringCare</div>
@@ -358,38 +345,53 @@
     </footer>
 
     <!-- ============================================================
-         SCRIPTS
+         SCRIPTS – Chatt mot Cloudflare Worker
          ============================================================ -->
     <script>
-      // Footer-år
-      document.getElementById("year").textContent = new Date().getFullYear();
+      /* ── Konfig ─────────────────────────────────────── */
+      const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev/";
 
-      /* ============================================================
-         CONFIG – ändra bara om din Worker URL ändras
-         Debug:
-         - Testa att öppna WORKER_URL i en flik (den svarar oftast på GET med not_found)
-         - Chatten använder POST till WORKER_URL
-         ============================================================ */
-      const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev/"; // <-- ändra vid behov
-
-      // UI elements
+      /* ── DOM-element ────────────────────────────────── */
+      const elYear     = document.getElementById("year");
       const elMessages = document.getElementById("chatMessages");
-      const elForm = document.getElementById("chatForm");
-      const elInput = document.getElementById("chatInput");
-      const elLang = document.getElementById("chatLang");
-      const elChip = document.getElementById("workerChip");
+      const elForm     = document.getElementById("chatForm");
+      const elInput    = document.getElementById("chatInput");
+      const elLang     = document.getElementById("chatLang");
+      const elChip     = document.getElementById("workerChip");
 
-      // Minimal state (sparas bara i minnet på sidan)
+      /* ── State ──────────────────────────────────────── */
       let history = [];
 
-      // Visar worker i UI för enklare felsökning (ingen hemlig data)
+      /* ── Init ───────────────────────────────────────── */
+      elYear.textContent = new Date().getFullYear();
       elChip.textContent = "Worker: " + new URL(WORKER_URL).host;
+      greet();
 
+      /* ── Events ─────────────────────────────────────── */
+      elLang.addEventListener("change", greet);
+
+      elForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var q = elInput.value.trim();
+        if (!q) return;
+
+        addMessage("user", q);
+        elInput.value = "";
+        ask(q);
+      });
+
+      /* ── Funktioner ─────────────────────────────────── */
+
+      /**
+       * addMessage – Lägger till en chatbubbla i chattfönstret
+       * @param {string} role  – "user" eller "assistant"
+       * @param {string} text  – Meddelandetext
+       */
       function addMessage(role, text) {
-        const row = document.createElement("div");
+        var row = document.createElement("div");
         row.className = "msg " + role;
 
-        const bubble = document.createElement("div");
+        var bubble = document.createElement("div");
         bubble.className = "bubble";
         bubble.textContent = text;
 
@@ -398,87 +400,85 @@
         elMessages.scrollTop = elMessages.scrollHeight;
       }
 
+      /**
+       * getLoadingText – Returnerar "tänker"-text baserat på valt språk
+       */
       function getLoadingText() {
-        const lang = elLang.value;
+        var lang = elLang.value;
         if (lang === "en") return "Thinking…";
         if (lang === "ar") return "جارٍ التفكير…";
         if (lang === "fi") return "Mietitään…";
         return "Tänker…";
       }
 
+      /**
+       * greet – Nollställer chatten och visar välkomstmeddelande
+       */
       function greet() {
-        const lang = elLang.value;
+        var lang = elLang.value;
         elMessages.innerHTML = "";
         history = [];
 
-        // Debug: reset vid språkbyte (enkelt och stabilt)
-        if (lang === "en") addMessage("assistant", "Hi! How can I help you today?");
+        if (lang === "en")      addMessage("assistant", "Hi! How can I help you today?");
         else if (lang === "ar") addMessage("assistant", "مرحبًا! كيف يمكنني مساعدتك اليوم؟");
         else if (lang === "fi") addMessage("assistant", "Hei! Kuinka voin auttaa tänään?");
-        else addMessage("assistant", "Hej! Hur kan jag hjälpa dig idag?");
+        else                    addMessage("assistant", "Hej! Hur kan jag hjälpa dig idag?");
       }
 
+      /**
+       * ask – Skickar fråga till Cloudflare Worker och visar svaret
+       * @param {string} question – Användarens fråga
+       */
       async function ask(question) {
-        // Visa laddning
+        /* Visa laddningsindikator */
         addMessage("assistant", getLoadingText());
 
-        const payload = {
-          question,
-          history: history.slice(-10), // säkerhetsgräns
+        var payload = {
+          question: question,
+          history: history.slice(-10),
           lang: elLang.value
         };
 
-        let res;
+        var res;
         try {
           res = await fetch(WORKER_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-        } catch (e) {
-          // Ta bort "laddar..."
-          elMessages.lastChild?.remove();
+        } catch (err) {
+          /* Nätverksfel – ta bort laddningsbubblan */
+          if (elMessages.lastChild) elMessages.lastChild.remove();
           addMessage("assistant", "Chatten är inte nåbar just nu. Försök igen senare.");
-          console.error("Chat fetch failed:", e);
           return;
         }
 
-        // Ta bort "laddar..."
-        elMessages.lastChild?.remove();
+        /* Ta bort laddningsbubblan */
+        if (elMessages.lastChild) elMessages.lastChild.remove();
 
+        /* Hantera HTTP-fel */
         if (!res.ok) {
-          const txt = await res.text().catch(() => "");
           addMessage("assistant", "Det gick inte att kontakta chatten just nu. Försök igen senare.");
-          console.error("Chat HTTP error:", res.status, txt.slice(0, 300));
           return;
         }
 
-        const data = await res.json().catch(() => ({}));
-        const answer = data?.answer || "Jag kunde inte svara just nu.";
+        /* Parsa svar */
+        var data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          addMessage("assistant", "Kunde inte läsa svaret. Försök igen.");
+          return;
+        }
 
-        // Spara historik lokalt så konversationen känns sammanhängande
+        var answer = (data && data.answer) ? data.answer : "Jag kunde inte svara just nu.";
+
+        /* Spara i lokal historik */
         history.push({ role: "user", content: question });
         history.push({ role: "assistant", content: answer });
 
         addMessage("assistant", answer);
       }
-
-      // Event: språkbyte (nollställer historik)
-      elLang.addEventListener("change", greet);
-
-      // Event: skickar fråga
-      elForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const q = elInput.value.trim();
-        if (!q) return;
-
-        addMessage("user", q);
-        elInput.value = "";
-        ask(q);
-      });
-
-      // Init
-      greet();
     </script>
   </body>
 </html>
