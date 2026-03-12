@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CateringCare Admin</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
 
+<!-- LOGIN -->
+<div id="loginPage">
+<div class="login-box">
+  <div class="login-icon">🔒</div>
+  <h1>CateringCare Admin</h1>
+  <p>Logga in för att hantera matlådor & FAQ</p>
+  <input id="password" type="password" class="input" placeholder="Ange lösenord..."
+    onkeydown="if(event.key==='Enter')login()">
+  <button class="btn btn-full" onclick="login()">Logga in</button>
+  <div id="loginError" class="login-error" style="display:none">❌ Fel lösenord</div>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none">
+
+<!-- HEADER -->
+<header>
+<div class="admin-header">
+  <div class="admin-logo">
+    <span>🍱</span> CateringCare Admin
+  </div>
+  <div class="admin-nav">
+    <button class="nav-tab active" onclick="showSection('menu',this)">🍽️ Matlådor</button>
+    <button class="nav-tab" onclick="showSection('orders',this)">📋 Beställningar</button>
+    <button class="nav-tab" onclick="showSection('receipts',this)">🧾 Kassabok</button>
+    <button class="nav-tab" onclick="showSection('customers',this)">👥 Kunder</button>
+    <button class="nav-tab" onclick="showSection('stats',this)">📊 Statistik</button>
+    <button class="nav-tab" onclick="showSection('faq',this)">💬 FAQ</button>
+    <button class="nav-tab" onclick="showSection('settings',this)">⚙️ Inställningar</button>
+    <button class="nav-tab" onclick="showSection('notifications',this)" style="position:relative;">
+      🔔 <span id="notifDot" class="notif-dot"></span>
+    </button>
+  </div>
+  <button class="btn btn-sm btn-outline" onclick="logout()" style="color:white;border-color:rgba(255,255,255,0.3);">
+    🚪 Logga ut
+  </button>
+</div>
+</header>
+
+<div id="status" style="display:none"></div>
+
+<div class="admin-content">
+
+<!-- ======== MATLÅDOR ======== -->
+<div id="section-menu" class="section active">
+<h2>🍽️ Matlådor</h2>
+
+<!-- HÄMTA / LÄGG TILL -->
+<div class="menu-toolbar">
+  <div class="menu-toolbar-row">
+    <select id="menuDaySelect" class="input" style="width:auto;min-width:200px;"></select>
+    <button id="loadMenuBtn" class="btn" onclick="loadMenuFromAPI()">📥 Hämta meny från API</button>
+    <span style="color:#ccc;font-size:18px;">|</span>
+    <button class="btn btn-blue" onclick="addManualItem()">➕ Lägg till rätt</button>
+    <button class="btn btn-outline" onclick="addMultipleItems()">📝 Lägg till flera</button>
+  </div>
+</div>
+
+<!-- KATEGORI-FILTER -->
+<div class="filter-section">
+  <h3>📁 Filtrera menyer</h3>
+  <div id="menuFilterCheckboxes"></div>
+</div>
+
+<!-- SNABBKNAPPAR -->
+<div class="quick-actions">
+  <button class="btn btn-sm" onclick="enableAllWithStock()">✅ Aktivera alla med lager</button>
+  <button class="btn btn-sm btn-outline" onclick="disableAll()">⬜ Avaktivera alla</button>
+  <button class="btn btn-sm btn-outline" onclick="setAllPrice()">💰 Sätt pris alla</button>
+  <button class="btn btn-sm btn-outline" onclick="setAllStock()">📦 Sätt antal alla</button>
+</div>
+
+<!-- ITEMS -->
+<div id="shopItemsCount"></div>
+<div id="shopItemsList"></div>
+
+<!-- PUBLICERA -->
+<div id="shopSaveBar" class="save-bar" style="display:none">
+  <button class="btn btn-lg" onclick="saveShopItems()">🚀 Publicera till shop</button>
+  <button class="btn btn-sm btn-red" onclick="clearWeek()">🗑️ Rensa vecka</button>
+  <span id="shopSaveStatus" style="font-size:13px;color:#999;"></span>
+</div>
+
+<!-- PUBLIKA MENYER -->
+<div class="public-section">
+  <h3>👁️ Publika menyer (visas för kunder & AI)</h3>
+  <div id="publicMenuTags"></div>
+</div>
+</div>
+
+<!-- ======== BESTÄLLNINGAR ======== -->
+<div id="section-orders" class="section">
+<h2>📋 Beställningar</h2>
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-number" id="orderCountTotal">0</div><div>Totalt</div></div>
+  <div class="stat-card warning"><div class="stat-number" id="orderCountPending">0</div><div>Inväntar</div></div>
+  <div class="stat-card success"><div class="stat-number" id="orderRevenue">0 kr</div><div>Omsättning</div></div>
+</div>
+<div id="ordersList"></div>
+</div>
+
+<!-- ======== KASSABOK ======== -->
+<div id="section-receipts" class="section">
+<h2>🧾 Kassabok / Kvittoarkiv</h2>
+<div class="receipt-filters">
+  <label>Från: <input type="date" id="receiptDateFrom" class="input" onchange="loadReceipts()"></label>
+  <label>Till: <input type="date" id="receiptDateTo" class="input" onchange="loadReceipts()"></label>
+  <input type="text" id="receiptSearch" class="input" placeholder="🔍 Sök kvitto, kund..."
+    oninput="loadReceipts()" style="min-width:200px;">
+  <button class="btn btn-sm" onclick="exportReceipts()">📥 CSV</button>
+  <button class="btn btn-sm btn-outline" onclick="exportReceiptsPdf()">🖨️ Skriv ut</button>
+</div>
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-number" id="rcptTotal">0</div><div>Kvitton</div></div>
+  <div class="stat-card success"><div class="stat-number" id="rcptRevenue">0 kr</div><div>Omsättning</div></div>
+  <div class="stat-card"><div class="stat-number" id="rcptVat">0 kr</div><div>Moms</div></div>
+  <div class="stat-card"><div class="stat-number" id="rcptAvg">0 kr</div><div>Snitt/order</div></div>
+</div>
+<div id="receiptsSummary"></div>
+<div id="receiptsList"></div>
+</div>
+
+<!-- ======== KUNDER ======== -->
+<div id="section-customers" class="section">
+<h2>👥 Kundstock</h2>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <div id="customerCount"></div>
+  <button class="btn btn-sm" onclick="exportCustomers()">📥 Exportera CSV</button>
+</div>
+<div id="customerList"></div>
+</div>
+
+<!-- ======== STATISTIK ======== -->
+<div id="section-stats" class="section">
+<h2>📊 Chattstatistik</h2>
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-number" id="statTotal">0</div><div>Totalt</div></div>
+  <div class="stat-card"><div class="stat-number" id="statToday">0</div><div>Idag</div></div>
+  <div class="stat-card"><div class="stat-number" id="statAvg">0</div><div>Snitt/dag</div></div>
+</div>
+<h3>Senaste 30 dagarna</h3>
+<div class="chart-wrapper"><div id="chartContainer" class="chart-container"></div></div>
+<h3>Senaste frågor</h3>
+<table class="data-table">
+  <thead><tr><th>Fråga</th><th>Tid</th></tr></thead>
+  <tbody id="recentBody"></tbody>
+</table>
+</div>
+
+<!-- ======== FAQ ======== -->
+<div id="section-faq" class="section">
+<h2>💬 FAQ – Information till AI-assistenten</h2>
+<p class="muted">Skriv information som AI:n ska kunna svara på. T.ex. leveranstider, priser, kontaktinfo.</p>
+<textarea id="faq" class="input faq-textarea" placeholder="Skriv FAQ här..."></textarea>
+<div style="display:flex;gap:10px;margin-top:10px;">
+  <button class="btn" onclick="saveFaq()">💾 Spara FAQ</button>
+  <button class="btn btn-outline" onclick="loadFaq()">🔄 Ladda om</button>
+</div>
+</div>
+
+<!-- ======== INSTÄLLNINGAR ======== -->
+<div id="section-settings" class="section">
+<h2>⚙️ Inställningar</h2>
+
+<div class="settings-group">
+  <h3>🏢 Företagsuppgifter</h3>
+  <div class="settings-grid">
+    <label>Företagsnamn <input id="setCompanyName" class="input" placeholder="CateringCare AB"></label>
+    <label>Org.nummer <input id="setOrgNumber" class="input" placeholder="559xxx-xxxx"></label>
+    <label>Adress <input id="setCompanyAddress" class="input" placeholder="Gatan 1, 123 45 Stad"></label>
+    <label>E-post <input id="setCompanyEmail" class="input" placeholder="info@cateringcare.se"></label>
+    <label>Telefon <input id="setCompanyPhone" class="input" placeholder="070-xxx xx xx"></label>
+    <label>Webbsida <input id="setCompanyWeb" class="input" placeholder="www.cateringcare.se"></label>
+    <label>Momssats (%)
+      <input id="setVatPercent" class="input" type="number" value="12" step="0.5">
+    </label>
+    <label>F-skatt
+      <select id="setFskatt" class="input">
+        <option value="yes">✅ Ja, innehar F-skattesedel</option>
+        <option value="no">❌ Nej</option>
+      </select>
+    </label>
+  </div>
+</div>
+
+<div class="settings-group">
+  <h3>🛒 Butiksinställningar</h3>
+  <div class="settings-grid">
+    <label>Standardpris (kr) <input id="setDefaultPrice" class="input" type="number" value="79"></label>
+    <label>Swish-nummer <input id="setSwishNumber" class="input" placeholder="123-456 78 90"></label>
+    <label>Swish-meddelande <input id="setSwishMessage" class="input" placeholder="CateringCare Matlåda"></label>
+    <label>Hämtadress <input id="setAddress" class="input" placeholder="Ekelundsvägen 18, Solna"></label>
+    <label>Öppnar (tid) <input id="setPickupStart" class="input" type="time" value="11:00"></label>
+    <label>Stänger (tid) <input id="setPickupEnd" class="input" type="time" value="15:00"></label>
+  </div>
+</div>
+
+<div class="settings-group">
+  <h3>🏷️ Rabattinställningar</h3>
+  <div class="settings-grid">
+    <label>Rabatt (%) <input id="setDiscountPercent" class="input" type="number" value="30"></label>
+    <label>Rabattdag
+      <select id="setDiscountDay" class="input">
+        <option value="0">Söndag</option><option value="1">Måndag</option>
+        <option value="2">Tisdag</option><option value="3">Onsdag</option>
+        <option value="4">Torsdag</option><option value="5" selected>Fredag</option>
+        <option value="6">Lördag</option>
+      </select>
+    </label>
+    <label>Starttid (timme) <input id="setDiscountHour" class="input" type="number" value="13" min="0" max="23"></label>
+    <label>Startminut <input id="setDiscountMinute" class="input" type="number" value="0" min="0" max="59"></label>
+  </div>
+</div>
+
+<button class="btn btn-lg" onclick="saveAllSettings()" style="margin-top:20px;">💾 Spara alla inställningar</button>
+</div>
+
+<!-- ======== NOTISER ======== -->
+<div id="section-notifications" class="section">
+<h2>🔔 Notiser</h2>
+<div id="notifList"></div>
+</div>
+
+</div><!-- admin-content -->
+</div><!-- adminPanel -->
+
+<script src="admin.js"></script>
+</body>
+</html>
