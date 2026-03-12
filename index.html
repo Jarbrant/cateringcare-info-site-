@@ -3,7 +3,8 @@
   <head>
     <!-- ============================================================
          CateringCare – Startsida
-         Sektioner: Hero, Tjänster (kort), Så funkar det,
+         Flerspråkig (sv/en/ar/fi) via data-i18n + chat.js
+         Sektioner: Hero, Tjänster, Så funkar det,
          Hemtjänst, Företag, Butiker, Privat, Chatt, Kontakt
          ============================================================ -->
     <meta charset="utf-8" />
@@ -25,25 +26,41 @@
   <body>
     <!-- ============================================================
          HEADER / NAV
+         Flagg-knappar för språkbyte längst till höger
          ============================================================ -->
     <header class="site-header">
       <div class="container header-inner">
+
+        <!-- Logotyp -->
         <div class="brand">
           <div class="logo">CateringCare</div>
-          <div class="tagline">Näringsrika måltider – enkelt och tryggt</div>
+          <div class="tagline" data-i18n="tagline">Näringsrika måltider – enkelt och tryggt</div>
         </div>
 
+        <!-- Huvudnavigation (dold på mobil) -->
         <nav class="nav" aria-label="Huvudmeny">
-          <a href="#tjanster">Tjänster</a>
-          <a href="#sa-funkar-det">Så fungerar det</a>
-          <a href="#support-chat">Support</a>
-          <a class="nav-cta" href="#kontakt">Kontakta oss</a>
+          <a href="#tjanster"      data-i18n="navServices">Tjänster</a>
+          <a href="#sa-funkar-det" data-i18n="navHow">Så fungerar det</a>
+          <a href="#support-chat"  data-i18n="navSupport">Support</a>
+          <a class="nav-cta" href="#kontakt" data-i18n="navContact">Kontakta oss</a>
         </nav>
 
-        <div class="header-links" aria-label="Snabblänkar">
-          <a class="link" href="shop.html">Meny / Beställ</a>
-          <a class="link" href="admin.html">Admin</a>
+        <!-- Snabblänkar + Språkväljare -->
+        <div class="header-right">
+          <div class="header-links" aria-label="Snabblänkar">
+            <a class="link" href="shop.html" data-i18n="navMenu">Meny / Beställ</a>
+            <a class="link" href="admin.html">Admin</a>
+          </div>
+
+          <!-- Språkväljare med flaggor -->
+          <div class="lang-switcher" aria-label="Välj språk">
+            <button class="lang-btn active" data-lang="sv" title="Svenska">🇸🇪</button>
+            <button class="lang-btn"        data-lang="en" title="English">🇬🇧</button>
+            <button class="lang-btn"        data-lang="ar" title="العربية">🇸🇦</button>
+            <button class="lang-btn"        data-lang="fi" title="Suomi">🇫🇮</button>
+          </div>
         </div>
+
       </div>
     </header>
 
@@ -53,20 +70,20 @@
            ============================================================ -->
       <section class="hero">
         <div class="container">
-          <h1>Smarta måltidslösningar för äldre, företag och lokala butiker</h1>
+          <h1 data-i18n="heroTitle">Smarta måltidslösningar för äldre, företag och lokala butiker</h1>
 
-          <p class="lead">
+          <p class="lead" data-i18n="heroText">
             CateringCare levererar näringsrika och färdiglagade måltider – enkelt, tryggt och flexibelt.
             Vi samarbetar med hemtjänst, företag och lokala butiker för att göra bra mat lättillgänglig där människor finns.
           </p>
 
           <div class="cta">
-            <a class="button" href="#support-chat">Chatta med oss</a>
-            <a class="button secondary" href="shop.html">Se meny / beställ</a>
-            <a class="button secondary" href="#kontakt">Kontakta oss</a>
+            <a class="button"           href="#support-chat" data-i18n="heroChat">Chatta med oss</a>
+            <a class="button secondary" href="shop.html"     data-i18n="heroMenu">Se meny / beställ</a>
+            <a class="button secondary" href="#kontakt"       data-i18n="heroContact">Kontakta oss</a>
           </div>
 
-          <div class="hero-note">
+          <div class="hero-note" data-i18n="heroNote">
             Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen.
           </div>
         </div>
@@ -74,42 +91,43 @@
 
       <!-- ============================================================
            TJÄNSTER – 4 kort (målgrupper)
-           Rubrik och beskrivningstext borttagna enligt plan
            ============================================================ -->
       <section id="tjanster" class="section">
         <div class="container">
           <div class="card-grid">
+
             <!-- Kort 1: Hemtjänst -->
-            <a class="card" href="#hemtjanst" aria-label="Läs mer om hemtjänst">
+            <a class="card" href="#hemtjanst" aria-label="Hemtjänst">
               <div class="card-icon" aria-hidden="true">🏥</div>
-              <h3>Hemtjänst</h3>
-              <p>Näringsrika måltider och trygg leverans som förenklar vardagen för personal och brukare.</p>
-              <span class="card-link">Läs mer →</span>
+              <h3 data-i18n="card1Title">Hemtjänst</h3>
+              <p  data-i18n="card1Text">Näringsrika måltider och trygg leverans som förenklar vardagen för personal och brukare.</p>
+              <span class="card-link" data-i18n="readMore">Läs mer →</span>
             </a>
 
             <!-- Kort 2: Företag -->
-            <a class="card" href="#foretag" aria-label="Läs mer om företag och kontor">
+            <a class="card" href="#foretag" aria-label="Företag / kontor">
               <div class="card-icon" aria-hidden="true">🏢</div>
-              <h3>Företag / kontor</h3>
-              <p>Enkel lunchlösning: vi fyller kylskåp på jobbet med färska matlådor.</p>
-              <span class="card-link">Läs mer →</span>
+              <h3 data-i18n="card2Title">Företag / kontor</h3>
+              <p  data-i18n="card2Text">Enkel lunchlösning: vi fyller kylskåp på jobbet med färska matlådor.</p>
+              <span class="card-link" data-i18n="readMore">Läs mer →</span>
             </a>
 
             <!-- Kort 3: Privat -->
-            <a class="card" href="#privat" aria-label="Läs mer för privatpersoner">
+            <a class="card" href="#privat" aria-label="Privatpersoner">
               <div class="card-icon" aria-hidden="true">🍽️</div>
-              <h3>Privatpersoner</h3>
-              <p>God mat utan krångel – beställ online och hämta hos återförsäljare eller partner.</p>
-              <span class="card-link">Läs mer →</span>
+              <h3 data-i18n="card3Title">Privatpersoner</h3>
+              <p  data-i18n="card3Text">God mat utan krångel – beställ online och hämta hos återförsäljare eller partner.</p>
+              <span class="card-link" data-i18n="readMore">Läs mer →</span>
             </a>
 
             <!-- Kort 4: Återförsäljare -->
-            <a class="card" href="#butiker" aria-label="Läs mer om att bli återförsäljare">
+            <a class="card" href="#butiker" aria-label="Bli återförsäljare">
               <div class="card-icon" aria-hidden="true">🏪</div>
-              <h3>Bli återförsäljare</h3>
-              <p>Öka trafiken i butiken och skapa en extra intäktskälla med enkel hantering.</p>
-              <span class="card-link">Läs mer →</span>
+              <h3 data-i18n="card4Title">Bli återförsäljare</h3>
+              <p  data-i18n="card4Text">Öka trafiken i butiken och skapa en extra intäktskälla med enkel hantering.</p>
+              <span class="card-link" data-i18n="readMore">Läs mer →</span>
             </a>
+
           </div>
         </div>
       </section>
@@ -119,22 +137,22 @@
            ============================================================ -->
       <section id="sa-funkar-det" class="section alt">
         <div class="container">
-          <h2>Så fungerar CateringCare</h2>
+          <h2 data-i18n="howTitle">Så fungerar CateringCare</h2>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="howIntro">
             CateringCare gör det enkelt att få tillgång till god och näringsrik mat – oavsett om du är privatperson,
             arbetar på kontor eller driver en verksamhet.
           </p>
 
-          <p>Vi lagar färdiga måltider som levereras till:</p>
+          <p data-i18n="howListLabel">Vi lagar färdiga måltider som levereras till:</p>
           <ul>
-            <li>Hemtjänstverksamheter</li>
-            <li>Företag och kontor</li>
-            <li>Lokala återförsäljare och mindre butiker</li>
-            <li>Privatpersoner</li>
+            <li data-i18n="howItem1">Hemtjänstverksamheter</li>
+            <li data-i18n="howItem2">Företag och kontor</li>
+            <li data-i18n="howItem3">Lokala återförsäljare och mindre butiker</li>
+            <li data-i18n="howItem4">Privatpersoner</li>
           </ul>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="howOutro">
             Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen.
             Färdiglagade måltidslösningar blir allt vanligare eftersom de sparar tid och gör det enklare att äta bra mat
             utan att behöva laga den själv.
@@ -147,23 +165,23 @@
            ============================================================ -->
       <section id="hemtjanst" class="section">
         <div class="container">
-          <h2>För hemtjänst och omsorg</h2>
-          <h3>Trygg matleverans för äldre</h3>
+          <h2 data-i18n="homeTitle">För hemtjänst och omsorg</h2>
+          <h3 data-i18n="homeSub">Trygg matleverans för äldre</h3>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="homeText">
             CateringCare levererar näringsrika måltider till personer med biståndsbeslut via hemtjänsten.
             Vi levererar maten till hemtjänstens lokaler där personalen enkelt kan ta med matlådor till brukarna.
           </p>
 
-          <h4>Fördelar</h4>
+          <h4 data-i18n="benefitsLabel">Fördelar</h4>
           <ul>
-            <li>Näringsrika måltider anpassade för äldre</li>
-            <li>Enkel hantering för personal</li>
-            <li>Trygg och stabil leverans</li>
-            <li>Mindre administration för hemtjänsten</li>
+            <li data-i18n="homeBen1">Näringsrika måltider anpassade för äldre</li>
+            <li data-i18n="homeBen2">Enkel hantering för personal</li>
+            <li data-i18n="homeBen3">Trygg och stabil leverans</li>
+            <li data-i18n="homeBen4">Mindre administration för hemtjänsten</li>
           </ul>
 
-          <p>Vi hjälper er att göra måltiderna till en trygg del av omsorgen.</p>
+          <p data-i18n="homeEnd">Vi hjälper er att göra måltiderna till en trygg del av omsorgen.</p>
         </div>
       </section>
 
@@ -172,24 +190,24 @@
            ============================================================ -->
       <section id="foretag" class="section alt">
         <div class="container">
-          <h2>För företag och kontor</h2>
-          <h3>Enkel lunch på jobbet</h3>
+          <h2 data-i18n="bizTitle">För företag och kontor</h2>
+          <h3 data-i18n="bizSub">Enkel lunch på jobbet</h3>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="bizText">
             CateringCare levererar färdiga måltider direkt till kontor.
             Vi fyller ett kylskåp på arbetsplatsen med färska matlådor.
             Sedan kan medarbetare enkelt ta sin lunch när det passar.
           </p>
 
-          <h4>Fördelar</h4>
+          <h4 data-i18n="benefitsLabel">Fördelar</h4>
           <ul>
-            <li>Ingen lunchstress</li>
-            <li>Snabb och enkel måltid</li>
-            <li>Perfekt för mindre kontor utan egen restaurang</li>
-            <li>Mindre matsvinn</li>
+            <li data-i18n="bizBen1">Ingen lunchstress</li>
+            <li data-i18n="bizBen2">Snabb och enkel måltid</li>
+            <li data-i18n="bizBen3">Perfekt för mindre kontor utan egen restaurang</li>
+            <li data-i18n="bizBen4">Mindre matsvinn</li>
           </ul>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="bizOutro">
             Den här typen av kontorslösningar blir allt vanligare eftersom de ger anställda enkel tillgång till bra mat
             utan att lämna arbetsplatsen.
           </p>
@@ -201,29 +219,29 @@
            ============================================================ -->
       <section id="butiker" class="section">
         <div class="container">
-          <h2>För butiker och återförsäljare</h2>
-          <h3>Bli utlämningsställe för våra matlådor</h3>
+          <h2 data-i18n="shopTitle">För butiker och återförsäljare</h2>
+          <h3 data-i18n="shopSub">Bli utlämningsställe för våra matlådor</h3>
 
-          <p class="maxw">
+          <p class="maxw" data-i18n="shopText">
             Driver du en mindre livsmedelsbutik? Då kan du bli återförsäljare av CateringCares måltider.
           </p>
 
-          <p>Konceptet fungerar ungefär som ett paketombud:</p>
+          <p data-i18n="shopStepLabel">Konceptet fungerar ungefär som ett paketombud:</p>
           <ol>
-            <li>Kunden beställer sin mat online</li>
-            <li>Vi levererar till din butik</li>
-            <li>Kunden hämtar sin matlåda hos dig</li>
+            <li data-i18n="shopStep1">Kunden beställer sin mat online</li>
+            <li data-i18n="shopStep2">Vi levererar till din butik</li>
+            <li data-i18n="shopStep3">Kunden hämtar sin matlåda hos dig</li>
           </ol>
 
-          <h4>Fördelar för butiken</h4>
+          <h4 data-i18n="shopBenLabel">Fördelar för butiken</h4>
           <ul>
-            <li>Fler kunder i butiken</li>
-            <li>Extra intäktsmöjlighet</li>
-            <li>Enkel hantering</li>
-            <li>Lokal service för området</li>
+            <li data-i18n="shopBen1">Fler kunder i butiken</li>
+            <li data-i18n="shopBen2">Extra intäktsmöjlighet</li>
+            <li data-i18n="shopBen3">Enkel hantering</li>
+            <li data-i18n="shopBen4">Lokal service för området</li>
           </ul>
 
-          <p>Ett smart sätt att kombinera matservice och lokal handel.</p>
+          <p data-i18n="shopEnd">Ett smart sätt att kombinera matservice och lokal handel.</p>
         </div>
       </section>
 
@@ -232,26 +250,26 @@
            ============================================================ -->
       <section id="privat" class="section alt">
         <div class="container">
-          <h2>För privatpersoner</h2>
-          <h3>God mat utan krångel</h3>
+          <h2 data-i18n="privTitle">För privatpersoner</h2>
+          <h3 data-i18n="privSub">God mat utan krångel</h3>
 
-          <p>För dig som vill ha en enkel och god måltid i vardagen.</p>
+          <p data-i18n="privText">För dig som vill ha en enkel och god måltid i vardagen.</p>
           <ul>
-            <li>Beställ online</li>
-            <li>Hämta hos återförsäljare</li>
-            <li>Eller via samarbetspartners</li>
+            <li data-i18n="privOpt1">Beställ online</li>
+            <li data-i18n="privOpt2">Hämta hos återförsäljare</li>
+            <li data-i18n="privOpt3">Eller via samarbetspartners</li>
           </ul>
 
-          <p>Perfekt för:</p>
+          <p data-i18n="privForLabel">Perfekt för:</p>
           <ul>
-            <li>äldre</li>
-            <li>upptagna familjer</li>
-            <li>personer som vill slippa laga mat varje dag</li>
+            <li data-i18n="privFor1">äldre</li>
+            <li data-i18n="privFor2">upptagna familjer</li>
+            <li data-i18n="privFor3">personer som vill slippa laga mat varje dag</li>
           </ul>
 
           <div class="cta">
-            <a class="button" href="shop.html">Se meny / beställ</a>
-            <a class="button secondary" href="#support-chat">Fråga i chatten</a>
+            <a class="button"           href="shop.html"     data-i18n="heroMenu">Se meny / beställ</a>
+            <a class="button secondary" href="#support-chat"  data-i18n="privChatBtn">Fråga i chatten</a>
           </div>
         </div>
       </section>
@@ -262,21 +280,14 @@
            ============================================================ -->
       <section id="support-chat" class="section">
         <div class="container">
-          <h2>Support &amp; frågor</h2>
-          <p class="maxw">
+          <h2 data-i18n="chatTitle">Support &amp; frågor</h2>
+          <p class="maxw" data-i18n="chatDesc">
             Har du frågor om menyer, beställning, leverans eller samarbeten?
             Skriv här så hjälper vi dig direkt.
           </p>
 
-          <!-- Språkval och status -->
+          <!-- Statuschip -->
           <div class="chat-controls">
-            <label for="chatLang"><strong>Välj språk:</strong></label>
-            <select id="chatLang">
-              <option value="sv" selected>Svenska</option>
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-              <option value="fi">Suomi</option>
-            </select>
             <span class="chip" id="workerChip" title="Worker endpoint">Worker: ok</span>
           </div>
 
@@ -288,15 +299,16 @@
               <input
                 id="chatInput"
                 type="text"
+                data-i18n-placeholder="chatPlaceholder"
                 placeholder="Skriv din fråga…"
                 autocomplete="off"
                 required
               />
-              <button class="button" type="submit">Skicka</button>
+              <button class="button" type="submit" data-i18n="chatSend">Skicka</button>
             </form>
 
             <div class="chat-hint">
-              Om vi inte kan svara direkt, kontakta oss på
+              <span data-i18n="chatHint">Om vi inte kan svara direkt, kontakta oss på</span>
               <a href="mailto:info@cateringcare.se">info@cateringcare.se</a>.
             </div>
           </div>
@@ -308,24 +320,24 @@
            ============================================================ -->
       <section id="kontakt" class="section alt cta-section">
         <div class="container">
-          <h2>Vill du samarbeta med oss?</h2>
-          <p>Vi söker just nu:</p>
+          <h2 data-i18n="ctaTitle">Vill du samarbeta med oss?</h2>
+          <p data-i18n="ctaText">Vi söker just nu:</p>
           <ul>
-            <li>hemtjänstverksamheter</li>
-            <li>företag</li>
-            <li>butiker som vill bli återförsäljare</li>
+            <li data-i18n="ctaItem1">hemtjänstverksamheter</li>
+            <li data-i18n="ctaItem2">företag</li>
+            <li data-i18n="ctaItem3">butiker som vill bli återförsäljare</li>
           </ul>
 
-          <p><strong>Kontakta oss för mer information.</strong></p>
+          <p><strong data-i18n="ctaAction">Kontakta oss för mer information.</strong></p>
 
           <div class="contact-box">
-            <div><strong>E-post:</strong> <a href="mailto:info@cateringcare.se">info@cateringcare.se</a></div>
-            <div><strong>Telefon:</strong> <a href="tel:+46700000000">+46 70 000 00 00</a></div>
+            <div><strong data-i18n="labelEmail">E-post:</strong> <a href="mailto:info@cateringcare.se">info@cateringcare.se</a></div>
+            <div><strong data-i18n="labelPhone">Telefon:</strong> <a href="tel:+46700000000">+46 70 000 00 00</a></div>
           </div>
 
           <div class="cta">
-            <a class="button" href="mailto:info@cateringcare.se?subject=Samarbete%20med%20CateringCare">Maila oss</a>
-            <a class="button secondary" href="#support-chat">Chatta med oss</a>
+            <a class="button"           href="mailto:info@cateringcare.se?subject=Samarbete%20med%20CateringCare" data-i18n="ctaEmail">Maila oss</a>
+            <a class="button secondary" href="#support-chat" data-i18n="heroChat">Chatta med oss</a>
           </div>
         </div>
       </section>
@@ -338,147 +350,15 @@
       <div class="container footer-inner">
         <div>© <span id="year"></span> CateringCare</div>
         <div class="footer-links">
-          <a href="shop.html">Meny / Beställ</a>
+          <a href="shop.html" data-i18n="navMenu">Meny / Beställ</a>
           <a href="admin.html">Admin</a>
         </div>
       </div>
     </footer>
 
     <!-- ============================================================
-         SCRIPTS – Chatt mot Cloudflare Worker
+         SCRIPTS – Extern fil hanterar språk + chatt
          ============================================================ -->
-    <script>
-      /* ── Konfig ─────────────────────────────────────── */
-      const WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev/";
-
-      /* ── DOM-element ────────────────────────────────── */
-      const elYear     = document.getElementById("year");
-      const elMessages = document.getElementById("chatMessages");
-      const elForm     = document.getElementById("chatForm");
-      const elInput    = document.getElementById("chatInput");
-      const elLang     = document.getElementById("chatLang");
-      const elChip     = document.getElementById("workerChip");
-
-      /* ── State ──────────────────────────────────────── */
-      let history = [];
-
-      /* ── Init ───────────────────────────────────────── */
-      elYear.textContent = new Date().getFullYear();
-      elChip.textContent = "Worker: " + new URL(WORKER_URL).host;
-      greet();
-
-      /* ── Events ─────────────────────────────────────── */
-      elLang.addEventListener("change", greet);
-
-      elForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var q = elInput.value.trim();
-        if (!q) return;
-
-        addMessage("user", q);
-        elInput.value = "";
-        ask(q);
-      });
-
-      /* ── Funktioner ─────────────────────────────────── */
-
-      /**
-       * addMessage – Lägger till en chatbubbla i chattfönstret
-       * @param {string} role  – "user" eller "assistant"
-       * @param {string} text  – Meddelandetext
-       */
-      function addMessage(role, text) {
-        var row = document.createElement("div");
-        row.className = "msg " + role;
-
-        var bubble = document.createElement("div");
-        bubble.className = "bubble";
-        bubble.textContent = text;
-
-        row.appendChild(bubble);
-        elMessages.appendChild(row);
-        elMessages.scrollTop = elMessages.scrollHeight;
-      }
-
-      /**
-       * getLoadingText – Returnerar "tänker"-text baserat på valt språk
-       */
-      function getLoadingText() {
-        var lang = elLang.value;
-        if (lang === "en") return "Thinking…";
-        if (lang === "ar") return "جارٍ التفكير…";
-        if (lang === "fi") return "Mietitään…";
-        return "Tänker…";
-      }
-
-      /**
-       * greet – Nollställer chatten och visar välkomstmeddelande
-       */
-      function greet() {
-        var lang = elLang.value;
-        elMessages.innerHTML = "";
-        history = [];
-
-        if (lang === "en")      addMessage("assistant", "Hi! How can I help you today?");
-        else if (lang === "ar") addMessage("assistant", "مرحبًا! كيف يمكنني مساعدتك اليوم؟");
-        else if (lang === "fi") addMessage("assistant", "Hei! Kuinka voin auttaa tänään?");
-        else                    addMessage("assistant", "Hej! Hur kan jag hjälpa dig idag?");
-      }
-
-      /**
-       * ask – Skickar fråga till Cloudflare Worker och visar svaret
-       * @param {string} question – Användarens fråga
-       */
-      async function ask(question) {
-        /* Visa laddningsindikator */
-        addMessage("assistant", getLoadingText());
-
-        var payload = {
-          question: question,
-          history: history.slice(-10),
-          lang: elLang.value
-        };
-
-        var res;
-        try {
-          res = await fetch(WORKER_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
-        } catch (err) {
-          /* Nätverksfel – ta bort laddningsbubblan */
-          if (elMessages.lastChild) elMessages.lastChild.remove();
-          addMessage("assistant", "Chatten är inte nåbar just nu. Försök igen senare.");
-          return;
-        }
-
-        /* Ta bort laddningsbubblan */
-        if (elMessages.lastChild) elMessages.lastChild.remove();
-
-        /* Hantera HTTP-fel */
-        if (!res.ok) {
-          addMessage("assistant", "Det gick inte att kontakta chatten just nu. Försök igen senare.");
-          return;
-        }
-
-        /* Parsa svar */
-        var data;
-        try {
-          data = await res.json();
-        } catch (parseErr) {
-          addMessage("assistant", "Kunde inte läsa svaret. Försök igen.");
-          return;
-        }
-
-        var answer = (data && data.answer) ? data.answer : "Jag kunde inte svara just nu.";
-
-        /* Spara i lokal historik */
-        history.push({ role: "user", content: question });
-        history.push({ role: "assistant", content: answer });
-
-        addMessage("assistant", answer);
-      }
-    </script>
+    <script src="chat.js"></script>
   </body>
 </html>
