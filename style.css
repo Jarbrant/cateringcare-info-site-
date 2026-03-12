@@ -1,11 +1,26 @@
+/* ============================================================
+   CateringCare – Styles (PROD)
+   - Card-baserad layout med hover-animation
+   - Responsiv (mobil först)
+   - Chat UI styling
+   Debug-tips:
+   - Om layout känns "stor": justera --container-pad eller .section padding
+   ============================================================ */
+
 :root {
   --bg: #ffffff;
   --text: #0f172a;
   --muted: #475569;
+
   --brand: #2f7d59;
   --brand-dark: #256346;
+
   --card: #f8fafc;
   --border: #e2e8f0;
+
+  --radius: 16px;
+  --container: 1100px;
+  --container-pad: 40px;
 }
 
 * { box-sizing: border-box; }
@@ -18,15 +33,22 @@ body {
 }
 
 .container {
-  width: min(1100px, calc(100% - 40px));
+  width: min(var(--container), calc(100% - var(--container-pad)));
   margin: 0 auto;
 }
+
+.maxw { max-width: 75ch; }
+.muted { color: var(--muted); }
+
+/* =========================
+   HEADER / NAV
+   ========================= */
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
 }
@@ -40,8 +62,8 @@ body {
 }
 
 .brand .logo {
-  font-weight: 800;
-  letter-spacing: 0.3px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
   color: var(--brand);
   font-size: 18px;
 }
@@ -51,7 +73,7 @@ body {
 }
 
 .nav {
-  display: none;
+  display: none; /* visas på desktop via media query */
   gap: 12px;
   align-items: center;
 }
@@ -63,7 +85,7 @@ body {
 .nav a:hover { color: var(--text); }
 .nav .nav-cta {
   color: var(--brand);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .header-links {
@@ -73,9 +95,13 @@ body {
 .header-links .link {
   text-decoration: none;
   color: var(--brand);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
 }
+
+/* =========================
+   HERO
+   ========================= */
 
 .hero {
   padding: 56px 0 28px;
@@ -83,14 +109,14 @@ body {
 }
 .hero h1 {
   margin: 0 0 12px;
-  font-size: clamp(28px, 4vw, 44px);
-  line-height: 1.15;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.12;
 }
 .hero .lead {
   margin: 0 0 18px;
   font-size: 16px;
   color: var(--muted);
-  max-width: 70ch;
+  max-width: 75ch;
 }
 .hero-note {
   margin-top: 14px;
@@ -100,9 +126,11 @@ body {
   padding-left: 12px;
 }
 
-.section {
-  padding: 44px 0;
-}
+/* =========================
+   SECTIONS / TYPO
+   ========================= */
+
+.section { padding: 44px 0; }
 .section.alt {
   background: var(--card);
   border-top: 1px solid var(--border);
@@ -111,10 +139,20 @@ body {
 
 h2 { margin: 0 0 10px; font-size: 28px; }
 h3 { margin: 14px 0 6px; font-size: 18px; color: var(--brand-dark); }
-h4 { margin: 16px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+h4 {
+  margin: 16px 0 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
 
 ul, ol { padding-left: 18px; }
 li { margin: 6px 0; }
+
+/* =========================
+   BUTTONS
+   ========================= */
 
 .cta {
   display: flex;
@@ -126,22 +164,98 @@ li { margin: 6px 0; }
 .button {
   display: inline-block;
   padding: 12px 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--brand);
   color: white;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 800;
   border: 1px solid transparent;
+  box-shadow: 0 10px 22px rgba(47, 125, 89, 0.18);
 }
 .button:hover { background: var(--brand-dark); }
+
 .button.secondary {
   background: white;
   color: var(--brand);
   border-color: var(--border);
+  box-shadow: none;
 }
-.button.secondary:hover {
-  background: #f1f5f9;
+.button.secondary:hover { background: #f1f5f9; }
+
+/* =========================
+   CARD GRID (4 kort)
+   - Card-baserad layout med hover-animation
+   ========================= */
+
+.card-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  grid-template-columns: 1fr;
 }
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(47, 125, 89, 0.35);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.12);
+}
+
+.card:focus {
+  outline: 3px solid rgba(47, 125, 89, 0.25);
+  outline-offset: 2px;
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #ecfdf5;
+  border: 1px solid rgba(47, 125, 89, 0.18);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.card-link {
+  font-weight: 900;
+  color: var(--brand);
+  font-size: 14px;
+}
+
+/* =========================
+   CONTACT BOX
+   ========================= */
 
 .cta-section .contact-box {
   margin: 12px 0 0;
@@ -151,6 +265,10 @@ li { margin: 6px 0; }
   border-radius: 12px;
 }
 .cta-section a { color: var(--brand); }
+
+/* =========================
+   FOOTER
+   ========================= */
 
 .site-footer {
   padding: 18px 0;
@@ -171,16 +289,13 @@ li { margin: 6px 0; }
 }
 .footer-links a:hover { color: var(--text); }
 
-@media (min-width: 980px) {
-  .nav { display: flex; }
-}
-
 /* =========================
    CHAT UI
    ========================= */
 
 .chat-controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   margin: 12px 0 10px;
@@ -188,10 +303,19 @@ li { margin: 6px 0; }
 
 .chat-controls select {
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: white;
   font-size: 14px;
+}
+
+.chip {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
 }
 
 .chat-box {
@@ -210,10 +334,7 @@ li { margin: 6px 0; }
   border: 1px solid var(--border);
 }
 
-.msg {
-  margin: 10px 0;
-  display: flex;
-}
+.msg { margin: 10px 0; display: flex; }
 
 .msg .bubble {
   max-width: 85%;
@@ -231,9 +352,7 @@ li { margin: 6px 0; }
 }
 
 .msg.assistant { justify-content: flex-start; }
-.msg.assistant .bubble {
-  background: white;
-}
+.msg.assistant .bubble { background: white; }
 
 .chat-form {
   display: grid;
@@ -244,7 +363,7 @@ li { margin: 6px 0; }
 
 .chat-form input {
   padding: 12px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid var(--border);
   font-size: 14px;
 }
@@ -253,4 +372,26 @@ li { margin: 6px 0; }
   margin-top: 10px;
   font-size: 12px;
   color: var(--muted);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (min-width: 720px) {
+  .card-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+
+@media (min-width: 980px) {
+  .nav { display: flex; }
+}
+
+@media (min-width: 1100px) {
+  .card-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Mobil: lite mindre padding */
+@media (max-width: 420px) {
+  :root { --container-pad: 28px; }
+  .section { padding: 36px 0; }
 }
