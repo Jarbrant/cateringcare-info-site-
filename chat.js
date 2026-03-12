@@ -1,13 +1,13 @@
 /* ============================================================
-   CateringCare – Språk & Chatt (Fas 3: FAQ-sökning)
+   CateringCare – Språk & Chatt (Fas 3b: Självständig FAQ)
    Hanterar:
    1. Flerspråkigt innehåll (sv, en, ar, fi) via data-i18n
    2. Lokal FAQ-sökning från content/faq/*.md-data
-   3. Fallback till Cloudflare Worker med FAQ-kontext
+   3. Fallback-meddelande om ingen FAQ matchar
    ============================================================ */
 
 /* ── Konfig ─────────────────────────────────────────── */
-var WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev/";
+var WORKER_URL = "https://cateringcare-info-site-01.andersmenyit.workers.dev";
 
 /* ── State ──────────────────────────────────────────── */
 var currentLang  = "sv";
@@ -31,7 +31,7 @@ var faqDatabase = [
     title: "Hur skaffar jag autogiro?",
     category: "fakturering",
     keywords: ["autogiro", "auto", "giro", "automatisk", "betalning", "bank", "blankett", "dragning", "konto"],
-    content: "Autogiro innebär att betalningen dras automatiskt från ditt bankkonto när fakturan förfaller. Du slipper betala manuellt varje månad. Autogiro är kostnadsfritt.\n\nSå här gör du:\n1. Ladda ner autogiroblanketten: https://cdn.menyit.se/live/files/499fd0351c114a98aaa01ed9068bde18.pdf\n2. Fyll i blanketten med dina bankuppgifter\n3. Skicka den till info@cateringcare.se\n4. Autogiro aktiveras inom 5–10 bankdagar\n\nAlternativt kan du kontakta din bank och registrera autogiro där.\n\nOm du inte använder autogiro eller e-postfaktura tillkommer en fakturaavgift på 30 kr.\n\nPengarna dras automatiskt på fakturans förfallodatum. Om dragningen misslyckas behöver fakturan betalas manuellt."
+    content: "Autogiro innebär att betalningen dras automatiskt från ditt bankkonto när fakturan förfaller. Du slipper betala manuellt varje m��nad. Autogiro är kostnadsfritt.\n\nSå här gör du:\n1. Ladda ner autogiroblanketten: https://cdn.menyit.se/live/files/499fd0351c114a98aaa01ed9068bde18.pdf\n2. Fyll i blanketten med dina bankuppgifter\n3. Skicka den till info@cateringcare.se\n4. Autogiro aktiveras inom 5–10 bankdagar\n\nAlternativt kan du kontakta din bank och registrera autogiro där.\n\nOm du inte använder autogiro eller e-postfaktura tillkommer en fakturaavgift på 30 kr.\n\nPengarna dras automatiskt på fakturans förfallodatum. Om dragningen misslyckas behöver fakturan betalas manuellt."
   },
   {
     title: "Kan faktura skickas via e-post?",
@@ -54,7 +54,7 @@ var faqDatabase = [
     content: "Vi erbjuder alla typer av specialkost:\n• Diabeteskost\n• Proteinrik kost\n• Konsistensanpassad (timbal, gelé, flytande)\n• Laktosfri\n• Glutenfri\n• Vegetarisk / Vegansk\n\nAlla specialanpassningar ingår i priset. Ange behoven vid beställning."
   },
 
-  /* ── Leverans ────────────────────────────────────── */
+  /* ─��� Leverans ────────────────────────────────────── */
   {
     title: "Jag har inte fått någon mat idag",
     category: "leverans",
@@ -112,8 +112,6 @@ var faqDatabase = [
 
 /* ============================================================
    LOKAL FAQ-SÖKNING
-   Söker keyword-matchning i faqDatabase.
-   Returnerar bästa matchens content, eller null.
    ============================================================ */
 function searchFAQ(query) {
   if (!query) return null;
@@ -127,7 +125,6 @@ function searchFAQ(query) {
     var faq = faqDatabase[i];
     var score = 0;
 
-    /* Keyword-matchning */
     for (var k = 0; k < faq.keywords.length; k++) {
       var keyword = faq.keywords[k].toLowerCase();
       for (var w = 0; w < words.length; w++) {
@@ -138,7 +135,6 @@ function searchFAQ(query) {
       }
     }
 
-    /* Titel-matchning (bonus) */
     var titleLower = faq.title.toLowerCase();
     for (var t = 0; t < words.length; t++) {
       if (words[t].length < 2) continue;
@@ -147,7 +143,6 @@ function searchFAQ(query) {
       }
     }
 
-    /* Content-matchning (lägre vikt) */
     var contentLower = faq.content.toLowerCase();
     for (var c = 0; c < words.length; c++) {
       if (words[c].length < 3) continue;
@@ -162,7 +157,6 @@ function searchFAQ(query) {
     }
   }
 
-  /* Kräv minst 3 poäng för en träff */
   if (bestScore >= 3 && bestMatch) {
     return bestMatch.content;
   }
@@ -170,28 +164,13 @@ function searchFAQ(query) {
   return null;
 }
 
-/**
- * Bygg FAQ-kontext för Cloudflare Worker (AI-fallback)
- */
-function buildFAQContext() {
-  var ctx = "";
-  for (var i = 0; i < faqDatabase.length; i++) {
-    ctx += "## " + faqDatabase[i].title + "\n";
-    ctx += faqDatabase[i].content + "\n\n";
-  }
-  return ctx;
-}
-
 
 /* ============================================================
    ÖVERSÄTTNINGAR
-   Varje nyckel matchar ett data-i18n-attribut i HTML
    ============================================================ */
 var translations = {
 
-  /* ── Svenska (standard) ───────────────────────────── */
   sv: {
-    /* Header */
     tagline:       "Näringsrika måltider – enkelt och tryggt",
     navServices:   "Tjänster",
     navHow:        "Så fungerar det",
@@ -199,7 +178,6 @@ var translations = {
     navContact:    "Kontakta oss",
     navMenu:       "Meny / Beställ",
 
-    /* Hero */
     heroTitle:     "Smarta måltidslösningar för äldre, företag och lokala butiker",
     heroText:      "CateringCare levererar näringsrika och färdiglagade måltider – enkelt, tryggt och flexibelt. Vi samarbetar med hemtjänst, företag och lokala butiker för att göra bra mat lättillgänglig där människor finns.",
     heroChat:      "Chatta med oss",
@@ -207,7 +185,6 @@ var translations = {
     heroContact:   "Kontakta oss",
     heroNote:      "Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen.",
 
-    /* Kort */
     card1Title:    "Hemtjänst",
     card1Text:     "Näringsrika måltider och trygg leverans som förenklar vardagen för personal och brukare.",
     card2Title:    "Företag / kontor",
@@ -218,7 +195,6 @@ var translations = {
     card4Text:     "Öka trafiken i butiken och skapa en extra intäktskälla med enkel hantering.",
     readMore:      "Läs mer →",
 
-    /* Så fungerar det */
     howTitle:      "Så fungerar CateringCare",
     howIntro:      "CateringCare gör det enkelt att få tillgång till god och näringsrik mat – oavsett om du är privatperson, arbetar på kontor eller driver en verksamhet.",
     howListLabel:  "Vi lagar färdiga måltider som levereras till:",
@@ -228,7 +204,6 @@ var translations = {
     howItem4:      "Privatpersoner",
     howOutro:      "Maten levereras kyld och klar att värma – perfekt för en enkel och trygg måltid i vardagen. Färdiglagade måltidslösningar blir allt vanligare eftersom de sparar tid och gör det enklare att äta bra mat utan att behöva laga den själv.",
 
-    /* Hemtjänst-sektion */
     homeTitle:     "För hemtjänst och omsorg",
     homeSub:       "Trygg matleverans för äldre",
     homeText:      "CateringCare levererar näringsrika måltider till personer med biståndsbeslut via hemtjänsten. Vi levererar maten till hemtjänstens lokaler där personalen enkelt kan ta med matlådor till brukarna.",
@@ -239,7 +214,6 @@ var translations = {
     homeBen4:      "Mindre administration för hemtjänsten",
     homeEnd:       "Vi hjälper er att göra måltiderna till en trygg del av omsorgen.",
 
-    /* Företag-sektion */
     bizTitle:      "För företag och kontor",
     bizSub:        "Enkel lunch på jobbet",
     bizText:       "CateringCare levererar färdiga måltider direkt till kontor. Vi fyller ett kylskåp på arbetsplatsen med färska matlådor. Sedan kan medarbetare enkelt ta sin lunch när det passar.",
@@ -249,7 +223,6 @@ var translations = {
     bizBen4:       "Mindre matsvinn",
     bizOutro:      "Den här typen av kontorslösningar blir allt vanligare eftersom de ger anställda enkel tillgång till bra mat utan att lämna arbetsplatsen.",
 
-    /* Butiker-sektion */
     shopTitle:     "För butiker och återförsäljare",
     shopSub:       "Bli utlämningsställe för våra matlådor",
     shopText:      "Driver du en mindre livsmedelsbutik? Då kan du bli återförsäljare av CateringCares måltider.",
@@ -264,7 +237,6 @@ var translations = {
     shopBen4:      "Lokal service för området",
     shopEnd:       "Ett smart sätt att kombinera matservice och lokal handel.",
 
-    /* Privatpersoner-sektion */
     privTitle:     "För privatpersoner",
     privSub:       "God mat utan krångel",
     privText:      "För dig som vill ha en enkel och god måltid i vardagen.",
@@ -277,7 +249,6 @@ var translations = {
     privFor3:      "personer som vill slippa laga mat varje dag",
     privChatBtn:   "Fråga i chatten",
 
-    /* Chatt */
     chatTitle:       "Support & frågor",
     chatDesc:        "Har du frågor om menyer, beställning, leverans eller samarbeten? Skriv här så hjälper vi dig direkt.",
     chatPlaceholder: "Skriv din fråga…",
@@ -285,12 +256,12 @@ var translations = {
     chatHint:        "Om vi inte kan svara direkt, kontakta oss på",
     chatGreeting:    "Hej! 👋 Hur kan jag hjälpa dig? Jag kan svara på frågor om leverans, fakturering, specialkost, blanketter och mer.",
     chatThinking:    "Tänker…",
+    chatNoMatch:     "Jag hittar tyvärr inget svar på den frågan. 🤔 Du kan kontakta oss direkt på info@cateringcare.se eller ringa +46 70 000 00 00 så hjälper vi dig!",
     chatErrorNet:    "Chatten är inte nåbar just nu. Försök igen senare.",
     chatErrorHttp:   "Det gick inte att kontakta chatten just nu. Försök igen senare.",
     chatErrorParse:  "Kunde inte läsa svaret. Försök igen.",
     chatErrorEmpty:  "Jag kunde inte svara just nu.",
 
-    /* Kontakt */
     ctaTitle:   "Vill du samarbeta med oss?",
     ctaText:    "Vi söker just nu:",
     ctaItem1:   "hemtjänstverksamheter",
@@ -302,7 +273,6 @@ var translations = {
     ctaEmail:   "Maila oss"
   },
 
-  /* ── English ──────────────────────────────────────── */
   en: {
     tagline:       "Nutritious meals – simple and safe",
     navServices:   "Services",
@@ -389,6 +359,7 @@ var translations = {
     chatHint:        "If we can't answer right away, contact us at",
     chatGreeting:    "Hi! 👋 How can I help you? I can answer questions about delivery, invoicing, special diets, forms and more.",
     chatThinking:    "Thinking…",
+    chatNoMatch:     "I couldn't find an answer to that question. 🤔 You can contact us directly at info@cateringcare.se or call +46 70 000 00 00 and we'll help you!",
     chatErrorNet:    "The chat is not reachable right now. Please try again later.",
     chatErrorHttp:   "Could not contact the chat right now. Please try again later.",
     chatErrorParse:  "Could not read the response. Please try again.",
@@ -405,7 +376,6 @@ var translations = {
     ctaEmail:   "Email us"
   },
 
-  /* ── العربية ──────────────────────────────────────── */
   ar: {
     tagline:       "وجبات مغذية – بسيطة وآمنة",
     navServices:   "الخدمات",
@@ -462,7 +432,7 @@ var translations = {
     shopTitle:     "للمتاجر والبائعين",
     shopSub:       "كن نقطة استلام لصناديق وجباتنا",
     shopText:      "هل تدير متجر بقالة صغير؟ يمكنك أن تصبح بائعاً لوجبات CateringCare.",
-    shopStepLabel: "ا��مفهوم يعمل مثل نقطة استلام الطرود:",
+    shopStepLabel: "المفهوم يعمل مثل نقطة استلام الطرود:",
     shopStep1:     "العميل يطلب الطعام عبر الإنترنت",
     shopStep2:     "نوصل إلى متجرك",
     shopStep3:     "العميل يستلم وجبته منك",
@@ -490,8 +460,9 @@ var translations = {
     chatPlaceholder: "اكتب سؤالك…",
     chatSend:        "إرسال",
     chatHint:        "إذا لم نتمكن من الرد فوراً، تواصل معنا على",
-    chatGreeting:    "مرحبًا! 👋 كيف يمكنني مساعدتك اليوم؟ يمكنني الإجابة عن أسئلة حول التوصيل والفواتير والنظام الغذائي والمزيد.",
+    chatGreeting:    "مرحبًا! 👋 كيف يمكنني مساعدتك؟ يمكنني الإجابة عن أسئلة حول التوصيل والفواتير والنظام الغذائي والمزيد.",
     chatThinking:    "جارٍ التفكير…",
+    chatNoMatch:     "لم أجد إجابة على هذا السؤال. 🤔 يمكنك التواصل معنا مباشرة على info@cateringcare.se أو الاتصال على +46 70 000 00 00 وسنساعدك!",
     chatErrorNet:    "المحادثة غير متاحة حالياً. حاول مرة أخرى لاحقاً.",
     chatErrorHttp:   "تعذر الاتصال بالمحادثة. حاول مرة أخرى لاحقاً.",
     chatErrorParse:  "تعذرت قراءة الرد. حاول مرة أخرى.",
@@ -508,7 +479,6 @@ var translations = {
     ctaEmail:   "راسلنا"
   },
 
-  /* ── Suomi ────────────────────────────────────────── */
   fi: {
     tagline:       "Ravitsevia aterioita – helposti ja turvallisesti",
     navServices:   "Palvelut",
@@ -595,6 +565,7 @@ var translations = {
     chatHint:        "Jos emme voi vastata heti, ota yhteyttä osoitteeseen",
     chatGreeting:    "Hei! 👋 Kuinka voin auttaa? Voin vastata kysymyksiin toimituksesta, laskutuksesta, erikoisruokavalioista ja muusta.",
     chatThinking:    "Mietitään…",
+    chatNoMatch:     "En valitettavasti löytänyt vastausta tähän kysymykseen. 🤔 Voit ottaa yhteyttä suoraan osoitteeseen info@cateringcare.se tai soittaa +46 70 000 00 00 niin autamme!",
     chatErrorNet:    "Chat ei ole tavoitettavissa juuri nyt. Yritä myöhemmin.",
     chatErrorHttp:   "Yhteyttä chattiin ei saatu. Yritä myöhemmin.",
     chatErrorParse:  "Vastausta ei voitu lukea. Yritä uudelleen.",
@@ -660,8 +631,7 @@ function setLang(lang) {
 
 /* ============================================================
    CHATT-FUNKTIONER
-   1. Lokal FAQ-sökning (snabb, ingen nätverksanrop)
-   2. Fallback: Cloudflare Worker med FAQ-kontext
+   100% lokal FAQ-sökning – ingen Worker-fallback
    ============================================================ */
 
 function addMessage(role, text) {
@@ -681,88 +651,28 @@ function addMessage(role, text) {
 }
 
 /**
- * ask – Först lokal FAQ-sökning, sedan Worker-fallback
+ * ask – Lokal FAQ-sökning, fallback = "kontakta oss"
  */
-async function ask(question) {
+function ask(question) {
   var t = translations[currentLang];
 
-  /* ── Steg 1: Lokal FAQ-sökning ──────────────────── */
-  var localAnswer = searchFAQ(question);
+  /* Sök lokalt i FAQ-databasen */
+  var answer = searchFAQ(question);
 
-  if (localAnswer) {
-    /* Spara i historik */
+  if (answer) {
     chatHistory.push({ role: "user",      content: question });
-    chatHistory.push({ role: "assistant",  content: localAnswer });
-
-    if (chatHistory.length > 20) {
-      chatHistory = chatHistory.slice(-20);
-    }
-
-    addMessage("assistant", localAnswer);
-    return;
+    chatHistory.push({ role: "assistant",  content: answer });
+  } else {
+    answer = t.chatNoMatch;
+    chatHistory.push({ role: "user",      content: question });
+    chatHistory.push({ role: "assistant",  content: answer });
   }
-
-  /* ── Steg 2: Cloudflare Worker (AI-fallback) ────── */
-  addMessage("assistant", t.chatThinking);
-
-  var payload = {
-    question:   question,
-    history:    chatHistory.slice(-10),
-    lang:       currentLang,
-    faqContext:  buildFAQContext()
-  };
-
-  var res;
-  try {
-    res = await fetch(WORKER_URL, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(payload)
-    });
-  } catch (err) {
-    removeLastMessage();
-    addMessage("assistant", t.chatErrorNet);
-    return;
-  }
-
-  removeLastMessage();
-
-  if (!res.ok) {
-    addMessage("assistant", t.chatErrorHttp);
-    return;
-  }
-
-  var data;
-  try {
-    data = await res.json();
-  } catch (parseErr) {
-    addMessage("assistant", t.chatErrorParse);
-    return;
-  }
-
-  var answer = (data && data.answer) ? data.answer : t.chatErrorEmpty;
-
-  chatHistory.push({ role: "user",      content: question });
-  chatHistory.push({ role: "assistant",  content: answer });
 
   if (chatHistory.length > 20) {
     chatHistory = chatHistory.slice(-20);
   }
 
   addMessage("assistant", answer);
-}
-
-function removeLastMessage() {
-  var chatEl = document.getElementById("chatMessages");
-  if (chatEl && chatEl.lastChild) {
-    chatEl.lastChild.remove();
-  }
-}
-
-function escapeHtml(text) {
-  var div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
 }
 
 
@@ -775,13 +685,11 @@ function escapeHtml(text) {
     yearEl.textContent = new Date().getFullYear();
   }
 
+  /* Worker-chip: visa shop-API status */
   var chipEl = document.getElementById("workerChip");
   if (chipEl) {
-    try {
-      chipEl.textContent = "Worker: " + new URL(WORKER_URL).host;
-    } catch (e) {
-      chipEl.textContent = "Worker: ej konfigurerad";
-    }
+    chipEl.textContent = "FAQ: lokal ✅";
+    chipEl.style.color = "#16a34a";
   }
 
   var langButtons = document.querySelectorAll(".lang-btn");
