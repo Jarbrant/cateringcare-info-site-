@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CateringCare – Matlådor</title>
-<link rel="stylesheet" href="shop.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>CateringCare – Matlådor</title>
+
+  <!-- Matcha startsidan: style.css först, sedan shop.css som override -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shop.css">
 </head>
 <body>
 
 <header class="shop-header">
-<div class="container">
-  <a href="index.html" class="shop-logo">CateringCare <span>· Matlådor</span></a>
-  <div class="header-links">
-    <a href="index.html">🏠 Hem</a>
-    <a href="admin.html">🔒</a>
+  <div class="container">
+    <a href="index.html" class="shop-logo">CateringCare <span>· Matlådor</span></a>
+    <div class="header-links">
+      <a href="index.html">🏠 Hem</a>
+      <a href="admin.html">🔒</a>
+    </div>
   </div>
-</div>
 </header>
 
 <div class="shop-hero">
@@ -34,7 +38,12 @@
 <div class="toolbar">
   <div class="search-box">
     <span class="sicon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Sök matlåda, ingrediens eller allergen..." oninput="filterProducts()">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Sök matlåda, ingrediens eller allergen..."
+      oninput="filterProducts()"
+    >
   </div>
   <div class="category-tabs" id="categoryTabs"></div>
 </div>
@@ -50,7 +59,7 @@
 
 <!-- EXPANDED CARD MODAL -->
 <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
-<div class="detail-modal" id="detailModal"></div>
+  <div class="detail-modal" id="detailModal"></div>
 </div>
 
 <!-- CART FLOAT -->
@@ -61,72 +70,86 @@
 
 <!-- CART MODAL -->
 <div class="modal-overlay" id="cartModal" onclick="if(event.target===this)closeCart()">
-<div class="modal">
-  <button class="modal-close" onclick="closeCart()">✕</button>
+  <div class="modal">
+    <button class="modal-close" onclick="closeCart()">✕</button>
 
-  <div id="cartStep1">
-    <h2>🛒 Din kundvagn</h2>
-    <div id="cartItems"></div>
-    <div class="cart-total">Totalt: <span id="cartTotal">0</span> kr</div>
+    <div id="cartStep1">
+      <h2>🛒 Din kundvagn</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total">Totalt: <span id="cartTotal">0</span> kr</div>
 
-    <h2 style="margin-top:16px;">📝 Dina uppgifter</h2>
-    <div class="form-group">
-      <label>👤 Namn *</label>
-      <input type="text" id="custName" placeholder="Ditt namn">
-    </div>
-    <div class="form-group">
-      <label>📱 Telefon *</label>
-      <input type="tel" id="custPhone" placeholder="07X-XXX XX XX">
-    </div>
-    <div class="form-group">
-      <label>📧 E-post (för kvitto)</label>
-      <input type="email" id="custEmail" placeholder="din@email.se">
-      <small>Vi skickar orderbekräftelse & kvitto till din e-post</small>
-    </div>
-    <div class="form-group">
-      <label>📅 Hämtningsdag *</label>
-      <select id="custDay"></select>
-    </div>
-    <div class="form-group">
-      <label>🕐 Hämtningstid *</label>
-      <select id="custTime"></select>
-    </div>
-    <div class="form-group">
-      <label>🎟️ Rabattkod</label>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="custCoupon" placeholder="T.ex. VÄLKOMMEN10" style="flex:1;">
-        <button class="coupon-btn" onclick="applyCoupon()">Använd</button>
+      <h2 style="margin-top:16px;">📝 Dina uppgifter</h2>
+
+      <div class="form-group">
+        <label>👤 Namn *</label>
+        <input type="text" id="custName" placeholder="Ditt namn">
       </div>
-      <small id="couponStatus"></small>
+
+      <div class="form-group">
+        <label>📱 Telefon *</label>
+        <input type="tel" id="custPhone" placeholder="07X-XXX XX XX">
+      </div>
+
+      <div class="form-group">
+        <label>📧 E-post (för kvitto)</label>
+        <input type="email" id="custEmail" placeholder="din@email.se">
+        <small>Vi skickar orderbekräftelse & kvitto till din e-post</small>
+      </div>
+
+      <div class="form-group">
+        <label>📅 Hämtningsdag *</label>
+        <select id="custDay"></select>
+      </div>
+
+      <div class="form-group">
+        <label>🕐 Hämtningstid *</label>
+        <select id="custTime"></select>
+      </div>
+
+      <div class="form-group">
+        <label>🎟️ Rabattkod</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="custCoupon" placeholder="T.ex. VÄLKOMMEN10" style="flex:1;">
+          <button class="coupon-btn" onclick="applyCoupon()">Använd</button>
+        </div>
+        <small id="couponStatus"></small>
+      </div>
+
+      <button class="checkout-btn" id="checkoutBtn" onclick="placeOrder()" disabled>
+        ✅ Beställ & betala med Swish
+      </button>
     </div>
-    <button class="checkout-btn" id="checkoutBtn" onclick="placeOrder()" disabled>
-      ✅ Beställ & betala med Swish
-    </button>
+
+    <div id="cartStep2" style="display:none;">
+      <div class="receipt">
+        <h2>✅ Tack för din beställning!</h2>
+        <div class="order-id" id="receiptOrderId">–</div>
+
+        <div class="receipt-detail">
+          <p>📦 <strong id="receiptItems">–</strong></p>
+          <p>📅 Hämtas: <strong id="receiptPickup">–</strong></p>
+          <p>📍 <strong id="receiptAddress">–</strong></p>
+        </div>
+
+        <div class="receipt-swish">
+          💳 Swisha till:
+          <strong id="receiptSwish">–</strong>
+          <div style="font-size:14px;margin-top:5px;">Meddelande: <span id="receiptSwishMsg">–</span></div>
+          <div style="font-size:20px;margin-top:6px;"><span id="receiptTotal">–</span> kr</div>
+          <div id="swishQrArea" style="margin-top:12px;"></div>
+        </div>
+
+        <div class="receipt-email" id="receiptEmailMsg" style="display:none;"></div>
+        <div id="receiptStatusLink" style="margin-top:10px;"></div>
+
+        <p style="margin-top:12px;font-size:12px;color:#666;">Visa detta kvitto när du hämtar maten.</p>
+      </div>
+
+      <button class="checkout-btn" onclick="closeCart();resetCart();" style="margin-top:12px;background:#666;">
+        Stäng
+      </button>
+    </div>
   </div>
-
-  <div id="cartStep2" style="display:none;">
-    <div class="receipt">
-      <h2>✅ Tack för din beställning!</h2>
-      <div class="order-id" id="receiptOrderId">–</div>
-      <div class="receipt-detail">
-        <p>📦 <strong id="receiptItems">–</strong></p>
-        <p>📅 Hämtas: <strong id="receiptPickup">–</strong></p>
-        <p>📍 <strong id="receiptAddress">–</strong></p>
-      </div>
-      <div class="receipt-swish">
-        💳 Swisha till:
-        <strong id="receiptSwish">–</strong>
-        <div style="font-size:14px;margin-top:5px;">Meddelande: <span id="receiptSwishMsg">–</span></div>
-        <div style="font-size:20px;margin-top:6px;"><span id="receiptTotal">–</span> kr</div>
-        <div id="swishQrArea" style="margin-top:12px;"></div>
-      </div>
-      <div class="receipt-email" id="receiptEmailMsg" style="display:none;"></div>
-      <div id="receiptStatusLink" style="margin-top:10px;"></div>
-      <p style="margin-top:12px;font-size:12px;color:#666;">Visa detta kvitto när du hämtar maten.</p>
-    </div>
-    <button class="checkout-btn" onclick="closeCart();resetCart();" style="margin-top:12px;background:#666;">Stäng</button>
-  </div>
-</div>
 </div>
 
 <footer class="shop-footer">
